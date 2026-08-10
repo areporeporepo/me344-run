@@ -1,0 +1,173 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>ME344 Run Monitor — tpu-student49</title>
+<style>
+  :root {
+    --bg: #0d1117; --panel: #161b22; --border: #30363d;
+    --text: #e6edf3; --dim: #8b949e; --accent: #58a6ff;
+    --ok: #3fb950; --run: #d29922; --fail: #f85149;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 13px/1.5 "SF Mono", ui-monospace, Menlo, monospace;
+  }
+  header {
+    padding: 14px 20px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap;
+  }
+  header h1 { font-size: 15px; margin: 0; font-weight: 600; }
+  header .links a { color: var(--accent); text-decoration: none; margin-right: 14px; }
+  #phase { color: var(--dim); }
+  main { display: grid; grid-template-columns: 430px 1fr; gap: 0; height: calc(100vh - 49px); }
+  #cells { overflow-y: auto; border-right: 1px solid var(--border); padding: 10px; }
+  .cell {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 6px;
+    padding: 7px 10px; margin-bottom: 6px; cursor: pointer;
+  }
+  .cell .head { display: flex; gap: 8px; align-items: baseline; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; flex: none; align-self: center; }
+  .done .dot { background: var(--ok); }
+  .running .dot { background: var(--run); animation: pulse 1.2s infinite; }
+  .failed .dot { background: var(--fail); }
+  .pending .dot { background: var(--border); }
+  @keyframes pulse { 50% { opacity: 0.3; } }
+  .cell .idx { color: var(--dim); flex: none; }
+  .cell .label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+  .cell .dur { color: var(--dim); flex: none; }
+  .running .dur { color: var(--run); }
+  .cell pre {
+    display: none; margin: 6px 0 2px; padding: 6px 8px; background: var(--bg);
+    border-radius: 4px; max-height: 260px; overflow: auto; white-space: pre-wrap;
+    color: var(--dim); font-size: 12px;
+  }
+  .cell.open pre { display: block; }
+  #logpane { display: flex; flex-direction: column; overflow: hidden; }
+  #logpane .bar {
+    padding: 6px 14px; color: var(--dim); border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between;
+  }
+  #log { flex: 1; overflow-y: auto; padding: 10px 14px; white-space: pre-wrap; font-size: 12px; }
+  #log .ts { color: var(--accent); }
+  #log .out { color: var(--dim); }
+  #log .err { color: var(--fail); }
+  @media (max-width: 900px) { main { grid-template-columns: 1fr; } #cells { max-height: 45vh; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>ME344 Final Project — live run</h1>
+  <span id="phase">loading…</span>
+  <span class="links" style="margin-left:auto">
+    <a href="http://localhost:8888/lab?token=me344qanh" target="_blank">JupyterLab</a>
+    <a href="http://localhost:6006" target="_blank">TensorBoard</a>
+    <span id="clock" style="color:var(--dim)"></span>
+  </span>
+</header>
+<main>
+  <div id="cells"></div>
+  <div id="logpane">
+    <div class="bar"><span>run_progress.log (live tail)</span><span id="lastupd"></span></div>
+    <div id="log"></div>
+  </div>
+</main>
+<script>
+const REMOTE = !["localhost", "127.0.0.1"].includes(location.hostname);
+const LOG_URL = REMOTE
+  ? "https://gist.githubusercontent.com/areporeporepo/8dadecfa12ef5e2b7dfbaada34019e67/raw/run_progress.log"
+  : "run_progress.log";
+const POLL_MS = REMOTE ? 20000 : 5000;
+if (REMOTE) {
+  addEventListener("DOMContentLoaded", () => {
+    document.querySelector(".links").innerHTML =
+      '<span style="color:var(--dim)">mirrored via gist · ~1 min lag</span> <span id="clock" style="color:var(--dim)"></span>';
+  });
+}
+const CELL_RE = /^\[(\d{4}-\d\d-\d\d \d\d:\d\d:\d\d)\] cell (\d+) (START|DONE|\(markdown\))(?::? ?(.*))?$/;
+const open = new Set();
+
+function parse(text) {
+  const cells = new Map();
+  let phase = "starting";
+  let lastTs = null;
+  for (const line of text.split("\n")) {
+    const m = line.match(/^\[(\d{4}-\d\d-\d\d \d\d:\d\d:\d\d)\] (.*)$/);
+    if (!m) continue;
+    const ts = m[1], rest = m[2];
+    lastTs = ts;
+    if (rest.startsWith("===")) { phase = rest.replaceAll("=", "").trim(); continue; }
+    let cm = rest.match(/^cell (\d+) START: (.*)$/);
+    if (cm) { cells.set(+cm[1], { label: cm[2], status: "running", start: ts, dur: "" }); continue; }
+    cm = rest.match(/^cell (\d+) DONE in (.*)$/);
+    if (cm) { const c = cells.get(+cm[1]); if (c) { c.status = "done"; c.dur = cm[2]; } continue; }
+    cm = rest.match(/^cell (\d+) \(markdown\): (.*)$/);
+    if (cm) { cells.set(+cm[1], { label: cm[2], status: "done", dur: "§", md: true }); continue; }
+    if (rest.startsWith("FATAL")) {
+      for (const c of cells.values()) if (c.status === "running") c.status = "failed";
+      phase = "FAILED — " + rest.slice(0, 120);
+    }
+  }
+  return { cells, phase, lastTs };
+}
+
+function outputsFor(text, idx) {
+  const lines = text.split("\n");
+  let capture = false, buf = [];
+  for (const line of lines) {
+    const m = line.match(CELL_RE);
+    if (line.includes(`cell ${idx} START`)) { capture = true; buf = []; continue; }
+    if (capture && (line.match(/^\[.*\] cell (\d+) (START|DONE)/) && !line.includes(`cell ${idx} `))) capture = false;
+    if (capture && (line.startsWith("  | ") || line.includes("output:"))) buf.push(line.replace(/^\s*\|? ?/, ""));
+  }
+  return buf.slice(-40).join("\n");
+}
+
+function elapsed(startTs) {
+  const s = new Date(startTs.replace(" ", "T"));
+  const mins = (Date.now() - s.getTime()) / 60000;
+  return mins < 0 ? "" : mins.toFixed(1) + " min…";
+}
+
+let lastText = "";
+async function refresh() {
+  try {
+    const r = await fetch(LOG_URL + "?t=" + Date.now(), { cache: "no-store" });
+    const text = await r.text();
+    lastText = text;
+    const { cells, phase, lastTs } = parse(text);
+    document.getElementById("phase").textContent = phase;
+    document.getElementById("lastupd").textContent = "last event " + (lastTs || "—");
+    const box = document.getElementById("cells");
+    box.innerHTML = "";
+    const sorted = [...cells.entries()].sort((a, b) => a[0] - b[0]);
+    for (const [idx, c] of sorted) {
+      const div = document.createElement("div");
+      div.className = "cell " + c.status + (open.has(idx) ? " open" : "");
+      const dur = c.status === "running" ? elapsed(c.start) : (c.dur || "");
+      div.innerHTML = `<div class="head"><span class="dot"></span><span class="idx">[${String(idx).padStart(2, "0")}]</span>` +
+        `<span class="label">${c.label.replace(/</g, "&lt;")}</span><span class="dur">${dur}</span></div>` +
+        (c.md ? "" : `<pre>${outputsFor(text, idx).replace(/</g, "&lt;") || "(no output captured yet)"}</pre>`);
+      div.onclick = () => { open.has(idx) ? open.delete(idx) : open.add(idx); div.classList.toggle("open"); };
+      box.appendChild(div);
+    }
+    const log = document.getElementById("log");
+    const nearBottom = log.scrollHeight - log.scrollTop - log.clientHeight < 60;
+    log.innerHTML = text.split("\n").slice(-400).map(l => {
+      const esc = l.replace(/</g, "&lt;");
+      if (l.includes("FATAL") || l.includes("ERROR")) return `<div class="err">${esc}</div>`;
+      if (l.startsWith("  |")) return `<div class="out">${esc}</div>`;
+      return `<div>${esc.replace(/^(\[[^\]]+\])/, '<span class="ts">$1</span>')}</div>`;
+    }).join("");
+    if (nearBottom) log.scrollTop = log.scrollHeight;
+  } catch (e) {
+    document.getElementById("phase").textContent = "fetch failed: " + e.message;
+  }
+  document.getElementById("clock").textContent = new Date().toLocaleTimeString();
+}
+refresh();
+setInterval(refresh, POLL_MS);
+</script>
+</body>
+</html>
