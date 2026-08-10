@@ -1,0 +1,19 @@
+index.html
+  s_68f67872a7c902::t_8e74c467cb1e4d 1-173
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "264ac02600d491704b1ed7bc65afe7d318d3ba8a",
+  "prompts": {},
+  "sessions": {
+    "s_68f67872a7c902": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "85d979a9-9bc2-4b58-b221-08a2758cd18b",
+        "model": "unknown"
+      },
+      "human_author": "anh nguyen <anh.nqqq@icloud.com>"
+    }
+  }
+}
