@@ -1,0 +1,14 @@
+{
+  "reason": "Sequence length buys coverage but increases activation memory and padded compute.",
+  "examples": 400,
+  "sequence_length": 256,
+  "mean_total_tokens": 162.0525,
+  "p95_total_tokens": 187.04999999999995,
+  "max_total_tokens": 217,
+  "mean_completion_tokens": 6.65,
+  "truncated_examples": 0,
+  "truncated_percent": 0.0,
+  "padded_token_utilization_percent": 63.3017578125,
+  "padding_tokens_if_unpacked": 37579,
+  "decision": "Shorten only if saved memory/compute is worth the measured truncation; packing changes this math."
+}

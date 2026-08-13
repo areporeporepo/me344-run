@@ -1,0 +1,3 @@
+label,examples,exact_match_percent,format_compliance_percent,length_limited_percent,mean_completion_tokens,retention_examples,retention_exact_match_percent,retention_format_compliance_percent
+base,40,70.0,100.0,0.0,5.4,16,81.25,75.0
+sft,40,92.5,100.0,0.0,5.575,16,87.5,87.5

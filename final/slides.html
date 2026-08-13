@@ -1,0 +1,739 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Train, Tune, And Scale Qwen3-4B on a v5e-8 — ME344 Final Project</title>
+<style>
+  :root {
+    --bg: #f5f5f7; --panel: #ffffff; --border: #d2d2d7;
+    --text: #1d1d1f; --dim: #6e6e73; --accent: #0071e3;
+    --ok: #34c759; --warn: #ff9f0a; --fail: #ff3b30;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    background: var(--bg); color: var(--text);
+    font: 16px/1.5 -apple-system, BlinkMacSystemFont, "SF Pro Text", Helvetica, Arial, sans-serif;
+  }
+  code, .mono, table { font-family: "SF Mono", ui-monospace, Menlo, monospace; }
+
+  .deck { height: 100vh; overflow: hidden; }
+  .slide {
+    display: none; height: 100vh; padding: 38px 56px 66px;
+    flex-direction: column; background: var(--bg);
+  }
+  .slide.active { display: flex; }
+  .slide h1 { font-size: 38px; line-height: 1.15; margin: 0 0 6px; letter-spacing: -0.02em; }
+  .slide h2 { font-size: 26px; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .kicker { color: var(--dim); font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
+  .lede { font-size: 17px; color: var(--dim); margin: 0 0 16px; max-width: 74ch; }
+  .body { flex: 1; min-height: 0; overflow: auto; }
+
+  table { border-collapse: collapse; width: 100%; font-size: 12.5px; background: var(--panel); }
+  th, td { border: 1px solid var(--border); padding: 6px 9px; text-align: right; }
+  th:first-child, td:first-child { text-align: left; }
+  thead th { background: #fafafa; font-weight: 600; color: var(--dim); }
+  tr.hi td { background: #fff8e6; font-weight: 600; }
+  tr.bad td { background: #fff0ef; }
+  tr.good td { background: #eefaf0; }
+
+  .grid { display: grid; gap: 14px; }
+  .g2 { grid-template-columns: 1fr 1fr; }
+  .g3 { grid-template-columns: repeat(3, 1fr); }
+  .card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+  .card h3 { margin: 0 0 8px; font-size: 13px; color: var(--dim); font-weight: 600;
+             text-transform: uppercase; letter-spacing: 0.05em; }
+  .stat { font-size: 31px; font-weight: 650; letter-spacing: -0.02em; }
+  .stat.ok { color: var(--ok); } .stat.bad { color: var(--fail); } .stat.warn { color: var(--warn); }
+  .sub { color: var(--dim); font-size: 12.5px; }
+  ul { margin: 5px 0 0; padding-left: 19px; }
+  li { margin: 4px 0; }
+  .note { color: var(--dim); font-size: 12.5px; margin-top: 10px; }
+  .pill { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 11.5px;
+          border: 1px solid var(--border); background: var(--panel); color: var(--dim); }
+  .pill.ok { border-color: var(--ok); color: #1c7c33; background: #eefaf0; }
+  .pill.bad { border-color: var(--fail); color: #b3261e; background: #fff0ef; }
+  .flow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 12.5px; }
+  .flow .step { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 7px 11px; }
+  .flow .arrow { color: var(--dim); }
+
+  /* provenance caption: every claim points at the file it came from */
+  .src {
+    margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--border);
+    font-family: "SF Mono", ui-monospace, Menlo, monospace;
+    font-size: 11px; color: var(--dim); line-height: 1.5;
+  }
+  .src b { color: var(--text); font-weight: 600; }
+  .caveat { border-left: 3px solid var(--warn); padding-left: 10px; background: #fffaf0; }
+
+  footer {
+    position: fixed; left: 0; right: 0; bottom: 0; height: 42px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 56px; border-top: 1px solid var(--border);
+    background: rgba(255,255,255,0.82); backdrop-filter: saturate(180%) blur(16px);
+    font-size: 12px; color: var(--dim);
+  }
+  footer nav button { font: inherit; color: var(--accent); background: none; border: none; cursor: pointer; padding: 4px 8px; }
+
+  @media print {
+    html, body { height: auto; }
+    .deck { height: auto; overflow: visible; }
+    .slide { display: flex !important; height: auto; min-height: 96vh; page-break-after: always; }
+    footer { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+  <!-- 1 -->
+  <section class="slide active">
+    <div class="kicker">ME344 &middot; Final Project &middot; 13 August 2026</div>
+    <h1>Train, Tune, And Scale Qwen3-4B<br>on a TPU v5e-8</h1>
+    <p class="lede">Plan the memory before running it, find the batch boundary, profile the step,
+      fine-tune and recover, evaluate the behavior change, then compare ICI against DCN scaling.</p>
+    <div class="body">
+      <div class="grid g3">
+        <div class="card"><h3>Hardware</h3><div class="stat">8</div>
+          <div class="sub">v5e chips, one host, 2&times;4 ICI. 15.75 GiB XLA-reported HBM per chip,
+            197 BF16 TFLOP/s peak.</div></div>
+        <div class="card"><h3>Model</h3><div class="stat">4,022,468,096</div>
+          <div class="sub">Qwen3-4B parameters. BF16 checkpoint 7.49 GiB.</div></div>
+        <div class="card"><h3>Run</h3><div class="stat mono" style="font-size:17px">qanh-20260813t194806z</div>
+          <div class="sub">MaxText pinned at 17c7172. 19:48Z to 20:28Z, about 40 minutes.</div></div>
+      </div>
+      <div class="flow" style="margin-top:16px">
+        <span class="step">AOT capacity</span><span class="arrow">&rarr;</span>
+        <span class="step">batch frontier</span><span class="arrow">&rarr;</span>
+        <span class="step">XProf</span><span class="arrow">&rarr;</span>
+        <span class="step">SFT 200 steps</span><span class="arrow">&rarr;</span>
+        <span class="step">resume</span><span class="arrow">&rarr;</span>
+        <span class="step">GRPO</span><span class="arrow">&rarr;</span>
+        <span class="step">eval + serve</span><span class="arrow">&rarr;</span>
+        <span class="step">GKE ICI vs DCN</span>
+      </div>
+      <div class="src"><b>Every number in this deck is traceable.</b> Each slide names the artifact file
+        it was read from, all under <code>artifacts/qanh-20260813t194806z/</code>.
+        The executed notebook re-derives them and prints the same file paths.<br>
+        <b>this slide:</b> config.json, capacity_report.json (hardware, model)</div>
+    </div>
+  </section>
+
+  <!-- 2 -->
+  <section class="slide">
+    <div class="kicker">Question 1</div>
+    <h2>Will the first training step fit, before I pay for it?</h2>
+    <p class="lede">Ahead-of-time compilation answers the memory question without holding the chips.
+      I predicted two layouts, then ran both, including one I expected to fail.</p>
+    <div class="body">
+      <table>
+        <thead><tr><th>Layout</th><th>Optimistic state shards</th><th>Predicted GiB/chip</th>
+          <th>Prediction</th><th>Observed</th><th>AOT total GiB/chip</th></tr></thead>
+        <tbody>
+          <tr class="good"><td>TP8 (<span class="mono">ici_tensor_parallelism=8</span>)</td><td>8</td>
+            <td>7.49</td><td>fit_candidate</td><td><span class="pill ok">fit</span></td><td>8.23</td></tr>
+          <tr class="bad"><td>DP8 (replicated)</td><td>1</td>
+            <td>59.94</td><td>oom</td><td><span class="pill bad">oom</span></td><td>needs 65.47</td></tr>
+        </tbody>
+      </table>
+      <div class="grid g3" style="margin-top:14px">
+        <div class="card"><h3>The rule this validates</h3><div class="stat">16 B/param</div>
+          <div class="sub">12 bytes persistent (FP32 weights 4 + two Adam moments 8) plus a
+            transient FP32 gradient 4. Check: 12 &times; 4.022e9 = <strong>44.95 GiB</strong>,
+            exactly the reported persistent state.</div></div>
+        <div class="card"><h3>Why TP8 survives</h3>
+          <div class="sub">Tensor parallelism shards that dense persistent state eight ways.
+            Data parallelism replicates it on every chip, so DP8 needs the whole 59.94 GiB per chip
+            against 15.75 available.</div></div>
+        <div class="card"><h3>Why run a failure on purpose</h3>
+          <div class="sub">The DP8 OOM at 65.47 GiB of HLO temporaries is what makes the capacity
+            check credible. A formula that only ever agrees with successes has not been tested.</div></div>
+      </div>
+      <div class="src"><b>source:</b> capacity_report.json (cases[].prediction / observed,
+        model.persistent_training_state_gib = 44.95, rough_peak_before_activations_gib = 59.94)<br>
+        <b>raw evidence:</b> capacity-tp8-aot.log, capacity-dp8-aot.log
+        (<code>RESOURCE_EXHAUSTED: ... HLO temporaries (65.47G) exceeds available HBM (15.75G)</code>)
+        &middot; <b>figure:</b> capacity.svg</div>
+    </div>
+  </section>
+
+  <!-- 3 -->
+  <section class="slide">
+    <div class="kicker">Question 2</div>
+    <h2>How much work should one step hold?</h2>
+    <p class="lede">Eight global batch sizes at sequence length 256, AOT-checked first, then measured.
+      The memory boundary and the throughput knee are four doublings apart.</p>
+    <div class="body">
+      <table>
+        <thead><tr><th>Global batch</th><th>Per device</th><th>AOT GiB/chip</th>
+          <th>% of 15.75 limit</th><th>Steady step (s)</th><th>tokens/s</th><th>TFLOP/s/device</th></tr></thead>
+        <tbody>
+          <tr><td>4</td><td>0.5</td><td>8.23</td><td>52.2%</td><td>0.0979</td><td>10,457</td><td>31.84</td></tr>
+          <tr><td>8</td><td>1.0</td><td>8.36</td><td>53.1%</td><td>0.1537</td><td>13,322</td><td>40.57</td></tr>
+          <tr><td>16</td><td>2.0</td><td>9.00</td><td>57.2%</td><td>0.2666</td><td>15,361</td><td>46.78</td></tr>
+          <tr class="hi"><td>32</td><td>4.0</td><td>9.35</td><td>59.4%</td><td>0.4946</td><td>16,562</td><td>50.43</td></tr>
+          <tr><td>64</td><td>8.0</td><td>10.60</td><td>67.3%</td><td>0.9849</td><td>16,635</td><td>50.65</td></tr>
+          <tr><td>128</td><td>16.0</td><td>12.99</td><td>82.5%</td><td>1.9708</td><td>16,627</td><td>50.63</td></tr>
+          <tr><td>256</td><td>32.0</td><td>17.37</td><td>110.3%</td><td>4.0386</td><td>16,227</td><td>49.41</td></tr>
+          <tr class="bad"><td>512</td><td>64.0</td><td colspan="5">AOT <strong>oom</strong>: needs 18.43 GiB temporaries against 15.75 GiB available</td></tr>
+        </tbody>
+      </table>
+      <div class="grid g3" style="margin-top:14px">
+        <div class="card"><h3>Memory boundary</h3><div class="stat bad">gb512</div>
+          <div class="sub">First shape past the wall. gb256 compiles at 110% of the AOT limit and
+            still runs, so the AOT total is conservative rather than exact.</div></div>
+        <div class="card"><h3>Throughput knee</h3><div class="stat ok">gb32</div>
+          <div class="sub">16,562 tokens/s at 59.4% of the limit: the smallest batch within 1% of
+            peak. gb64 buys 0.4% more throughput for 13% more HBM.</div></div>
+        <div class="card"><h3>Past the knee</h3><div class="stat warn">flat, then down</div>
+          <div class="sub">gb64 and gb128 sit within noise of gb32. gb256 is 2% slower while using
+            86% more memory.</div></div>
+      </div>
+      <div class="src"><b>source:</b> sweep_results.csv, all 8 rows
+        (aot_reported_total_gib_per_chip, total_tokens_per_sec, tflops_per_sec_per_device,
+        oom_required_temporary_gib_per_chip = 18.43)<br>
+        <b>raw evidence:</b> sweep-aot-gb{4..512}.log, sweep-gb{4..256}.jsonl
+        &middot; <b>figure:</b> sweep.svg<br>
+        <b>note:</b> the gb8, gb16 and gb32 rows were absent from the earlier run's recovered log,
+        which made throughput look flat from gb64. With all 8 rows the knee is gb32.</div>
+    </div>
+  </section>
+
+  <!-- 4 -->
+  <section class="slide">
+    <div class="kicker">Question 2, continued</div>
+    <h2>How much hardware headroom is left?</h2>
+    <p class="lede">Against a 6 &middot; parameters &middot; tokens lower bound and the published
+      197 BF16 TFLOP/s peak, utilization saturates near one quarter of peak.</p>
+    <div class="body">
+      <table>
+        <thead><tr><th>Global batch</th><th>Tokens/step</th><th>Compute lower bound (s)</th>
+          <th>Measured steady step (s)</th><th>Time efficiency</th><th>% of BF16 peak</th></tr></thead>
+        <tbody>
+          <tr><td>4</td><td>1,024</td><td>0.0157</td><td>0.0979</td><td>16.0%</td><td>16.2%</td></tr>
+          <tr><td>8</td><td>2,048</td><td>0.0314</td><td>0.1537</td><td>20.4%</td><td>20.6%</td></tr>
+          <tr><td>16</td><td>4,096</td><td>0.0627</td><td>0.2666</td><td>23.5%</td><td>23.7%</td></tr>
+          <tr><td>32</td><td>8,192</td><td>0.1255</td><td>0.4946</td><td>25.4%</td><td>25.6%</td></tr>
+          <tr class="hi"><td>64</td><td>16,384</td><td>0.2509</td><td>0.9849</td><td>25.5%</td><td>25.7%</td></tr>
+          <tr><td>128</td><td>32,768</td><td>0.5018</td><td>1.9708</td><td>25.5%</td><td>25.7%</td></tr>
+          <tr><td>256</td><td>65,536</td><td>1.0036</td><td>4.0386</td><td>24.9%</td><td>25.1%</td></tr>
+        </tbody>
+      </table>
+      <div class="note">The curve flattens at gb32 and never improves, so the remaining ~74% is not
+        recoverable by making the step bigger. It would take a different execution strategy: better
+        overlap, fewer rematerializations, a fused attention path. The bound is also optimistic,
+        assuming zero communication and zero stalls, so it is a utilization proxy rather than MFU.</div>
+      <div class="src"><b>source:</b> compute_bound.json (cases[].time_efficiency_percent,
+        measured_peak_tflops_percent, assumptions[]) &middot; <b>figure:</b> compute_bound.svg</div>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section class="slide">
+    <div class="kicker">Question 3</div>
+    <h2>Where does a training step actually spend its time?</h2>
+    <div class="body">
+      <div class="grid g2">
+        <div class="card"><h3>XProf, per train step</h3>
+          <div class="stat">24.94 TFLOPs</div>
+          <div class="sub" style="margin-top:10px">
+            <strong>99.07%</strong> learnable weight FLOPs<br>
+            <strong>0.93%</strong> attention FLOPs</div>
+          <div class="note">3 profiled steps after 3 warmup steps at sequence length 256. The
+            instrumented steps report implausible per-step rates (one at 2,301 TFLOP/s/device over
+            0.011 s), which is profiler distortion, not throughput.</div>
+        </div>
+        <div class="card"><h3>What that tells the tuning story</h3>
+          <ul>
+            <li>At sequence length 256 this is a <strong>dense-matmul workload</strong>, not an
+              attention-bound one.</li>
+            <li>Attention tricks have under 1% of the step to win back, so they are the wrong lever here.</li>
+            <li>The lever that matters is how efficiently the weight matmuls are fed, which is why
+              the batch sweep saturates instead of climbing.</li>
+            <li>This 0.93% is a statement about <em>this shape</em>, not about the model. See the
+              final slide for where it inverts.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="src"><b>source:</b> profile.log (<code>Total TFLOPs: 24.94, split as 99.07%
+        learnable weight flops and 0.93% attention flops</code>), profile_metrics.jsonl<br>
+        <b>invocation:</b> xprof_command.txt &middot; <b>trace:</b> xprof_profile/ (kept out of the
+        public site for size)</div>
+    </div>
+  </section>
+
+  <!-- 6 -->
+  <section class="slide">
+    <div class="kicker">Question 4</div>
+    <h2>What changed after fine-tuning?</h2>
+    <p class="lede">200 SFT steps on banking77 intent classification at global batch 4,
+      sequence length 256, learning rate 3e-6.</p>
+    <div class="body">
+      <table>
+        <thead><tr><th>Checkpoint</th><th>n</th><th>banking77 exact</th><th>Format compliance</th>
+          <th>Mean output tokens</th><th>GSM8K retention n</th><th>GSM8K exact</th></tr></thead>
+        <tbody>
+          <tr><td>base (qwen3-4b-instruct-2507)</td><td>40</td><td>70.0%</td><td>100.0%</td>
+            <td>5.40</td><td>16</td><td>81.25%</td></tr>
+          <tr class="good"><td>SFT step 202</td><td>40</td><td><strong>92.5%</strong></td><td>100.0%</td>
+            <td>5.58</td><td>16</td><td><strong>87.5%</strong></td></tr>
+          <tr class="hi"><td>change</td><td></td><td>+22.5 pts</td><td>+0.0 pts</td>
+            <td>+0.18</td><td></td><td>+6.25 pts</td></tr>
+        </tbody>
+      </table>
+      <div class="grid g3" style="margin-top:14px">
+        <div class="card"><h3>Domain gain</h3><div class="stat ok">+22.5 pts</div>
+          <div class="sub">70.0% to 92.5% exact match, 28/40 to 37/40.</div></div>
+        <div class="card"><h3>Retention</h3><div class="stat ok">no regression</div>
+          <div class="sub">GSM8K went up 6.25 points rather than down, so the fine-tune did not
+            trade general ability for the domain.</div></div>
+        <div class="card"><h3>Training loss</h3><div class="stat">0.007942</div>
+          <div class="sub">At step 200, from 209 logged points. The earlier Aug 10 run reached
+            0.007942 as well, matching to six digits.</div></div>
+      </div>
+      <div class="src"><b>source:</b> evaluation_results.csv (base/sft rows),
+        sft_metrics.jsonl (209 points, learning/loss and eval/avg_loss)<br>
+        <b>raw evidence:</b> sft.log, inference-base.log, inference-sft.log, outputs_base.jsonl
+        &middot; <b>figure:</b> training_curve.svg</div>
+    </div>
+  </section>
+
+  <!-- 7 -->
+  <section class="slide">
+    <div class="kicker">Question 4, continued</div>
+    <h2>Can we resume without starting over?</h2>
+    <div class="body">
+      <div class="grid g2">
+        <div class="card"><h3>Resume evidence</h3>
+          <table style="margin-top:4px">
+            <tbody>
+              <tr><td>Rollback step</td><td>200</td></tr>
+              <tr><td>Resumed steps</td><td>201, 202</td></tr>
+              <tr><td>Optimizer state restored</td><td><span class="pill ok">true</span></td></tr>
+              <tr><td>Loss before resume</td><td>0.007942</td></tr>
+              <tr><td>First loss after resume</td><td>0.012250</td></tr>
+            </tbody>
+          </table>
+          <div class="note">Tunix resumed at the next optimizer step rather than restarting at
+            step 1, and the final checkpoint still contains optimizer_state. The small loss bump
+            is the expected effect of re-entering the data stream, not a lost optimizer.</div>
+        </div>
+        <div class="card caveat"><h3>But the stopping rule disagrees</h3>
+          <div class="stat warn">step 50, not 200</div>
+          <div class="sub" style="margin-top:8px">
+            Best held-out loss <strong>0.0436 at step 50</strong>, drifted to
+            <strong>0.0623 by step 200</strong>: six evaluation intervals with no new best.
+          </div>
+          <div class="note"><strong>Recommendation recorded by the run:</strong> "Stop or roll back:
+            held-out loss has not set a new best for 6 evaluation intervals."<br><br>
+            So the task metric prefers step 202 and the held-out loss prefers step 50, and no task
+            metric was ever run against step 50. That is a real gap, not a rounding detail.</div>
+        </div>
+      </div>
+      <div class="src"><b>source:</b> recovery_report.json (rollback_step, resumed_steps,
+        optimizer_state_evidence[], loss_before_resume, first_loss_after_resume),
+        training_decision.json (best_held_out_loss = 0.0436 @ step 50,
+        evaluation_intervals_since_best = 6, recommendation)<br>
+        <b>raw evidence:</b> sft-resume.log, sft_resume_metrics.jsonl, checkpoint_paths.txt</div>
+    </div>
+  </section>
+
+  <!-- 8 -->
+  <section class="slide">
+    <div class="kicker">Question 5</div>
+    <h2>How is reward training different from SFT?</h2>
+    <p class="lede">GRPO, 12 updates, 4 generations per prompt, on top of the SFT checkpoint.</p>
+    <div class="body">
+      <table>
+        <thead><tr><th>Metric</th><th>Before</th><th>After</th><th>Change</th></tr></thead>
+        <tbody>
+          <tr><td>Exact correct</td><td>10/16</td><td>12/16</td><td>+2 examples</td></tr>
+          <tr><td>Exact accuracy</td><td>62.50%</td><td>75.00%</td><td>+12.5 pts</td></tr>
+          <tr class="good"><td>Format compliance</td><td>37.50%</td><td>93.75%</td><td><strong>+56.25 pts</strong></td></tr>
+          <tr><td>Mean reward</td><td>1.0671</td><td>1.5309</td><td>+0.4638</td></tr>
+        </tbody>
+      </table>
+      <div class="grid g2" style="margin-top:14px">
+        <div class="card"><h3>What GRPO reliably did</h3><div class="stat ok">format: 6/16 &rarr; 15/16</div>
+          <div class="sub">A +56 point swing on format compliance is far too large to be sampling
+            noise. Reward training taught the output contract.</div>
+          <div class="note">Training signal was healthy: 11 of 12 groups had relative signal
+            (91.7%), mean group reward span 1.36.</div></div>
+        <div class="card caveat"><h3>What it did not reliably do</h3><div class="stat warn">accuracy: unstable</div>
+          <div class="sub">The +12.5 point accuracy change is <strong>two examples out of
+            sixteen</strong>. An identically configured earlier run (qanh-20260810t005140z) produced
+            <strong>-12.5 points</strong> on this same metric with the guardrail
+            <strong>failing</strong>.</div>
+          <div class="note">Same config, opposite sign. That is direct evidence the accuracy effect
+            is not resolvable at n=16, which is why the release decision below does not rest on it.</div></div>
+      </div>
+      <div class="src"><b>source:</b> rl_summary.json (pre/post correct 10/16 and 12/16,
+        format_accuracy_percent 37.5 and 93.75, change.mean_reward = 0.4638,
+        exact_accuracy_guardrail_passed = true, training_signal.*)<br>
+        <b>raw evidence:</b> rl.log, rl_reward_events.jsonl, rl_task.py, rl_dataset_report.json
+        &middot; <b>figure:</b> rl_reward.svg<br>
+        <b>cross-run comparison:</b> recovered/RECOVERED_RESULTS.md, GRPO section (Aug 10 run)</div>
+    </div>
+  </section>
+
+  <!-- 9 -->
+  <section class="slide">
+    <div class="kicker">Question 5, continued</div>
+    <h2>How confident can a 40-example evaluation make us?</h2>
+    <p class="lede">A point estimate without an interval turns random prompt variation into a
+      release claim. Wilson 95% intervals on the same numbers:</p>
+    <div class="body">
+      <table>
+        <thead><tr><th>Checkpoint</th><th>Successes</th><th>Observed</th>
+          <th>Wilson 95% low</th><th>Wilson 95% high</th></tr></thead>
+        <tbody>
+          <tr><td>base</td><td>28/40</td><td>70.0%</td><td>54.6%</td><td>81.9%</td></tr>
+          <tr><td>SFT step 202</td><td>37/40</td><td>92.5%</td><td>80.1%</td><td>97.4%</td></tr>
+        </tbody>
+      </table>
+      <div class="grid g3" style="margin-top:14px">
+        <div class="card caveat"><h3>The intervals still touch</h3><div class="stat warn">by 1.8 pts</div>
+          <div class="sub">SFT's lower bound 80.1% sits just under base's upper bound 81.9%.
+            The +22.5 point gain is large and almost certainly real, but this suite cannot
+            formally separate them.</div></div>
+        <div class="card"><h3>What would settle it</h3><div class="stat">97 examples</div>
+          <div class="sub">The worst-case sample size for a plus-or-minus 10 point margin.
+            This suite used 40.</div></div>
+        <div class="card"><h3>So what is this?</h3><div class="stat">a smoke test</div>
+          <div class="sub">"Treat this suite as a release smoke test; use a larger representative
+            set for a real launch." That is the run's own recorded decision, and I agree with it.</div></div>
+      </div>
+      <div class="src"><b>source:</b> evaluation_uncertainty.json (models[].wilson_95_low_percent /
+        wilson_95_high_percent, worst_case_samples_for_target_margin = 97,
+        target_margin_percentage_points = 10, assumption, decision)<br>
+        <b>figure:</b> evaluation_uncertainty.svg &middot;
+        <b>caveat carried from the file:</b> "Prompts are independent and representative; Wilson
+        intervals do not fix biased data."</div>
+    </div>
+  </section>
+
+  <!-- 10 -->
+  <section class="slide">
+    <div class="kicker">Serving</div>
+    <h2>What does the chosen checkpoint cost to serve?</h2>
+    <div class="body">
+      <table>
+        <thead><tr><th>Concurrency</th><th>Requests</th><th>req/s</th><th>TTFT p50</th>
+          <th>Latency p50</th><th>Latency p95</th><th>Output tok/s</th><th>Mean out tokens</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>8</td><td>26.97</td><td>12.5 ms</td><td>35.1 ms</td><td>51.2 ms</td><td>161.8</td><td>6.0</td></tr>
+          <tr><td>4</td><td>8</td><td>75.48</td><td>23.8 ms</td><td>45.1 ms</td><td>63.1 ms</td><td>452.9</td><td>6.0</td></tr>
+        </tbody>
+      </table>
+      <div class="grid g3" style="margin-top:14px">
+        <div class="card"><h3>Concurrency trade</h3><div class="stat ok">2.80&times; / 1.91&times;</div>
+          <div class="sub">4&times; concurrency buys 2.80&times; throughput for 1.91&times; TTFT.
+            Worth taking for a batch workload, a judgement call for an interactive one.</div></div>
+        <div class="card"><h3>What this actually measures</h3><div class="stat">6 tokens</div>
+          <div class="sub">Mean output is 6 tokens, so this is short-generation classification.
+            It says nothing about long-form decoding, where KV cache growth dominates.</div></div>
+        <div class="card caveat"><h3>Sample size, again</h3><div class="stat warn">8 requests</div>
+          <div class="sub">8 requests after 8 warmup requests. p95 over 8 samples is the second
+            slowest request, so treat the tail number as indicative only.</div></div>
+      </div>
+      <div class="src"><b>source:</b> serving_results.csv (requests_per_second, ttft_p50_seconds,
+        latency_p50_seconds, latency_p95_seconds, output_tokens_per_second, mean_output_tokens,
+        usage_reported_for_all = True)<br>
+        <b>raw evidence:</b> inference-sft.log (vLLM server on the SFT step 202 checkpoint)</div>
+    </div>
+  </section>
+
+  <!-- 11 -->
+  <section class="slide">
+    <div class="kicker">Question 6</div>
+    <h2>Can the same checkpoint run on more workers?</h2>
+    <p class="lede">Five GKE JobSet runs: an 8-chip baseline, then 16 chips two ways, inside one
+      ICI slice and across two slices over DCN.</p>
+    <div class="body">
+      <table>
+        <thead><tr><th>Run</th><th>Chips</th><th>Fabric</th><th>Topology</th><th>Slices</th>
+          <th>Batch</th><th>s/step</th><th>tokens/s</th><th>tokens/s/chip</th><th>Efficiency</th></tr></thead>
+        <tbody>
+          <tr><td>baseline</td><td>8</td><td>ICI</td><td>2&times;4</td><td>1</td><td>256</td>
+            <td>4.045</td><td>16,200</td><td>2,025</td><td>reference</td></tr>
+          <tr class="good"><td>ici_strong</td><td>16</td><td>ICI</td><td>4&times;4</td><td>1</td><td>256</td>
+            <td>2.022</td><td>32,417</td><td>2,026</td><td>100.1%</td></tr>
+          <tr class="good"><td>ici_weak</td><td>16</td><td>ICI</td><td>4&times;4</td><td>1</td><td>512</td>
+            <td>4.061</td><td>32,272</td><td>2,017</td><td>99.6%</td></tr>
+          <tr class="bad"><td>strong</td><td>16</td><td>DCN</td><td>2&times;(2&times;4)</td><td>2</td><td>256</td>
+            <td>3.104</td><td>21,123</td><td>1,320</td><td>65.2%</td></tr>
+          <tr class="bad"><td>weak</td><td>16</td><td>DCN</td><td>2&times;(2&times;4)</td><td>2</td><td>512</td>
+            <td>7.553</td><td>17,355</td><td>1,085</td><td>53.6%</td></tr>
+        </tbody>
+      </table>
+      <div class="grid g3" style="margin-top:14px">
+        <div class="card"><h3>Inside one slice</h3><div class="stat ok">~100%</div>
+          <div class="sub">Doubling chips over ICI doubles throughput. Per-chip rate moves from
+            2,025 to 2,026 tokens/s: unchanged to within 0.5%.</div></div>
+        <div class="card"><h3>Across two slices</h3><div class="stat bad">-35% / -46%</div>
+          <div class="sub">Same 16 chips, same work, but the data-parallel gradient all-reduce now
+            crosses DCN. ICI beats DCN by 1.53&times; strong and 1.86&times; weak.</div></div>
+        <div class="card"><h3>The lesson</h3>
+          <div class="sub">Chip count is not the scaling unit. The fabric the collective crosses is.
+            Fill the ICI slice before adding a second one.</div></div>
+      </div>
+      <div class="src"><b>source:</b> scale_out.json (per-mode chips/fabric/topology/steady_step_seconds/
+        tokens_per_second_per_chip, ici_strong_scaling_efficiency_percent = 100.05,
+        weak_scaling_efficiency_percent = 53.56, ici_over_dcn_weak_ratio = 1.86)<br>
+        <b class="mono" style="color:#b3261e">provenance caveat:</b> these five JobSet results were
+        produced on 2026-08-10 and <b>reused</b> into this run. Every result file records
+        <code>source_checkpoint = .../me344-qanh-20260810t005140z-c4/checkpoints/4/items</code>,
+        and <code>collect_scale_results()</code> validates only <code>student_id</code>, so nothing
+        in the pipeline checks checkpoint identity. Same model, batches and layout, different
+        checkpoint instance.</div>
+    </div>
+  </section>
+
+  <!-- 12 -->
+  <section class="slide">
+    <div class="kicker">The anomaly worth explaining, not asserting</div>
+    <h2>Why is DCN weak scaling worse per chip than DCN strong?</h2>
+    <p class="lede">With DP2 &times; TP8 the cross-slice all-reduce carries gradients, whose size is set
+      by the model rather than the batch. Doubling per-slice work should amortize a fixed cost
+      better, not worse.</p>
+    <div class="body">
+      <div class="grid g2">
+        <div class="card"><h3>Backing out exposed communication</h3>
+          <table style="margin-top:4px">
+            <thead><tr><th>Case</th><th>DCN s/step</th><th>ICI s/step</th><th>Exposed</th></tr></thead>
+            <tbody>
+              <tr><td>strong (gb256)</td><td>3.104</td><td>2.022</td><td>1.08 s</td></tr>
+              <tr><td>weak (gb512)</td><td>7.553</td><td>4.045</td><td>3.51 s</td></tr>
+            </tbody>
+          </table>
+          <div class="note">Same payload, <strong>3.2&times;</strong> the exposed cost. That is the
+            thing a fixed-size all-reduce should not do, which is why I am treating it as an open
+            question rather than a result.</div>
+        </div>
+        <div class="card"><h3>Three candidates I cannot separate</h3>
+          <ul>
+            <li><strong>Lost overlap.</strong> At per-slice batch 256 the schedule may stop hiding
+              the all-reduce behind compute.</li>
+            <li><strong>HBM pressure.</strong> gb256 on one slice already compiles at 110% of the
+              AOT limit, so rematerialization may be lengthening the step.</li>
+            <li><strong>Shared-fabric contention.</strong> These ran 01:37Z to 01:58Z while other
+              students were on the same DCN.</li>
+          </ul>
+          <div class="note">The GKE jobs saved no XProf traces, so the evidence that would
+            distinguish these does not exist. Naming a single cause here would be a guess dressed
+            as a finding.</div>
+        </div>
+      </div>
+      <div class="src"><b>derived from:</b> scale_out.json steady_step_seconds, differencing DCN
+        against ICI at matched global batch (strong 3.104 - 2.022; weak 7.553 - 4.045).
+        Re-derived in the notebook, section 10.<br>
+        <b>missing evidence:</b> no xprof_profile/ under the GKE result files, unlike the local
+        run's capture</div>
+    </div>
+  </section>
+
+  <!-- 13 -->
+  <section class="slide">
+    <div class="kicker">The submitted artifact</div>
+    <h2>Nine panels, one figure</h2>
+    <div class="body" style="display:flex; flex-direction:column">
+      <img src="figures/systems_dashboard.png" alt="Nine-panel systems dashboard"
+           style="max-width:100%; max-height:74vh; object-fit:contain; align-self:center;
+                  background:#fff; border:1px solid var(--border); border-radius:10px; padding:6px">
+      <div class="src"><b>source:</b> systems_dashboard.png, built by
+        <code>project.build_dashboard()</code> from sweep_results.csv, sft_metrics.jsonl,
+        sft_resume_metrics.jsonl, evaluation_results.csv, serving_results.csv,
+        recovery_report.json, scale_out.json and cost_ledger.csv.<br>
+        This figure plus answers.md is the entire Canvas submission:
+        <code>qanh-20260813t194806z.final.tar.gz</code>, 325 KiB, uploaded to
+        <code>gs://me344-tpu-labs-west4/final_projects/qanh/submission/</code> at 20:32:45Z.</div>
+    </div>
+  </section>
+
+  <!-- 14 -->
+  <section class="slide">
+    <div class="kicker">Recommendation</div>
+    <h2>What would I ship?</h2>
+    <div class="body">
+      <div class="grid g2">
+        <div class="card"><h3>Ship: SFT step 202</h3>
+          <div class="sub">The only candidate with all three of a domain gain, no retention
+            regression, and a serving measurement behind it.</div>
+          <ul>
+            <li>banking77 exact 70.0% &rarr; <strong>92.5%</strong></li>
+            <li>GSM8K retention 81.25% &rarr; <strong>87.5%</strong>, so no regression</li>
+            <li>format compliance held at 100%</li>
+            <li>27.0 req/s at concurrency 1, 75.5 req/s at concurrency 4</li>
+          </ul>
+        </div>
+        <div class="card"><h3>Do not ship: the GRPO checkpoint</h3>
+          <div class="sub">Even though its guardrail passed <em>in this run</em>.</div>
+          <ul>
+            <li>Its +12.5 point accuracy change is 2 examples out of 16.</li>
+            <li>An identical earlier config gave <strong>-12.5 points</strong> with the guardrail
+              <strong>failing</strong>.</li>
+            <li>Its real, trustworthy contribution is format: 6/16 &rarr; 15/16.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="grid g2" style="margin-top:14px">
+        <div class="card caveat"><h3>Hold this as a smoke test, not a launch</h3>
+          <div class="sub">The Wilson intervals for base (54.6-81.9%) and SFT (80.1-97.4%) still
+            overlap by 1.8 points, and a plus-or-minus 10 point margin needs 97 examples rather
+            than 40. A systems win is not the same as a release.</div></div>
+        <div class="card"><h3>Two gaps I would close first</h3>
+          <div class="sub">The DCN weak-scaling anomaly has no trace to explain it, and the
+            stopping rule prefers step 50, which no task metric has ever been run against.
+            Both are cheap to fix and both could change the conclusion.</div></div>
+      </div>
+      <div class="src"><b>synthesis of:</b> evaluation_results.csv, evaluation_uncertainty.json,
+        rl_summary.json, serving_results.csv, training_decision.json, scale_out.json.
+        Written verbatim into answers.md, questions 2 and 3, and shipped in the archive.</div>
+    </div>
+  </section>
+
+  <!-- 15 -->
+  <section class="slide">
+    <div class="kicker">Extrapolation</div>
+    <h2>What does this pod predict about the next generation?</h2>
+    <p class="lede">Two measurements from this run generalize past Qwen3-4B: the 16 bytes/parameter
+      memory law, and the 0.93% attention share. Both say something concrete about frontier models.</p>
+    <div class="body">
+      <div class="grid g2">
+        <div class="card"><h3>1. Memory forces you onto the slow fabric</h3>
+          <div class="sub">Minimum chips to hold training state ≈ 16 bytes &times; params / 15.75 GiB.
+            Validated on this run: 4.02B needs 3.8 chips, we used 8 at 52% occupancy.</div>
+          <table style="margin-top:8px">
+            <thead><tr><th>Model</th><th>Total params</th><th>Train state</th><th>Min chips</th><th>v5e slices</th></tr></thead>
+            <tbody>
+              <tr><td>Qwen3-4B (measured)</td><td>4.0B</td><td>60 GiB</td><td>4</td><td class="mono">&lt;1</td></tr>
+              <tr><td>a 72B dense</td><td>72B</td><td>1.07 TiB</td><td>68</td><td class="mono">1</td></tr>
+              <tr class="bad"><td>Qwen 3.8 Max class</td><td>2.4T</td><td>35 TiB</td><td>2,270</td><td class="mono">9</td></tr>
+              <tr class="bad"><td>Kimi K3 class</td><td>2.8T</td><td>41 TiB</td><td>2,648</td><td class="mono">11</td></tr>
+            </tbody>
+          </table>
+          <div class="note">A v5e slice caps at 256 chips, so trillion-parameter training cannot fit
+            in one ICI domain. It is forced across DCN, exactly where we measured
+            <strong>65.2% strong and 53.6% weak</strong>. The binding constraint on this
+            architecture is not chips, it is that scale pushes you onto the fabric that loses
+            a third to a half of them. MoE does not help: every expert still needs optimizer state.</div>
+        </div>
+        <div class="card"><h3>2. The batch knee is a short-sequence artifact</h3>
+          <div class="sub">Attention FLOPs grow as L&sup2; while weight FLOPs grow as L, so the
+            measured ratio scales linearly in context length.</div>
+          <table style="margin-top:8px">
+            <thead><tr><th>Context</th><th>Attention share of step</th></tr></thead>
+            <tbody>
+              <tr><td>256 (measured)</td><td>0.93%</td></tr>
+              <tr><td>4,096</td><td>~13%</td></tr>
+              <tr class="hi"><td>~27,000</td><td><strong>~50%, parity</strong></td></tr>
+              <tr class="bad"><td>1,000,000 (K3-class)</td><td>~97%</td></tr>
+            </tbody>
+          </table>
+          <div class="note">So the gb32 knee, the 25.5%-of-peak ceiling, and "attention tricks have
+            under 1% to win" are all <strong>results about sequence length 256</strong>. At the
+            million-token contexts frontier models now advertise, the workload inverts and every
+            one of those conclusions would need re-measuring. Long-context and world-model training
+            is a different machine problem than the one I benchmarked, using the same chips.</div>
+        </div>
+      </div>
+      <div class="src"><b>derived from:</b> capacity_report.json (16 bytes/param law, validated
+        against persistent_training_state_gib = 44.95), sweep_results.csv
+        (runtime_hbm_limit_gib_per_chip = 15.75), profile.log (0.93% attention at L=256),
+        scale_out.json (DCN efficiency).<br>
+        <b class="mono" style="color:#b3261e">uncertainty:</b> the 2.4T and 2.8T parameter counts
+        come from secondary reporting on Qwen 3.8 Max and Kimi K3, not from model cards I verified.
+        The extrapolation is the load-bearing part; treat the specific parameter counts as
+        approximate. The L&sup2; parity estimate also ignores attention kernel efficiency and
+        assumes dense attention throughout.</div>
+    </div>
+  </section>
+
+  <!-- 16 -->
+  <section class="slide">
+    <div class="kicker">Next</div>
+    <h2>What I would try with more time</h2>
+    <div class="body">
+      <div class="grid g2">
+        <div class="card"><h3>Close the DCN question</h3>
+          <ul>
+            <li>Re-run the two DCN trials with XProf enabled and read the collective timeline directly.</li>
+            <li>Repeat at a per-slice batch below the 110%-of-AOT point to test the rematerialization theory.</li>
+            <li>Run at a quiet hour to rule out contention from other students.</li>
+          </ul>
+        </div>
+        <div class="card"><h3>Make the evaluation load-bearing</h3>
+          <ul>
+            <li>Grow the suite to the 97 examples the Wilson analysis requires for a
+              plus-or-minus 10 point margin.</li>
+            <li>Evaluate the step-50 checkpoint the stopping rule prefers, which no task metric has
+              ever scored.</li>
+            <li>Repeat GRPO several times to get an error bar on an effect that flipped sign
+              between two runs.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="grid g2" style="margin-top:14px">
+        <div class="card"><h3>Push on the 74% of peak left on the table</h3>
+          <ul>
+            <li>Since 99% of the step is weight FLOPs, test XLA flag variants that change matmul
+              fusion rather than attention.</li>
+            <li>Sweep sequence length as well as batch, to find where the knee moves as attention
+              share grows.</li>
+            <li>Repeat the frontier on a v6e to see whether the knee tracks HBM bandwidth or stays
+              at gb32.</li>
+          </ul>
+        </div>
+        <div class="card"><h3>Reproducibility notes worth keeping</h3>
+          <ul>
+            <li>SFT step-200 loss reproduced to six digits across two runs (0.007942), and the
+              capacity numbers reproduced exactly.</li>
+            <li>The GRPO accuracy effect did not reproduce, and flipped sign. Same config is not
+              the same result when n=16.</li>
+            <li>Artifacts died with a deleted VM once. Everything here was rebuilt from GCS plus a
+              re-run, which is why provenance is on every slide.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="src"><b>sources:</b> training_decision.json, evaluation_uncertainty.json,
+        rl_summary.json, scale_out.json, and recovered/RECOVERED_RESULTS.md for the cross-run
+        comparison</div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div>Anh Nguyen &middot; ME344 Final Project &middot; run qanh-20260813t194806z &middot; TPU v5e-8, MaxText 17c7172</div>
+  <nav>
+    <button onclick="go(-1)">&larr; Prev</button>
+    <span id="counter" class="mono"></span>
+    <button onclick="go(1)">Next &rarr;</button>
+  </nav>
+</footer>
+
+<script>
+  const slides = [...document.querySelectorAll('.slide')];
+  let index = 0;
+  function render() {
+    slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
+    document.getElementById('counter').textContent = `${index + 1} / ${slides.length}`;
+    location.hash = index + 1;
+  }
+  function go(delta) {
+    index = Math.min(slides.length - 1, Math.max(0, index + delta));
+    render();
+  }
+  document.addEventListener('keydown', event => {
+    if (['ArrowRight', 'PageDown', ' '].includes(event.key)) { go(1); event.preventDefault(); }
+    if (['ArrowLeft', 'PageUp'].includes(event.key)) { go(-1); event.preventDefault(); }
+    if (event.key === 'Home') { index = 0; render(); }
+    if (event.key === 'End') { index = slides.length - 1; render(); }
+  });
+  const start = parseInt(location.hash.slice(1), 10);
+  if (start >= 1 && start <= slides.length) index = start - 1;
+  render();
+</script>
+</body>
+</html>

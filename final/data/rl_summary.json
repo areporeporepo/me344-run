@@ -1,0 +1,111 @@
+{
+  "pre": {
+    "correct": 10,
+    "total": 16,
+    "accuracy_percent": 62.5,
+    "partial_accuracy_percent": 62.5,
+    "format_accuracy_percent": 37.5,
+    "mean_reward": 1.0671
+  },
+  "post": {
+    "correct": 12,
+    "total": 16,
+    "accuracy_percent": 75.0,
+    "partial_accuracy_percent": 75.0,
+    "format_accuracy_percent": 93.75,
+    "mean_reward": 1.5309
+  },
+  "training_signal": {
+    "groups": 12,
+    "groups_with_relative_signal": 11,
+    "groups_with_relative_signal_percent": 91.66666666666667,
+    "mean_group_reward_span": 1.363912468947606,
+    "mean_total_reward": 1.251749494703397,
+    "component_means": {
+      "closeness": 0.002791161370063638,
+      "exact": 0.7291666666666666,
+      "format": 0.5197916666666667
+    },
+    "group_total_rewards": [
+      [
+        0.1,
+        0.285,
+        1.1,
+        1.75
+      ],
+      [
+        1.75,
+        0.782,
+        1.75,
+        1.75
+      ],
+      [
+        1.75,
+        0.10170731707317074,
+        1.75,
+        1.75
+      ],
+      [
+        1.75,
+        9.722222222219302e-06,
+        1.75,
+        1.75
+      ],
+      [
+        1.25,
+        1.75,
+        1.25,
+        1.25
+      ],
+      [
+        1.75,
+        0.1,
+        1.25,
+        1.75
+      ],
+      [
+        1.75,
+        0.125,
+        1.75,
+        1.75
+      ],
+      [
+        1.75,
+        0.11492537313432837,
+        1.75,
+        0.11
+      ],
+      [
+        0.101,
+        1.1,
+        0.10016666666666668,
+        1.75
+      ],
+      [
+        1.75,
+        0.1075,
+        1.75,
+        1.75
+      ],
+      [
+        1.75,
+        1.75,
+        1.75,
+        1.75
+      ],
+      [
+        1.75,
+        0.10666666666666667,
+        1.75,
+        1.75
+      ]
+    ]
+  },
+  "change": {
+    "accuracy_percentage_points": 12.5,
+    "format_percentage_points": 56.25,
+    "mean_reward": 0.4638
+  },
+  "reward_improved": true,
+  "exact_accuracy_guardrail_passed": true
+}

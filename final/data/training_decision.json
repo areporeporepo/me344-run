@@ -1,0 +1,53 @@
+{
+  "loaded_nonpadding_tokens_reported": 10754,
+  "estimated_effective_nonpadding_tokens": 5377,
+  "maximum_effective_training_tokens": 206848,
+  "fractional_batch_note": "The MaxText hook counts the full loader batch before loss_fn slices to the effective batch; the effective token count is therefore an estimate.",
+  "last_train_loss_rolling_3": 0.11458292168875535,
+  "held_out_loss_by_step": [
+    {
+      "step": 0,
+      "loss": 0.8058359622955322
+    },
+    {
+      "step": 25,
+      "loss": 0.11159688234329224
+    },
+    {
+      "step": 50,
+      "loss": 0.04362247511744499
+    },
+    {
+      "step": 75,
+      "loss": 0.07750056684017181
+    },
+    {
+      "step": 100,
+      "loss": 0.11050102114677429
+    },
+    {
+      "step": 125,
+      "loss": 0.12441155314445496
+    },
+    {
+      "step": 150,
+      "loss": 0.07718203961849213
+    },
+    {
+      "step": 175,
+      "loss": 0.08234445750713348
+    },
+    {
+      "step": 200,
+      "loss": 0.06225566565990448
+    }
+  ],
+  "best_held_out_loss": 0.04362247511744499,
+  "best_held_out_step": 50,
+  "evaluation_intervals_since_best": 6,
+  "last_minus_best_held_out_loss": 0.018633190542459488,
+  "generalization_gap_at_last_eval": -0.04065188907164459,
+  "initial_run_steps": 200,
+  "decision_rule": "Stop after two evaluations without a new held-out best, a task-metric regression, or the cost limit.",
+  "recommendation": "Stop or roll back: held-out loss has not set a new best for 6 evaluation intervals."
+}

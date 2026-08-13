@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ME344 Final Project — Train, Tune, And Scale Qwen3-4B on a TPU v5e-8</title>
+<style>
+  :root {
+    --bg: #f5f5f7; --panel: #ffffff; --border: #d2d2d7;
+    --text: #1d1d1f; --dim: #6e6e73; --accent: #0071e3;
+    --ok: #34c759; --warn: #ff9f0a; --fail: #ff3b30;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "SF Pro Text", Helvetica, Arial, sans-serif;
+  }
+  code, .mono, table { font-family: "SF Mono", ui-monospace, Menlo, monospace; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 56px 24px 80px; }
+
+  header { border-bottom: 1px solid var(--border); padding-bottom: 26px; margin-bottom: 34px; }
+  .kicker { color: var(--dim); font-size: 12px; text-transform: uppercase; letter-spacing: 0.09em; }
+  h1 { font-size: 38px; line-height: 1.15; margin: 8px 0 10px; letter-spacing: -0.02em; }
+  .lede { font-size: 18px; color: var(--dim); margin: 0; max-width: 68ch; }
+  .meta { margin-top: 16px; font-size: 12.5px; color: var(--dim); }
+  .meta span { display: inline-block; margin-right: 18px; }
+
+  h2 { font-size: 22px; margin: 40px 0 12px; letter-spacing: -0.01em; }
+  p { max-width: 74ch; }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+  .card {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 12px; padding: 18px 20px; text-decoration: none; color: inherit;
+    display: block; transition: border-color .15s, transform .15s;
+  }
+  a.card:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .card h3 { margin: 0 0 6px; font-size: 15px; }
+  .card p { margin: 0; font-size: 13px; color: var(--dim); }
+  .card .go { margin-top: 10px; font-size: 12.5px; color: var(--accent); }
+
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; }
+  .stat-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; }
+  .stat-card .n { font-size: 27px; font-weight: 650; letter-spacing: -0.02em; }
+  .stat-card .n.ok { color: var(--ok); } .stat-card .n.bad { color: var(--fail); }
+  .stat-card .l { font-size: 12px; color: var(--dim); margin-top: 4px; }
+
+  table { border-collapse: collapse; width: 100%; font-size: 13px; background: var(--panel); margin-top: 8px; }
+  th, td { border: 1px solid var(--border); padding: 7px 10px; text-align: right; }
+  th:first-child, td:first-child { text-align: left; }
+  thead th { background: #fafafa; color: var(--dim); font-weight: 600; }
+  tr.hi td { background: #fff8e6; font-weight: 600; }
+  tr.bad td { background: #fff0ef; }
+
+  .note { font-size: 13px; color: var(--dim); border-left: 3px solid var(--border); padding-left: 12px; }
+  .note.warn { border-left-color: var(--warn); background: #fffaf0; padding: 10px 12px; }
+  ul { max-width: 74ch; }
+  footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--border);
+           font-size: 12.5px; color: var(--dim); }
+  .filelist { columns: 2; font-size: 13px; color: var(--dim); }
+  .filelist a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">Stanford ME344 &middot; High Performance Computing &middot; Final Project</div>
+  <h1>Train, Tune, And Scale Qwen3-4B on a TPU v5e-8</h1>
+  <p class="lede">Predict the memory before spending it, find the batch boundary, profile the step,
+    fine-tune and recover a checkpoint, evaluate the behavior change, then measure what happens when
+    the same work crosses from ICI to DCN.</p>
+  <div class="meta">
+    <span><strong>Anh Nguyen</strong></span>
+    <span>run <code>qanh-20260813t194806z</code></span>
+    <span>8 &times; TPU v5e (2&times;4 ICI)</span>
+    <span>MaxText @ <code>17c7172</code></span>
+    <span>13 August 2026</span>
+  </div>
+</header>
+
+<h2>Read it</h2>
+<div class="cards">
+  <a class="card" href="notebook.html">
+    <h3>Results notebook</h3>
+    <p>Every table and figure recomputed from the run's artifact files, with each cell printing the
+      file it read. No TPU work, fully reproducible.</p>
+    <div class="go">Open notebook &rarr;</div>
+  </a>
+  <a class="card" href="slides.html">
+    <h3>Slide deck</h3>
+    <p>16 slides. Arrow keys to navigate, Cmd-P prints to PDF one slide per page. Every slide cites
+      the artifact its numbers came from.</p>
+    <div class="go">Open deck &rarr;</div>
+  </a>
+  <a class="card" href="figures/systems_dashboard.png">
+    <h3>Nine-panel dashboard</h3>
+    <p>The figure submitted to Canvas alongside the four written answers.</p>
+    <div class="go">View figure &rarr;</div>
+  </a>
+  <a class="card" href="me344_results.ipynb">
+    <h3>Notebook source</h3>
+    <p>The executed <code>.ipynb</code>, if you would rather read it on GitHub or re-run it against
+      the data below.</p>
+    <div class="go">Download .ipynb &rarr;</div>
+  </a>
+</div>
+
+<h2>What the run found</h2>
+<div class="stats">
+  <div class="stat-card"><div class="n">gb32</div><div class="l">throughput knee, at 59.4% of the HBM limit</div></div>
+  <div class="stat-card"><div class="n bad">gb512</div><div class="l">memory wall, four doublings later</div></div>
+  <div class="stat-card"><div class="n">25.5%</div><div class="l">of BF16 peak, and it plateaus there</div></div>
+  <div class="stat-card"><div class="n">99.07%</div><div class="l">of step FLOPs are weight matmul at L=256</div></div>
+  <div class="stat-card"><div class="n ok">+22.5</div><div class="l">points banking77 exact after SFT</div></div>
+  <div class="stat-card"><div class="n ok">~100%</div><div class="l">scaling efficiency inside one ICI slice</div></div>
+  <div class="stat-card"><div class="n bad">53.6%</div><div class="l">weak scaling once it crosses DCN</div></div>
+  <div class="stat-card"><div class="n">16 B</div><div class="l">per parameter of training state, validated</div></div>
+</div>
+
+<h2>The three results worth arguing about</h2>
+
+<p><strong>1. The useful batch and the memory wall are not the same shape.</strong> Throughput
+saturates at global batch 32 (16,562 tokens/s, 59.4% of HBM), while the first shape that fails to
+compile is global batch 512. Four doublings of headroom sit between "as fast as this gets" and "out
+of memory", and everything in between spends HBM for nothing: gb64 buys 0.4% more throughput for 13%
+more memory.</p>
+
+<table>
+  <thead><tr><th>Global batch</th><th>AOT GiB/chip</th><th>% of limit</th><th>tokens/s</th><th>TFLOP/s/device</th></tr></thead>
+  <tbody>
+    <tr><td>4</td><td>8.23</td><td>52.2%</td><td>10,457</td><td>31.84</td></tr>
+    <tr><td>8</td><td>8.36</td><td>53.1%</td><td>13,322</td><td>40.57</td></tr>
+    <tr><td>16</td><td>9.00</td><td>57.2%</td><td>15,361</td><td>46.78</td></tr>
+    <tr class="hi"><td>32</td><td>9.35</td><td>59.4%</td><td>16,562</td><td>50.43</td></tr>
+    <tr><td>64</td><td>10.60</td><td>67.3%</td><td>16,635</td><td>50.65</td></tr>
+    <tr><td>128</td><td>12.99</td><td>82.5%</td><td>16,627</td><td>50.63</td></tr>
+    <tr><td>256</td><td>17.37</td><td>110.3%</td><td>16,227</td><td>49.41</td></tr>
+    <tr class="bad"><td>512</td><td colspan="4">AOT out of memory: needs 18.43 GiB temporaries against 15.75 GiB available</td></tr>
+  </tbody>
+</table>
+
+<p><strong>2. The fabric is the scaling unit, not the chip count.</strong> Going from 8 to 16 chips
+inside one ICI slice holds 100.1% strong and 99.6% weak efficiency. Taking the same 16 chips and
+splitting them across two slices, so the data-parallel gradient all-reduce crosses DCN, drops that
+to 65.2% and 53.6%. And DCN weak is <em>worse per chip</em> than DCN strong (1,085 against 1,320
+tokens/s/chip), which a fixed-size all-reduce should not do: differencing against ICI at matched
+batch shows 3.51 s of exposed communication against 1.08 s, a 3.2&times; jump for the same payload.
+Lost overlap, rematerialization at 110% of the AOT limit, and shared-fabric contention are all
+consistent with that, and the GKE jobs saved no traces, so I cannot tell you which it is.</p>
+
+<p><strong>3. The evaluation is too small to carry the release claim, and I can prove it.</strong>
+SFT moved banking77 exact match from 70.0% to 92.5% with no retention regression, which is the
+result I would ship. But GRPO's accuracy effect came out <strong>+12.5 points</strong> here and
+<strong>-12.5 points</strong> on an identically configured run three days earlier, with the guardrail
+flipping from pass to fail. That is a two-example swing on a 16-item set. The Wilson intervals say
+the same thing about the primary suite: base 54.6-81.9%, SFT 80.1-97.4%, still overlapping by 1.8
+points, and 97 examples would be needed for a plus-or-minus 10 point margin.</p>
+
+<div class="note warn"><strong>Provenance, stated rather than hidden.</strong> The five GKE scaling
+results were produced on 2026-08-10 and reused into this run: each records a
+<code>source_checkpoint</code> from the earlier run, and the collection code validates only
+<code>student_id</code>, so nothing checks checkpoint identity. Same model, batches and layout,
+different checkpoint instance. Everything else on this page was produced by the 2026-08-13 run.</div>
+
+<h2>Raw data</h2>
+<p>The files every number above was read from. The notebook prints these same paths as it goes, so
+any figure can be traced to its source.</p>
+<div class="filelist">
+  <a href="data/sweep_results.csv">sweep_results.csv</a><br>
+  <a href="data/capacity_report.json">capacity_report.json</a><br>
+  <a href="data/compute_bound.json">compute_bound.json</a><br>
+  <a href="data/evaluation_results.csv">evaluation_results.csv</a><br>
+  <a href="data/evaluation_uncertainty.json">evaluation_uncertainty.json</a><br>
+  <a href="data/serving_results.csv">serving_results.csv</a><br>
+  <a href="data/scale_out.json">scale_out.json</a><br>
+  <a href="data/rl_summary.json">rl_summary.json</a><br>
+  <a href="data/training_decision.json">training_decision.json</a><br>
+  <a href="data/recovery_report.json">recovery_report.json</a><br>
+  <a href="data/cost_ledger.csv">cost_ledger.csv</a><br>
+  <a href="data/system_info.json">system_info.json</a><br>
+  <a href="answers.md">answers.md</a> (submitted)<br>
+</div>
+
+<h2>Figures the run produced</h2>
+<div class="filelist">
+  <a href="figures/sweep.svg">sweep.svg</a><br>
+  <a href="figures/capacity.svg">capacity.svg</a><br>
+  <a href="figures/compute_bound.svg">compute_bound.svg</a><br>
+  <a href="figures/training_curve.svg">training_curve.svg</a><br>
+  <a href="figures/rl_reward.svg">rl_reward.svg</a><br>
+  <a href="figures/evaluation_uncertainty.svg">evaluation_uncertainty.svg</a><br>
+  <a href="figures/token_budget.svg">token_budget.svg</a><br>
+  <a href="figures/systems_dashboard.svg">systems_dashboard.svg</a><br>
+</div>
+
+<footer>
+  Anh Nguyen &middot; Stanford ME344, Summer 2026 &middot; run <code>qanh-20260813t194806z</code> on
+  <code>tpu-student49</code> (v5litepod-8, us-west4-a) &middot; MaxText pinned at
+  <code>17c7172720ca813b05e5ea248dedd78a0c64612e</code><br>
+  Course-provided assignment code is not republished here. This page contains only measurements,
+  figures and writing produced by the run.
+</footer>
+
+</div>
+</body>
+</html>
