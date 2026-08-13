@@ -1,0 +1,73 @@
+final/data/token_budget.json
+  s_c12f428810e9e0::t_4cac17b2b49331 1-14
+index.html
+  s_c12f428810e9e0::t_85c66e60dc3aa4 64
+final/data/sweep_results.csv
+  s_c12f428810e9e0::t_4cac17b2b49331 1-9
+final/data/system_info.json
+  s_c12f428810e9e0::t_4cac17b2b49331 1-50
+final/figures/capacity.svg
+  s_c12f428810e9e0::t_4cac17b2b49331 1-1927
+final/figures/token_budget.svg
+  s_c12f428810e9e0::t_4cac17b2b49331 1-1075
+final/data/scale_out.json
+  s_c12f428810e9e0::t_4cac17b2b49331 1-145
+final/data/evaluation_results.csv
+  s_c12f428810e9e0::t_4cac17b2b49331 1-3
+final/data/serving_results.csv
+  s_c12f428810e9e0::t_4cac17b2b49331 1-3
+final/me344_results.ipynb
+  s_c12f428810e9e0::t_4cac17b2b49331 1-1175
+final/data/evaluation_uncertainty.json
+  s_c12f428810e9e0::t_4cac17b2b49331 1-25
+final/index.html
+  s_c12f428810e9e0::t_4cac17b2b49331 1-207
+final/answers.md
+  s_c12f428810e9e0::t_4cac17b2b49331 1-17
+final/figures/sweep.svg
+  s_c12f428810e9e0::t_4cac17b2b49331 1-4427
+final/data/capacity_report.json
+  s_c12f428810e9e0::t_4cac17b2b49331 1-63
+final/figures/rl_reward.svg
+  s_c12f428810e9e0::t_4cac17b2b49331 1-2189
+final/figures/training_curve.svg
+  s_c12f428810e9e0::t_4cac17b2b49331 1-1708
+final/slides.html
+  s_c12f428810e9e0::t_4cac17b2b49331 1-739
+final/data/config.json
+  s_c12f428810e9e0::t_4cac17b2b49331 1-105
+final/data/compute_bound.json
+  s_c12f428810e9e0::t_4cac17b2b49331 1-73
+final/figures/systems_dashboard.svg
+  s_c12f428810e9e0::t_4cac17b2b49331 1-5935
+final/data/rl_summary.json
+  s_c12f428810e9e0::t_4cac17b2b49331 1-111
+final/notebook.html
+  s_c12f428810e9e0::t_4cac17b2b49331 1-8980
+final/data/recovery_report.json
+  s_c12f428810e9e0::t_4cac17b2b49331 1-17
+final/data/cost_ledger.csv
+  s_c12f428810e9e0::t_4cac17b2b49331 1-26
+final/figures/evaluation_uncertainty.svg
+  s_c12f428810e9e0::t_4cac17b2b49331 1-996
+final/figures/compute_bound.svg
+  s_c12f428810e9e0::t_4cac17b2b49331 1-1675
+final/data/training_decision.json
+  s_c12f428810e9e0::t_4cac17b2b49331 1-53
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "3cbec6404c4b1ac3c8e0742115196e32785936b2",
+  "prompts": {},
+  "sessions": {
+    "s_c12f428810e9e0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cfd0e4e8-14d7-4b14-9c6c-623e99c77f37",
+        "model": "claude-opus-5"
+      },
+      "human_author": "anh nguyen <anh.nqqq@icloud.com>"
+    }
+  }
+}
