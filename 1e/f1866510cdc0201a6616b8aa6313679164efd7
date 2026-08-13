@@ -1,0 +1,27 @@
+final/research-prompt.html
+  s_12283f6ed82210::t_2a6abe2ad18bca 1-170
+final/index.html
+  s_12283f6ed82210::t_1fde67651bc3c7 130,133-139
+final/outlook-slides.html
+  s_12283f6ed82210::t_b21dc5e3f48889 6
+  s_12283f6ed82210::t_d72f28e11fdb3d 213-264
+  s_12283f6ed82210::t_a010652a0d930d 212
+final/outlook.html
+  s_12283f6ed82210::t_2a6abe2ad18bca 315-412,466-469,472-473,493-499
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "1ef1866510cdc0201a6616b8aa6313679164efd7",
+  "prompts": {},
+  "sessions": {
+    "s_12283f6ed82210": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9e3fc376-acc5-43cc-b10a-9b8d5821f7cc",
+        "model": "claude-opus-5"
+      },
+      "human_author": "anh nguyen <anh.nqqq@icloud.com>"
+    }
+  }
+}
