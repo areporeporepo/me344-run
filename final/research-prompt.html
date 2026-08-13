@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Research prompt: outlook refresh</title>
+<style>
+  :root {
+    --bg: #f5f5f7; --panel: #ffffff; --border: #d2d2d7;
+    --text: #1d1d1f; --dim: #6e6e73; --accent: #0071e3;
+    --ok: #34c759; --warn: #ff9f0a; --fail: #ff3b30;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.65 -apple-system, BlinkMacSystemFont, "SF Pro Text", Helvetica, Arial, sans-serif; }
+  code, pre, table { font-family: "SF Mono", ui-monospace, Menlo, monospace; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 48px 24px 80px; }
+  .back { font-size: 13px; color: var(--accent); text-decoration: none; }
+  h1 { font-size: 34px; line-height: 1.15; margin: 14px 0 8px; letter-spacing: -0.02em; }
+  h2 { font-size: 22px; margin: 38px 0 10px; letter-spacing: -0.01em;
+       border-top: 1px solid var(--border); padding-top: 22px; }
+  h3 { font-size: 16.5px; margin: 24px 0 8px; }
+  p, li { max-width: 78ch; }
+  a { color: var(--accent); }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; background: var(--panel); margin: 12px 0; }
+  th, td { border: 1px solid var(--border); padding: 7px 10px; text-align: right; }
+  th:first-child, td:first-child { text-align: left; }
+  thead th { background: #fafafa; color: var(--dim); font-weight: 600; }
+  pre { background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+        padding: 13px 16px; overflow-x: auto; font-size: 13px; }
+  code { font-size: 13.5px; }
+  p code, li code, td code { background: #ececf0; padding: 1px 5px; border-radius: 4px; }
+  pre code { background: none; padding: 0; }
+  blockquote { border-left: 3px solid var(--warn); background: #fffaf0; margin: 14px 0;
+               padding: 10px 16px; color: var(--dim); font-size: 14px; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+  footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--border);
+           font-size: 12.5px; color: var(--dim); }
+</style>
+</head>
+<body>
+<div class="wrap">
+<a class="back" href="index.html">&larr; Overview</a>
+<h1>Research Prompt: ME344 Outlook Refresh</h1>
+<p>Paste the block below into ChatGPT Deep Research, Gemini Deep Research, or any research agent.
+Then hand the results back and they get folded into <code>OUTLOOK.md</code> and the outlook slides.</p>
+<p>The prompt is written to produce something <em>checkable</em>. It demands dates, primary sources, and an
+explicit separation between measured numbers and vendor claims, because the existing outlook makes
+that distinction everywhere and the refresh has to preserve it.</p>
+<hr />
+<h2>The prompt</h2>
+<blockquote>
+<p>I have a Stanford HPC final project that measured a dense 4-billion-parameter model (Qwen3-4B)
+training on 8 Google TPU v5e chips, in August 2026. I want to know which of its findings still
+matter and which are dead, so I can keep the write-up alive rather than let it rot.</p>
+<p><strong>My measurements, which are the anchor for everything. Do not contradict these, they are mine:</strong></p>
+<ul>
+<li>Peak throughput 16,562 tokens/s at global batch 32, which is 59.4% of the HBM limit</li>
+<li>Out of memory at global batch 512: needed 18.43 GiB against 15.75 GiB available</li>
+<li>Sustained 25.5% of the v5e's 197 BF16 TFLOP/s peak, and it plateaued there across an 8x range of batch sizes</li>
+<li>A training step is 24.94 TFLOPs, of which 99.07% is learnable-weight matmul and 0.93% is attention, at sequence length 256</li>
+<li>Training state measured at 16 bytes per parameter at peak (12 persistent, 4 transient), under BF16</li>
+<li>Scaling 8 to 16 chips inside one ICI slice: 100.1% strong efficiency, 99.6% weak</li>
+<li>The same 16 chips split across two slices so the gradient all-reduce crosses DCN: 65.2% strong, 53.6% weak</li>
+<li>An unexplained anomaly: DCN weak scaling was <em>worse per chip</em> than DCN strong (1,085 against 1,320 tokens/s/chip), with exposed communication jumping from 1.08 s to 3.51 s for an all-reduce payload that never changes size</li>
+</ul>
+<p><strong>Research these seven questions. Be specific, cite primary sources, and date every claim.</strong></p>
+<ol>
+<li><p><strong>TPU v8 (8t &quot;Sunfish&quot; and 8i &quot;Zebrafish&quot;).</strong> Everything currently known: per-chip BF16 and FP8
+throughput, HBM capacity and bandwidth, ICI and DCN bandwidth, pod and superpod sizes, process
+node, ship date, and pricing. Flag clearly which figures are Google's targets versus
+independently measured. Has anything shipped or been benchmarked by a third party yet?</p>
+</li>
+<li><p><strong>Ironwood (TPU v7) in practice.</strong> Independent benchmarks, not Google's marketing. What
+utilization are real training workloads achieving as a fraction of the 2,307 BF16 TFLOP/s peak?
+My v5e run plateaued at 25.5%. Is the v7 number better, worse, or the same? What limits it?</p>
+</li>
+<li><p><strong>MoE communication cost, which is the biggest gap in my analysis.</strong> I measured a once-per-step
+gradient all-reduce. MoE adds an expert-parallel all-to-all per layer. I predict MoE across DCN
+degrades worse than my measured 65.2%, but I have not tested it. Find published measurements of
+MoE all-to-all overhead as a fraction of step time, on TPU or GPU, ideally split by whether the
+collective stays inside the fast fabric. Also: what do expert-parallel sharding strategies do to
+change this?</p>
+</li>
+<li><p><strong>The 16 bytes per parameter constant, which every capacity projection I make scales with.</strong>
+What is the equivalent figure for FP8 and for MXFP4/MXFP8 training as actually deployed in 2026?
+Is sub-8-bit training standard at the frontier now, or still research? Give measured optimizer
+and gradient state costs, not theory.</p>
+</li>
+<li><p><strong>Linear and hybrid attention at long context.</strong> Kimi K3 uses Kimi Delta Attention at a 3:1
+linear-to-full ratio. Qwen3.5 replaced 75% of attention layers with Gated DeltaNet. I derived
+that a step which is 99.07% matmul at L=256 becomes roughly 97% attention at L=1M under
+quadratic attention. What do measured step profiles actually look like for these hybrid
+architectures at long context? Does the derivation hold, and where does it break?</p>
+</li>
+<li><p><strong>The accelerator landscape beyond NVIDIA and Google.</strong> Alibaba's Zhenwu M890 (PPU architecture,
+144 GB HBM3, 800 GB/s inter-chip, Panjiu AL128 rack of 128), plus anything comparable from AWS
+Trainium, Cerebras, Groq, Huawei Ascend, or others. I care specifically about the numbers that
+map onto what I measured: HBM capacity and bandwidth per chip, inter-chip bandwidth, and the
+size of the fast-fabric domain before you fall off onto a slower network.</p>
+</li>
+<li><p><strong>Open weights versus API-only at the frontier.</strong> Qwen3.6 was open-weight; Qwen3.7 (Max and
+Plus) is API-only. Kimi K3 stayed open at 2.8T parameters. Is the trend toward closing or
+opening? This matters practically: capacity and scaling analysis of the kind I did is only
+possible on models whose weights you can actually obtain.</p>
+</li>
+</ol>
+<p><strong>Output format.</strong> For each question: what is established and well-sourced, what is contested or
+vendor-claimed-only, and what is genuinely unknown. Give me a short list of the specific numbers
+that would most change my analysis if they turned out different from what I currently assume.
+Prefer primary sources: vendor documentation, papers, model cards, technical reports. Where you
+use secondary reporting, say so. If you cannot verify something, say you cannot rather than
+filling the gap.</p>
+<p>Do not use em dashes or en dashes anywhere in your answer.</p>
+</blockquote>
+<hr />
+<h2>What to do with the results</h2>
+<ol>
+<li>Fold verified numbers into the tables in <code>OUTLOOK.md</code>, keeping the measured-versus-claimed split.</li>
+<li>Update the hardware comparison table and the sparsity table.</li>
+<li>Re-check the five ranked experiments: if research answers one, drop it and promote the rest.</li>
+<li>Re-run <code>python3 publish_site.py</code> to rebuild the site.</li>
+<li>Update the &quot;What would change this page&quot; section with the new open questions.</li>
+</ol>
+<h2>Current state of the answers, as of 2026-08-13</h2>
+<p>So you can tell what is new when the results come back.</p>
+<table>
+<thead>
+<tr>
+  <th>Question</th>
+  <th>What the outlook currently assumes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>1. TPU v8</td>
+  <td>8t: Broadcom, training, 2 compute dies, 8 stacks 12-high HBM3e, ~30% more bandwidth than Ironwood, superpods to 9,600 chips, 2 PB HBM, 2.8x price-performance target. 8i: MediaTek, inference, 1 compute die, 6 HBM3e stacks, 20-30% cheaper. Both TSMC 2nm, late 2027. All vendor targets, nothing measured.</td>
+</tr>
+<tr>
+  <td>2. Ironwood real utilization</td>
+  <td>Unknown. Not addressed. This is a real gap.</td>
+</tr>
+<tr>
+  <td>3. MoE all-to-all</td>
+  <td>Untested prediction only: worse than 65.2% across DCN.</td>
+</tr>
+<tr>
+  <td>4. Bytes per parameter</td>
+  <td>16 B/param measured under BF16. FP8 and MXFP4 equivalents unknown.</td>
+</tr>
+<tr>
+  <td>5. Hybrid attention profiles</td>
+  <td>Derivation only, no measured profile for KDA or Gated DeltaNet.</td>
+</tr>
+<tr>
+  <td>6. Non-Google accelerators</td>
+  <td>Zhenwu M890 noted. Trainium, Cerebras, Groq, Ascend not covered.</td>
+</tr>
+<tr>
+  <td>7. Open versus closed</td>
+  <td>Qwen3.6 open, Qwen3.7 API-only, Kimi K3 open at 2.8T. Trend unclear.</td>
+</tr>
+</tbody>
+</table>
+
+<footer>Anh Nguyen &middot; Stanford ME344, Summer 2026 &middot; run <code>qanh-20260813t194806z</code> &middot;
+generated by <code>publish_site.py</code></footer>
+</div>
+</body>
+</html>

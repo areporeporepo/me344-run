@@ -312,6 +312,104 @@ above it. Whether those gaps clear their own confidence intervals is exactly the
 this run's cell 30 asks, and it is asked far less often than it should be. The habit of
 computing the interval before believing the delta is the most portable thing in this
 assignment.</p>
+<h2>Finding 7: three vendors are now answering the fabric question differently</h2>
+<p>This run's ICI-versus-DCN result is really one question: <em>how many chips can you reach before you
+fall off the fast fabric onto something slower?</em> That number is now a design choice each vendor is
+making differently, and it is the single most useful axis for comparing accelerators against what
+this run measured.</p>
+<table>
+<thead>
+<tr>
+  <th></th>
+  <th>v5e (this run)</th>
+  <th>Ironwood v7</th>
+  <th>TPU 8t (late 2027)</th>
+  <th>Zhenwu M890</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>HBM per chip</td>
+  <td>16 GB</td>
+  <td>192 GB</td>
+  <td>8 stacks, 12-high HBM3e</td>
+  <td>144 GB HBM3</td>
+</tr>
+<tr>
+  <td>Inter-chip bandwidth</td>
+  <td>400 GB/s</td>
+  <td>1,200 GB/s</td>
+  <td>~30% above Ironwood</td>
+  <td>800 GB/s</td>
+</tr>
+<tr>
+  <td>Fast-domain size</td>
+  <td>256 chips</td>
+  <td>9,216 chips</td>
+  <td>9,600 chips</td>
+  <td>128 per Panjiu AL128 rack</td>
+</tr>
+<tr>
+  <td>Status</td>
+  <td>measured here</td>
+  <td>shipping</td>
+  <td>vendor target</td>
+  <td>announced 2026-05-20</td>
+</tr>
+</tbody>
+</table>
+<p>Alibaba announced the <strong>Zhenwu M890</strong> on 2026-05-20, the same day as Qwen3.7-Max: an in-house PPU
+(Parallel Processing Unit) architecture from T-Head with a Transformer core engine, claiming 3x the
+previous Zhenwu 810E, packaged into a <strong>Panjiu AL128</strong> rack that links 128 accelerators as one unit.
+Alibaba also reported Qwen3.7-Max running autonomously for about 35 hours across 1,158 tool calls to
+optimize kernels for that chip, claiming a 10x geometric-mean speedup over a reference Triton
+kernel. <strong>No independent reproduction of that had been published as of 2026-05-25.</strong></p>
+<p>The number worth staring at is <strong>128</strong>. If the M890's fast domain really is one rack, then the
+boundary this run hit at 16 chips arrives at 128 there rather than 9,216. Same question, answers
+two orders of magnitude apart. I have not verified whether 128 is a hard fabric limit or just the
+shipping SKU, and that distinction decides whether the comparison above is fair.</p>
+<h2>Finding 8: the set of models you can actually measure is shrinking</h2>
+<p>Everything in the capacity table depends on knowing a parameter count and being able to load
+weights. You cannot run a capacity lab against an API endpoint. So it matters which way the
+frontier is moving:</p>
+<table>
+<thead>
+<tr>
+  <th>Model</th>
+  <th>Weights</th>
+  <th>Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Qwen3.6-35B-A3B</td>
+  <td>open</td>
+  <td>2026-04-16</td>
+</tr>
+<tr>
+  <td>Qwen3.7-Max</td>
+  <td>proprietary, API only</td>
+  <td>2026-05-20</td>
+</tr>
+<tr>
+  <td>Qwen3.7-Plus</td>
+  <td>proprietary, API only</td>
+  <td>2026-06-01</td>
+</tr>
+<tr>
+  <td>Kimi K3, 2.8T</td>
+  <td>open</td>
+  <td>2026-07-16</td>
+</tr>
+</tbody>
+</table>
+<p>Alibaba went from open weights at 3.6 to API-only at 3.7, in about five weeks. Moonshot went the
+other way and shipped 2.8 trillion parameters in the open. The projections in this document work
+for Kimi K3 and the open Qwen3.x line and stop working the instant a model is API-only, which makes
+Kimi K3 the reason this exercise is still possible at frontier scale at all.</p>
+<p>That is a systems argument, not a licensing opinion: the methods this assignment teaches, predict
+the memory before you spend it, find the throughput knee, measure where the collective travels,
+require access to weights. Whoever keeps publishing them decides who gets to do this work.</p>
 <h2>The five experiments worth actually running</h2>
 <p>Ranked by value per unit of effort. All five use the harness already in this repo.</p>
 <table>
@@ -365,8 +463,14 @@ vendor target. Replace with measurements when they exist.</li>
 <li><strong>A confirmed active-parameter count for Kimi K3.</strong> Currently unavailable, which is why the
 table says so rather than guessing.</li>
 <li><strong>Sub-8-bit training becoming standard.</strong> Rescales finding 1 entirely.</li>
+<li><strong>Independent Ironwood utilization numbers.</strong> This run plateaued at 25.5% of v5e peak. Whether v7
+does better on real training workloads is the biggest unknown here and nothing above answers it.</li>
+<li><strong>Whether the Zhenwu M890's 128-accelerator rack is a hard fabric boundary.</strong> Decides whether
+finding 7's comparison is fair.</li>
 <li><strong>Any of the five experiments above.</strong> Each one either confirms or kills a projection here.</li>
 </ul>
+<p><code>RESEARCH_PROMPT.md</code> in this repository holds a prompt written to close these gaps. Run it through
+a research agent, hand back the results, and this page gets rebuilt from them.</p>
 <h2>Sources</h2>
 <p>Hardware specifications, Google Cloud documentation, retrieved 2026-08-13:</p>
 <ul>
@@ -386,6 +490,13 @@ table says so rather than guessing.</li>
 <li><a href="https://www.marktechpost.com/2026/04/16/qwen-team-open-sources-qwen3-6-35b-a3b-a-sparse-moe-vision-language-model-with-3b-active-parameters-and-agentic-coding-capabilities/">Qwen3.6-35B-A3B release</a></li>
 <li><a href="https://www.marktechpost.com/2026/07/16/moonshot-ai-releases-kimi-k3-a-2-8-trillion-parameter-open-moe-model-with-kimi-delta-attention-and-1m-context/">Moonshot AI releases Kimi K3</a></li>
 <li><a href="https://developer.nvidia.com/blog/new-open-source-qwen3-next-models-preview-hybrid-moe-architecture-delivering-improved-accuracy-and-accelerated-parallel-processing-across-nvidia-platform/">Qwen3-Next hybrid MoE architecture</a></li>
+<li><a href="https://technode.com/2026/05/21/alibaba-introduces-qwen3-7-max-as-next-gen-ai-agent-model/">Alibaba introduces Qwen3.7-Max</a></li>
+</ul>
+<p>Non-Google accelerators:</p>
+<ul>
+<li><a href="https://www.scmp.com/tech/big-tech/article/3354212/alibaba-unveils-new-qwen-model-custom-chips-bid-become-chinas-ai-factory">Alibaba unveils new Qwen model and custom chips</a></li>
+<li><a href="https://www.alibabacloud.com/blog/alibaba-announces-comprehensive-full-stack-ai-upgrade-for-the-agentic-era_603149">Alibaba full-stack AI upgrade for the agentic era</a></li>
+<li><a href="https://wccftech.com/alibaba-targets-nvidia-hopper-with-zhenwu-m890-ai-chip-claiming-3x-h20-performance/">Zhenwu M890 specifications</a></li>
 </ul>
 <p>All measurements attributed to &quot;this run&quot; come from
 <code>artifacts/qanh-20260813t194806z/</code> in this repository.</p>
