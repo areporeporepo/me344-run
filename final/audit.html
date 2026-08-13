@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Assignment completeness audit</title>
+<style>
+  :root {
+    --bg: #f5f5f7; --panel: #ffffff; --border: #d2d2d7;
+    --text: #1d1d1f; --dim: #6e6e73; --accent: #0071e3;
+    --ok: #34c759; --warn: #ff9f0a; --fail: #ff3b30;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.65 -apple-system, BlinkMacSystemFont, "SF Pro Text", Helvetica, Arial, sans-serif; }
+  code, pre, table { font-family: "SF Mono", ui-monospace, Menlo, monospace; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 48px 24px 80px; }
+  .back { font-size: 13px; color: var(--accent); text-decoration: none; }
+  h1 { font-size: 34px; line-height: 1.15; margin: 14px 0 8px; letter-spacing: -0.02em; }
+  h2 { font-size: 22px; margin: 38px 0 10px; letter-spacing: -0.01em;
+       border-top: 1px solid var(--border); padding-top: 22px; }
+  h3 { font-size: 16.5px; margin: 24px 0 8px; }
+  p, li { max-width: 78ch; }
+  a { color: var(--accent); }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; background: var(--panel); margin: 12px 0; }
+  th, td { border: 1px solid var(--border); padding: 7px 10px; text-align: right; }
+  th:first-child, td:first-child { text-align: left; }
+  thead th { background: #fafafa; color: var(--dim); font-weight: 600; }
+  pre { background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+        padding: 13px 16px; overflow-x: auto; font-size: 13px; }
+  code { font-size: 13.5px; }
+  p code, li code, td code { background: #ececf0; padding: 1px 5px; border-radius: 4px; }
+  pre code { background: none; padding: 0; }
+  blockquote { border-left: 3px solid var(--warn); background: #fffaf0; margin: 14px 0;
+               padding: 10px 16px; color: var(--dim); font-size: 14px; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+  footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--border);
+           font-size: 12.5px; color: var(--dim); }
+</style>
+</head>
+<body>
+<div class="wrap">
+<a class="back" href="index.html">&larr; Overview</a>
+<h1>Assignment Completeness Audit</h1>
+<p>Run of record <code>qanh-20260813t194806z</code>, audited 2026-08-13 against every requirement in
+<code>me344_final_project/README.md</code>. Bucket, TPU, and cluster state were checked live, not
+inferred from the write-up.</p>
+<h2>Verdict</h2>
+<p>Every required step of the assignment was performed. One defect needs fixing before the
+Canvas upload, and two deviations from the README's procedure should be disclosed rather
+than papered over.</p>
+<table>
+<thead>
+<tr>
+  <th></th>
+  <th>Count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Required steps satisfied</td>
+  <td>24 of 25</td>
+</tr>
+<tr>
+  <td>Defects</td>
+  <td>1 (wrong <code>answers.md</code> in the submitted archive)</td>
+</tr>
+<tr>
+  <td>Deviations from the stated procedure</td>
+  <td>2 (headless execution, reused GKE results)</td>
+</tr>
+<tr>
+  <td>Optional work skipped</td>
+  <td>1 (cell 44, <code>run_miniperf</code>)</td>
+</tr>
+<tr>
+  <td>Outstanding</td>
+  <td>1 (Canvas upload)</td>
+</tr>
+</tbody>
+</table>
+<h2>Defect: the archive in the bucket carries the wrong answers</h2>
+<p><code>gs://me344-tpu-labs-west4/final_projects/qanh/submission/qanh-20260813t194806z.final.tar.gz</code>
+(uploaded 2026-08-13T20:33:14Z) contains an <code>answers.md</code> of md5 <code>e4175e0d...</code>, 2,737 bytes.
+That is <strong>not</strong> <code>answers_final.md</code> (md5 <code>295f8601...</code>, 2,930 bytes), which this repo's README
+calls &quot;the four reflection answers, as submitted&quot; and which the public site serves at
+<code>/final/answers.md</code>.</p>
+<p>Sequence:</p>
+<ol>
+<li>20:32:45Z, <code>scripts_used/package_only.py</code> built and uploaded the archive from
+<code>answers_final.md</code>. Correct.</li>
+<li>~20:33:14Z, <code>run-20260813/repackage.py</code> rebuilt the archive from
+<code>run-20260813/artifacts/answers.md</code>, a stale draft, and re-uploaded it. It overwrote the
+good copy.</li>
+</ol>
+<p>The <code>systems_dashboard.png</code> in the bucket is byte-identical to the one in
+<code>artifacts/qanh-20260813t194806z/</code> (md5 <code>6e60df3e...</code>), so only the answers are affected.</p>
+<p>All four answers differ. The stale draft is materially weaker on the points the write-up
+treats as its main caveats:</p>
+<table>
+<thead>
+<tr>
+  <th>Question</th>
+  <th>Stale draft (in the bucket)</th>
+  <th><code>answers_final.md</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>1, profile and scaling</td>
+  <td>Leads with 25% of peak; gives DCN exposed comms as 1.08 s / 3.49 s</td>
+  <td>Leads with the 99.07% matmul vs 0.93% attention split; per-chip throughput for all four points; 3.51 s</td>
+</tr>
+<tr>
+  <td>2, training</td>
+  <td>States GRPO accuracy 62.5% to 75.0% as a result</td>
+  <td>Reports the same numbers but adds that the stopping rule prefers step 50 over step 200</td>
+</tr>
+<tr>
+  <td>3, release</td>
+  <td>Same ship decision</td>
+  <td>Adds that the GRPO gain came out <strong>-12.5 points</strong> on the earlier run, so it is not trusted</td>
+</tr>
+<tr>
+  <td>4, next step</td>
+  <td>Same two gaps</td>
+  <td>Adds that no task metric has ever been run against the step-50 checkpoint</td>
+</tr>
+</tbody>
+</table>
+<p>The draft asserts the GRPO accuracy effect as real. <code>answers_final.md</code> says it did not
+reproduce. Caveat 3 of the repo README agrees with <code>answers_final.md</code>, so the bucket copy
+currently contradicts the rest of the submission.</p>
+<p><strong>Fixed locally, not yet uploaded.</strong> <code>stage_canvas_submission.py</code> rebuilds the archive from
+<code>answers_final.md</code> and stages it at <code>~/Desktop/ME344-canvas/</code>. Verified contents:</p>
+<pre><code>qanh-20260813t194806z/answers.md              2930 bytes  md5 295f8601ad6d7932645717986309bd55
+qanh-20260813t194806z/systems_dashboard.png 374072 bytes  md5 6e60df3e66e14a419f08a213a7ef7133
+</code></pre>
+<p>Overwriting the bucket copy is a one-line follow-up:
+<code>python3 stage_canvas_submission.py --upload</code>.</p>
+<h2>Deviation 1: the notebook ran headlessly</h2>
+<p>The README says to open Jupyter and work down the notebook with Shift+Enter. The session
+ran from a laptop instead, so <code>scripts_used/rerun_cells.py</code> made the same calls with the
+same arguments in the same order. Cell 40 prompts on stdin, so it was run separately by
+<code>scripts_used/package_only.py</code> against the finished artifact directory.</p>
+<p>No result depends on this. <code>me344_final_project/final_project.ipynb</code> now carries the
+outputs, reattached from <code>run_progress.log</code> and the saved figures.</p>
+<h2>Deviation 2: the GKE scaling results predate this run</h2>
+<p>All five scaling result files in the bucket are dated 2026-08-10, not 2026-08-13:</p>
+<pre><code>831  2026-08-10T01:37:18Z  scaling/baseline.json
+840  2026-08-10T01:46:02Z  scaling/ici_strong.json
+838  2026-08-10T01:48:17Z  scaling/ici_weak.json
+830  2026-08-10T01:54:33Z  scaling/strong.json
+834  2026-08-10T01:58:10Z  scaling/weak.json
+550  2026-08-13T20:27:36Z  scaling/handoff.json   &lt;- only this one is from this run
+</code></pre>
+<p>Every one records
+<code>source_checkpoint = .../me344-qanh-20260810t005140z-c4/checkpoints/4/items</code>, a checkpoint
+from the 2026-08-10 run, while this run handed off
+<code>me344-qanh-20260813t194806z-c4</code>. <code>collect_scale_results()</code> validates only <code>student_id</code>, so
+nothing in the pipeline catches the mismatch.</p>
+<p>Same model, same batches, same logical layout, different checkpoint instance. This is
+caveat 1 of the repo README and is already disclosed there and on the public site.</p>
+<h2>Requirement by requirement</h2>
+<h3>Setup</h3>
+<table>
+<thead>
+<tr>
+  <th>Step</th>
+  <th>Status</th>
+  <th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>gcloud project, zone, <code>.me344.env</code></td>
+  <td>Pass</td>
+  <td>Run reached the bucket with the course settings</td>
+</tr>
+<tr>
+  <td>Start TPU VM via <code>start_tpu_vm.sh</code></td>
+  <td>Pass</td>
+  <td><code>tpu-student49</code>, v5litepod-8, 2x4, <code>us-west4-a</code></td>
+</tr>
+<tr>
+  <td>Install both venvs at pinned MaxText SHA</td>
+  <td>Pass</td>
+  <td>Probe reports <code>17c7172720ca813b05e5ea248dedd78a0c64612e</code> for both; pretrain JAX 0.10.2, posttrain JAX 0.11.0</td>
+</tr>
+<tr>
+  <td>One process, eight TPU devices</td>
+  <td>Pass</td>
+  <td><code>process_count: 1</code>, <code>device_count: 8</code></td>
+</tr>
+<tr>
+  <td>Jupyter with the ME344 MaxText kernel</td>
+  <td>Deviation</td>
+  <td>Ran headlessly, see above</td>
+</tr>
+</tbody>
+</table>
+<h3>Notebook, required cells</h3>
+<p>All 20 required code cells ran clean. No exceptions, no failed trials other than the DP8
+out-of-memory the capacity lab is designed to provoke.</p>
+<table>
+<thead>
+<tr>
+  <th>Cell</th>
+  <th>Call</th>
+  <th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>2</td>
+  <td><code>project_config_from_env()</code></td>
+  <td>Pass</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>FinalProject(CONFIG)</code></td>
+  <td>Pass</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>probe()</code></td>
+  <td>Pass, 1m28s</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>run_capacity_lab()</code> + <code>plot_capacity()</code></td>
+  <td>Pass, 1m19s, expected DP8 OOM confirmed</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>run_baselines()</code></td>
+  <td>Pass, 3m58s</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>run_sweep()</code> + <code>plot_sweep()</code></td>
+  <td>Pass, 9m05s, 8 batches</td>
+</tr>
+<tr>
+  <td>13</td>
+  <td><code>analyze_compute_bound()</code></td>
+  <td>Pass</td>
+</tr>
+<tr>
+  <td>15</td>
+  <td><code>capture_profile()</code></td>
+  <td>Pass, 1m02s, 77 MB trace in the bucket</td>
+</tr>
+<tr>
+  <td>18</td>
+  <td><code>prepare_data()</code></td>
+  <td>Pass</td>
+</tr>
+<tr>
+  <td>20</td>
+  <td><code>analyze_token_budget(256)</code></td>
+  <td>Pass, 0% truncation</td>
+</tr>
+<tr>
+  <td>22</td>
+  <td><code>run_sft(steps=200)</code></td>
+  <td>Pass, 7m27s</td>
+</tr>
+<tr>
+  <td>24</td>
+  <td><code>resume_sft(extra_steps=2)</code></td>
+  <td>Pass, 3m41s, resumed at 201</td>
+</tr>
+<tr>
+  <td>26</td>
+  <td><code>run_grpo(updates=12)</code></td>
+  <td>Pass, 7m10s</td>
+</tr>
+<tr>
+  <td>28</td>
+  <td><code>run_evaluation_and_serving()</code></td>
+  <td>Pass, 4m02s</td>
+</tr>
+<tr>
+  <td>30</td>
+  <td><code>analyze_evaluation_uncertainty()</code></td>
+  <td>Pass</td>
+</tr>
+<tr>
+  <td>32</td>
+  <td><code>stop_server()</code></td>
+  <td>Pass</td>
+</tr>
+<tr>
+  <td>34</td>
+  <td><code>prepare_scale_handoff()</code></td>
+  <td>Pass</td>
+</tr>
+<tr>
+  <td>36</td>
+  <td><code>collect_scale_results()</code></td>
+  <td>Pass, but see deviation 2</td>
+</tr>
+<tr>
+  <td>38</td>
+  <td><code>build_dashboard()</code> + <code>log_wandb()</code></td>
+  <td>Pass, wandb offline as the README specifies</td>
+</tr>
+<tr>
+  <td>40</td>
+  <td><code>collect_reflections()</code> + <code>package()</code></td>
+  <td>Pass, via <code>package_only.py</code></td>
+</tr>
+</tbody>
+</table>
+<p>Cell 44, <code>run_miniperf</code>, is marked <strong>Optional</strong> and never ran. It is gated behind
+<code>ME344_RUN_MINIPERF=1</code>, which was never set. The TPU VM is deleted, so it cannot be run
+now. Nothing else depends on it.</p>
+<h3>GKE scaling</h3>
+<table>
+<thead>
+<tr>
+  <th>Step</th>
+  <th>Status</th>
+  <th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Build and push the image</td>
+  <td>Pass</td>
+  <td><code>us-central1-docker.pkg.dev/soe-hpccenter/tpu-images/me344-maxtext-qanh</code>, 2026-08-09</td>
+</tr>
+<tr>
+  <td>8-chip baseline, 2x4</td>
+  <td>Pass</td>
+  <td><code>baseline.json</code>, 2,025 tok/s/chip</td>
+</tr>
+<tr>
+  <td>16-chip ICI, 4x4</td>
+  <td>Pass</td>
+  <td><code>ici_strong.json</code> + <code>ici_weak.json</code></td>
+</tr>
+<tr>
+  <td>16-chip DCN, two 2x4 slices</td>
+  <td>Pass</td>
+  <td><code>strong.json</code> + <code>weak.json</code></td>
+</tr>
+<tr>
+  <td>All five result files present</td>
+  <td>Pass</td>
+  <td>Listed above</td>
+</tr>
+<tr>
+  <td>Workloads deleted</td>
+  <td>Pass</td>
+  <td><code>kubectl get jobsets</code> and <code>get pods</code>: nothing matching <code>qanh</code></td>
+</tr>
+</tbody>
+</table>
+<h3>Submit and clean up</h3>
+<table>
+<thead>
+<tr>
+  <th>Step</th>
+  <th>Status</th>
+  <th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Archive in the submission bucket</td>
+  <td>Pass with defect</td>
+  <td>Present, wrong <code>answers.md</code></td>
+</tr>
+<tr>
+  <td>TPU VM deleted</td>
+  <td>Pass</td>
+  <td><code>describe tpu-student49</code> returns <code>NOT_FOUND</code></td>
+</tr>
+<tr>
+  <td>Download the archive</td>
+  <td>Pass</td>
+  <td>Staged at <code>~/Desktop/ME344-canvas/</code></td>
+</tr>
+<tr>
+  <td>Submit to Canvas</td>
+  <td><strong>Outstanding</strong></td>
+  <td>Due 2026-08-14</td>
+</tr>
+</tbody>
+</table>
+<h2>Other things worth knowing</h2>
+<ol>
+<li><strong><code>artifacts/qanh-20260813t194806z/answers.md</code> in this repo is the blank TODO template</strong>,
+407 bytes. The run wrote it before the answers existed, and <code>package_only.py</code> overwrote
+the copy on the TPU VM rather than the copy that was later pulled into this repo. The
+real answers are in <code>answers_final.md</code>. The archive of record is therefore internally
+inconsistent about what was submitted. Left as-is because it is what the run actually
+wrote; noted here so it is not mistaken for the submission.</li>
+<li><strong>The assignment README requires no slides and no video.</strong> Its last instruction is to
+submit the <code>.final.tar.gz</code> to Canvas. The 16-slide deck and the 5-slide cut are extra.
+If a presentation is genuinely required, that requirement lives on Canvas and is not
+verifiable from this repo.</li>
+<li><strong>Four of 1,324 output lines in <code>run_progress.log</code> were clipped at 400 characters</strong> by
+the driver and end mid-token. They are inside the probe device lists and the sweep logs.
+No number reported anywhere was read from a clipped line.</li>
+</ol>
+
+<footer>Anh Nguyen &middot; Stanford ME344, Summer 2026 &middot; run <code>qanh-20260813t194806z</code> &middot;
+generated by <code>publish_site.py</code></footer>
+</div>
+</body>
+</html>

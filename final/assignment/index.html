@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The assignment itself</title>
+<style>
+  :root {
+    --bg: #f5f5f7; --panel: #ffffff; --border: #d2d2d7;
+    --text: #1d1d1f; --dim: #6e6e73; --accent: #0071e3;
+    --ok: #34c759; --warn: #ff9f0a; --fail: #ff3b30;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.65 -apple-system, BlinkMacSystemFont, "SF Pro Text", Helvetica, Arial, sans-serif; }
+  code, pre, table { font-family: "SF Mono", ui-monospace, Menlo, monospace; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 48px 24px 80px; }
+  .back { font-size: 13px; color: var(--accent); text-decoration: none; }
+  h1 { font-size: 34px; line-height: 1.15; margin: 14px 0 8px; letter-spacing: -0.02em; }
+  h2 { font-size: 22px; margin: 38px 0 10px; letter-spacing: -0.01em;
+       border-top: 1px solid var(--border); padding-top: 22px; }
+  h3 { font-size: 16.5px; margin: 24px 0 8px; }
+  p, li { max-width: 78ch; }
+  a { color: var(--accent); }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; background: var(--panel); margin: 12px 0; }
+  th, td { border: 1px solid var(--border); padding: 7px 10px; text-align: right; }
+  th:first-child, td:first-child { text-align: left; }
+  thead th { background: #fafafa; color: var(--dim); font-weight: 600; }
+  pre { background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+        padding: 13px 16px; overflow-x: auto; font-size: 13px; }
+  code { font-size: 13.5px; }
+  p code, li code, td code { background: #ececf0; padding: 1px 5px; border-radius: 4px; }
+  pre code { background: none; padding: 0; }
+  blockquote { border-left: 3px solid var(--warn); background: #fffaf0; margin: 14px 0;
+               padding: 10px 16px; color: var(--dim); font-size: 14px; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+  footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--border);
+           font-size: 12.5px; color: var(--dim); }
+</style>
+</head>
+<body>
+<div class="wrap">
+<a class="back" href="../index.html">&larr; Overview</a>
+<h1>The Assignment Itself</h1>
+<p>Everything the course handed out, plus the notebook as this run left it.</p>
+<p>This material was withheld from the site until 2026-08-13. It is published now at the
+author's decision. If you are a current ME344 student, reading the filled-in notebook
+instead of running it yourself will cost you the only part of the course that is worth
+anything.</p>
+<h2>The notebook</h2>
+<table>
+<thead>
+<tr>
+  <th></th>
+  <th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><a href="final_project.html"><code>final_project.html</code></a></td>
+  <td>The course notebook carrying this run's outputs. Rendered, with all nine figures inline.</td>
+</tr>
+<tr>
+  <td><a href="final_project.ipynb"><code>final_project.ipynb</code></a></td>
+  <td>The same notebook as source.</td>
+</tr>
+</tbody>
+</table>
+<p>Its first markdown cell explains exactly how the outputs got there: the run was driven
+headlessly by <code>rerun_cells.py</code>, stdout was reattached from <code>run_progress.log</code>, and the
+figures are the files the run wrote. Two code cells carry no output and say why.</p>
+<h2>Course-provided code</h2>
+<table>
+<thead>
+<tr>
+  <th>File</th>
+  <th>What it is</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><a href="README.md"><code>README.md</code></a></td>
+  <td>The assignment instructions, start to finish.</td>
+</tr>
+<tr>
+  <td><a href="scripts/final_project.py"><code>scripts/final_project.py</code></a></td>
+  <td>The <code>FinalProject</code> class the notebook drives. 233 KB, and the actual substance of the assignment.</td>
+</tr>
+<tr>
+  <td><a href="scripts/chat.py"><code>scripts/chat.py</code></a></td>
+  <td>Gradio chat client for the served checkpoint.</td>
+</tr>
+<tr>
+  <td><a href="scripts/prepare_sft_jsonl.py"><code>scripts/prepare_sft_jsonl.py</code></a></td>
+  <td>Dataset preparation for the SFT stage.</td>
+</tr>
+<tr>
+  <td><a href="scripts/start_tpu_vm.sh"><code>scripts/start_tpu_vm.sh</code></a></td>
+  <td>Creates or starts the mapped TPU VM and opens the second tunnel hop.</td>
+</tr>
+<tr>
+  <td><a href="Dockerfile"><code>Dockerfile</code></a></td>
+  <td>Image the GKE scaling jobs run from.</td>
+</tr>
+<tr>
+  <td><a href="scale-job.yaml"><code>scale-job.yaml</code></a></td>
+  <td>JobSet template for the three scaling configurations.</td>
+</tr>
+<tr>
+  <td><a href="examples/sft_pairs.jsonl"><code>examples/sft_pairs.jsonl</code></a></td>
+  <td>Example SFT data format.</td>
+</tr>
+</tbody>
+</table>
+<h2>Scripts used to drive this run</h2>
+<p>Not course-provided. Written to run the project headlessly from a laptop.</p>
+<table>
+<thead>
+<tr>
+  <th>File</th>
+  <th>What it is</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><a href="scripts_used/rerun_cells.py"><code>scripts_used/rerun_cells.py</code></a></td>
+  <td>Replays notebook cells 2 through 38 with identical calls and arguments.</td>
+</tr>
+<tr>
+  <td><a href="scripts_used/bootstrap_tpu.sh"><code>scripts_used/bootstrap_tpu.sh</code></a></td>
+  <td>Installs both venvs on a fresh TPU VM.</td>
+</tr>
+<tr>
+  <td><a href="scripts_used/package_only.py"><code>scripts_used/package_only.py</code></a></td>
+  <td>Runs cell 40's packaging against an already-finished run.</td>
+</tr>
+<tr>
+  <td><a href="scripts_used/repackage.py"><code>scripts_used/repackage.py</code></a></td>
+  <td>Rebuilds the archive after editing answers. The script responsible for the defect in the audit.</td>
+</tr>
+</tbody>
+</table>
+
+<footer>Anh Nguyen &middot; Stanford ME344, Summer 2026 &middot; run <code>qanh-20260813t194806z</code> &middot;
+generated by <code>publish_site.py</code></footer>
+</div>
+</body>
+</html>

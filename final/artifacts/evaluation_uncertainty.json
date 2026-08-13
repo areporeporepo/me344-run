@@ -1,0 +1,25 @@
+{
+  "reason": "A point estimate without uncertainty can turn random prompt variation into a release claim.",
+  "assumption": "Prompts are independent and representative; Wilson intervals do not fix biased data.",
+  "target_margin_percentage_points": 10.0,
+  "worst_case_samples_for_target_margin": 97,
+  "models": [
+    {
+      "label": "base",
+      "successes": 28,
+      "trials": 40,
+      "observed_percent": 70.0,
+      "wilson_95_low_percent": 54.56968934567959,
+      "wilson_95_high_percent": 81.9253290843047
+    },
+    {
+      "label": "sft",
+      "successes": 37,
+      "trials": 40,
+      "observed_percent": 92.5,
+      "wilson_95_low_percent": 80.13546984090249,
+      "wilson_95_high_percent": 97.41644432281419
+    }
+  ],
+  "decision": "Treat this suite as a release smoke test; use a larger representative set for a real launch."
+}

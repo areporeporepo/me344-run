@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Outlook: what this run measured, and what it will mean later</title>
+<style>
+  :root {
+    --bg: #f5f5f7; --panel: #ffffff; --border: #d2d2d7;
+    --text: #1d1d1f; --dim: #6e6e73; --accent: #0071e3;
+    --ok: #34c759; --warn: #ff9f0a; --fail: #ff3b30;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.65 -apple-system, BlinkMacSystemFont, "SF Pro Text", Helvetica, Arial, sans-serif; }
+  code, pre, table { font-family: "SF Mono", ui-monospace, Menlo, monospace; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 48px 24px 80px; }
+  .back { font-size: 13px; color: var(--accent); text-decoration: none; }
+  h1 { font-size: 34px; line-height: 1.15; margin: 14px 0 8px; letter-spacing: -0.02em; }
+  h2 { font-size: 22px; margin: 38px 0 10px; letter-spacing: -0.01em;
+       border-top: 1px solid var(--border); padding-top: 22px; }
+  h3 { font-size: 16.5px; margin: 24px 0 8px; }
+  p, li { max-width: 78ch; }
+  a { color: var(--accent); }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; background: var(--panel); margin: 12px 0; }
+  th, td { border: 1px solid var(--border); padding: 7px 10px; text-align: right; }
+  th:first-child, td:first-child { text-align: left; }
+  thead th { background: #fafafa; color: var(--dim); font-weight: 600; }
+  pre { background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+        padding: 13px 16px; overflow-x: auto; font-size: 13px; }
+  code { font-size: 13.5px; }
+  p code, li code, td code { background: #ececf0; padding: 1px 5px; border-radius: 4px; }
+  pre code { background: none; padding: 0; }
+  blockquote { border-left: 3px solid var(--warn); background: #fffaf0; margin: 14px 0;
+               padding: 10px 16px; color: var(--dim); font-size: 14px; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+  footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--border);
+           font-size: 12.5px; color: var(--dim); }
+</style>
+</head>
+<body>
+<div class="wrap">
+<a class="back" href="index.html">&larr; Overview</a>
+<h1>Outlook: What This Run Measured, And What It Will Mean Later</h1>
+<p>Written 2026-08-13, from the measurements in run <code>qanh-20260813t194806z</code>.</p>
+<p>The assignment measures a dense 4B model on 8 chips of a 2023 inference part. That sounds
+narrow. It is not: four of the five things it measures are properties of the <em>method</em>, and
+they transfer. One of them is already obsolete. This page separates those, projects each one
+onto hardware and architectures that exist now or are announced, and records what would have
+to be re-measured to check the projection.</p>
+<p>Everything derived here starts from a number this run actually produced. Vendor specs are
+from Google Cloud's own documentation, cited at the bottom, and dated. Where I am guessing,
+it says so.</p>
+<h2>Hardware the assignment's numbers land on</h2>
+<table>
+<thead>
+<tr>
+  <th></th>
+  <th>TPU v5e (this run)</th>
+  <th>TPU7x Ironwood (GA 2026-04-22)</th>
+  <th>Ratio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Peak BF16</td>
+  <td>197 TFLOP/s</td>
+  <td>2,307 TFLOP/s</td>
+  <td>11.7x</td>
+</tr>
+<tr>
+  <td>Peak FP8</td>
+  <td>not supported</td>
+  <td>4,614 TFLOP/s</td>
+  <td>new</td>
+</tr>
+<tr>
+  <td>HBM per chip</td>
+  <td>16 GB</td>
+  <td>192 GB</td>
+  <td>12x</td>
+</tr>
+<tr>
+  <td>HBM bandwidth</td>
+  <td>800 GiB/s</td>
+  <td>7,380 GB/s</td>
+  <td>8.6x</td>
+</tr>
+<tr>
+  <td>ICI per chip</td>
+  <td>400 GB/s</td>
+  <td>1,200 GB/s</td>
+  <td>3x</td>
+</tr>
+<tr>
+  <td>Chips per pod</td>
+  <td>256</td>
+  <td>9,216</td>
+  <td>36x</td>
+</tr>
+<tr>
+  <td>DCN per chip</td>
+  <td>not published for v5e</td>
+  <td>100 Gbps</td>
+  <td></td>
+</tr>
+</tbody>
+</table>
+<p>Announced but not shipping: the eighth generation splits into two parts for the first time.
+<strong>TPU 8t &quot;Sunfish&quot;</strong> (Broadcom, training, two compute dies, eight stacks of 12-high HBM3e,
+about 30% more memory bandwidth than Ironwood, superpods to 9,600 chips and 2 PB of shared
+HBM, targeted at 2.8x Ironwood's training price-performance) and <strong>TPU 8i &quot;Zebrafish&quot;</strong>
+(MediaTek, inference, single compute die, six HBM3e stacks, 20 to 30% cheaper than the
+training part). Both TSMC 2nm, both late 2027. Those are vendor targets, not measurements,
+and no one outside Google has run anything on either.</p>
+<h2>Finding 1: the memory wall. Obsolete on v7, and that is the point</h2>
+<p><strong>What this run measured.</strong> Global batch 512 failed to compile: 18.43 GiB of temporaries
+against 15.75 GiB available. The replicated DP8 layout failed harder, needing 65.47 GiB.
+Only TP8 fit, at 7.49 GiB per chip. Unsharded peak before activations was 59.94 GiB.</p>
+<p><strong>On Ironwood.</strong> 18.43 GiB is 19.8 GB, which is <strong>10.3% of one Ironwood chip</strong>. The full
+59.94 GiB unsharded state is 64.4 GB, <strong>33.5% of one chip</strong>. The entire capacity lab, the
+exercise of predicting whether a shape fits before paying to find out, resolves to &quot;fits, on
+one chip, with no tensor parallelism at all.&quot;</p>
+<p><strong>Why that does not make the exercise pointless.</strong> The method survives; only the model is too
+small. Apply this run's own measured constant, 16 bytes of training state per parameter, to
+what people actually train now:</p>
+<table>
+<thead>
+<tr>
+  <th>Model</th>
+  <th>Params</th>
+  <th>State at 16 B/param</th>
+  <th>Ironwood chips to hold it</th>
+  <th>v5e pod (256 chips, 4 TB)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Qwen3-4B (this run)</td>
+  <td>4.0B</td>
+  <td>64 GB</td>
+  <td>0.34</td>
+  <td>fits</td>
+</tr>
+<tr>
+  <td>Qwen3-30B-A3B</td>
+  <td>30.5B</td>
+  <td>488 GB</td>
+  <td>2.5</td>
+  <td>fits</td>
+</tr>
+<tr>
+  <td>Qwen3-235B-A22B</td>
+  <td>235B</td>
+  <td>3.8 TB</td>
+  <td>20</td>
+  <td>barely, 94% of pod HBM</td>
+</tr>
+<tr>
+  <td>Kimi K2</td>
+  <td>1T</td>
+  <td>16 TB</td>
+  <td>84</td>
+  <td><strong>impossible, 4x the whole pod</strong></td>
+</tr>
+<tr>
+  <td>Kimi K3</td>
+  <td>2.8T</td>
+  <td>44.8 TB</td>
+  <td>233</td>
+  <td><strong>impossible, 11x the whole pod</strong></td>
+</tr>
+</tbody>
+</table>
+<p>An entire 256-chip v5e pod holds 4 TB of HBM. Kimi K3's training state at this run's measured
+byte count needs 44.8 TB. That is the real content of the memory wall finding: not that
+gb512 failed, but that the arithmetic which predicted it is the arithmetic that says which
+models a given fleet can train at all. An Ironwood pod is 1.77 PB and a TPU 8t superpod is a
+claimed 2 PB, so both clear 44.8 TB with room, which is why 2.8T-parameter open models
+appeared in 2026 and not in 2023.</p>
+<p><strong>What to re-measure.</strong> 16 B/param was measured under BF16 with a specific optimizer. It is
+the most perishable number here. See finding 5.</p>
+<h2>Finding 2: the fabric is the scaling unit. This is the finding that ages best</h2>
+<p><strong>What this run measured.</strong> 8 to 16 chips inside one ICI slice: 100.1% strong, 99.6% weak.
+The same 16 chips split across two slices so the gradient all-reduce crosses DCN: 65.2% and
+53.6%. Exposed communication went from 1.08 s to 3.51 s at matched batch, a 3.2x jump for a
+payload that never changed size.</p>
+<p><strong>On Ironwood.</strong> The ICI domain goes from 256 chips to 9,216. A 16-chip job never leaves ICI.
+The specific 35% penalty this run measured simply does not arise at that scale.</p>
+<p><strong>Why the finding survives anyway.</strong> The boundary moved, it did not disappear. Every
+multi-pod training run still crosses DCN, and Ironwood's DCN is 100 Gbps per chip against
+1,200 GB/s of ICI, a ratio of roughly <strong>96x</strong>. The lesson generalizes exactly: performance is
+a step function in <em>where the collective travels</em>, not a smooth function of how many chips
+you bought. What changed is the chip count at which you hit the step, from 16 to 9,216.</p>
+<p>This is also the finding that transfers most directly to MoE, below, because MoE moves a
+second collective onto the critical path.</p>
+<p><strong>The anomaly is still unexplained and still worth chasing.</strong> DCN weak scaling came out worse
+per chip than DCN strong, 1,085 against 1,320 tokens/s/chip, which a fixed-size all-reduce
+should not do. The GKE jobs saved no traces. Lost overlap, rematerialization at 110% of the
+AOT limit, and shared-fabric contention are all consistent. Re-running those two trials with
+XProf enabled is the single highest-value follow-up in this whole project, and it costs
+maybe 20 minutes of TPU time.</p>
+<h2>Finding 3: the step is 99% dense matmul. True only in the regime measured</h2>
+<p><strong>What this run measured.</strong> A 24.94 TFLOP step that is 99.07% learnable-weight matmul against
+0.93% attention, at sequence length 256.</p>
+<p><strong>Why that ratio is not a fact about transformers.</strong> Attention FLOPs scale as L² while weight
+matmul scales as L, so the ratio between them scales as L. Taking this run's measured 0.93 /
+99.07 = 0.0094 and scaling to a 1M-token context:</p>
+<pre><code>0.0094 x (1,000,000 / 256) = 36.7  -&gt;  attention is 97.3% of step FLOPs
+</code></pre>
+<p>The step inverts completely. This run measured the short-context corner where architecture
+choice is invisible, and it is worth knowing that is what it measured.</p>
+<p><strong>Which is exactly why the frontier changed shape in 2026.</strong> Both leading open MoE families
+replaced most of their attention:</p>
+<ul>
+<li><strong>Kimi K3</strong> (2026-07-16): Kimi Delta Attention, linear-attention layers interleaved with
+full attention at 3:1, reported 6.3x faster decoding at 1M context.</li>
+<li><strong>Qwen3.5</strong>: Gated DeltaNet replacing 75% of standard attention layers.</li>
+</ul>
+<p>Both are engineering responses to the number above. If you re-ran this run's profile cell at
+L=131072 on a KDA-style model, the 99/1 split should collapse toward parity, and the profile
+would start showing linear-attention state updates rather than a single dominant matmul.
+<strong>That is a concrete, cheap experiment and nobody in the class ran it.</strong></p>
+<h2>Finding 4: MoE moves the bottleneck to the collective this run already measured</h2>
+<p>This run trained a <strong>dense</strong> 4B. Essentially nothing at the frontier is dense any more:</p>
+<table>
+<thead>
+<tr>
+  <th>Model</th>
+  <th>Total</th>
+  <th>Active</th>
+  <th>Experts</th>
+  <th>Date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Qwen3-30B-A3B</td>
+  <td>30.5B</td>
+  <td>3.3B (10.8%)</td>
+  <td>128, 8 active, no shared</td>
+  <td>2025</td>
+</tr>
+<tr>
+  <td>Qwen3-235B-A22B</td>
+  <td>235B</td>
+  <td>22B (9.4%)</td>
+  <td>128, 8 active</td>
+  <td>2025</td>
+</tr>
+<tr>
+  <td>Qwen3.6-35B-A3B</td>
+  <td>35B</td>
+  <td>~3B (~9%)</td>
+  <td>256, 8 routed + 1 shared</td>
+  <td>2026-04-16</td>
+</tr>
+<tr>
+  <td>Kimi K2</td>
+  <td>1T</td>
+  <td>32B (3.2%)</td>
+  <td>384 + 1 shared, MLA</td>
+  <td>2025-07</td>
+</tr>
+<tr>
+  <td>Kimi K3</td>
+  <td>2.8T</td>
+  <td>not confirmed</td>
+  <td>896, 16 active (1.8%)</td>
+  <td>2026-07-16</td>
+</tr>
+</tbody>
+</table>
+<p>The trend is monotone toward extreme sparsity: total parameters grow much faster than active
+ones. Two consequences follow directly from what this run measured.</p>
+<p><strong>First, HBM capacity binds before FLOPs do.</strong> A sparse model pays full HBM cost for every
+expert and compute cost for 2 to 11% of them. That is precisely why 192 GB per chip is the
+headline Ironwood number rather than the 11.7x compute jump, and why the finding-1 table
+above is the interesting one.</p>
+<p><strong>Second, expert-parallel all-to-all lands on the critical path, and finding 2 is the right
+instrument for it.</strong> Dense training has one collective per step, the gradient all-reduce this
+run measured. MoE adds an all-to-all <em>per MoE layer</em>, dispatching tokens to experts and
+gathering results back, on every forward and backward pass. It is latency-sensitive,
+irregular, and load-imbalanced when routing is skewed. The ICI-versus-DCN gap this run
+measured at 65.2% for a once-per-step all-reduce would be far more punishing for a
+per-layer all-to-all. <strong>Prediction: an MoE model split across DCN degrades substantially
+worse than the 65.2% measured here.</strong> I have not measured this and neither has anyone else in
+the class. It is testable with the same <code>scale-job.yaml</code> harness and a Qwen3-30B-A3B
+checkpoint.</p>
+<h2>Finding 5: 16 bytes per parameter. The number most likely to be wrong already</h2>
+<p><strong>What this run measured.</strong> 16 bytes per parameter at peak, 12 persistent plus 4 transient,
+under BF16.</p>
+<p><strong>What changed.</strong> Ironwood runs FP8 at exactly 2x its BF16 rate, 4,614 against 2,307
+TFLOP/s. Kimi K2 shipped with native INT4. Kimi K3 uses MXFP4/MXFP8. Low-precision training
+and inference are no longer research, they are the default path on current silicon.</p>
+<p>Every capacity projection in finding 1 scales linearly with this constant, so getting it
+wrong scales the whole table wrong. If sub-8-bit training states become standard, the 233
+Ironwood chips projected for Kimi K3 could be closer to 60.</p>
+<p><strong>What to re-measure.</strong> Re-run the capacity lab with FP8 enabled and recover the byte count
+empirically, the same way this run did. The AOT compile path already reports it. This is
+maybe an hour of work and it re-grounds the entire table.</p>
+<h2>Finding 6: the evaluation was too small. This one is timeless and mostly ignored</h2>
+<p>Not a hardware finding, and the one most likely to still be true in ten years.</p>
+<p>This run showed GRPO's accuracy effect coming out <strong>+12.5 points</strong> on 2026-08-13 and
+<strong>-12.5 points</strong> on an identically configured run three days earlier, with the guardrail
+flipping pass to fail. A two-example swing on a 16-item set. The primary suite's Wilson
+intervals still overlap by 1.8 points and would need 97 examples for a plus-or-minus 10 point
+margin.</p>
+<p>Frontier models are ranked on aggregate indices to a tenth of a point. Kimi K3 was reported
+at 57.1 on Artificial Analysis Intelligence Index v4.1, against 58.9 and 59.9 for the models
+above it. Whether those gaps clear their own confidence intervals is exactly the question
+this run's cell 30 asks, and it is asked far less often than it should be. The habit of
+computing the interval before believing the delta is the most portable thing in this
+assignment.</p>
+<h2>The five experiments worth actually running</h2>
+<p>Ranked by value per unit of effort. All five use the harness already in this repo.</p>
+<table>
+<thead>
+<tr>
+  <th></th>
+  <th>Experiment</th>
+  <th>Why</th>
+  <th>Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>1</td>
+  <td>Re-run the two DCN trials with XProf enabled</td>
+  <td>The weak-scaling anomaly is unexplained and it is the only broken measurement in the project</td>
+  <td>~20 min TPU</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td>Re-run the capacity lab in FP8</td>
+  <td>Re-grounds the 16 B/param constant that every projection here depends on</td>
+  <td>~1 hr</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td>Profile at L=131072 instead of 256</td>
+  <td>Should invert the 99/1 matmul/attention split, testing the derivation above</td>
+  <td>~1 hr</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td>Run the scaling harness on Qwen3-30B-A3B</td>
+  <td>Tests the prediction that MoE all-to-all degrades worse than 65.2% across DCN</td>
+  <td>~half day</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td>Grow the eval suite to 97 examples and score the step-50 checkpoint</td>
+  <td>The stopping rule preferred step 50 and no task metric was ever run against it</td>
+  <td>~2 hr</td>
+</tr>
+</tbody>
+</table>
+<p>Experiments 1, 2 and 3 need a v5e-8, which the course provides. Experiment 4 needs the GKE
+cluster. None need hardware nobody has.</p>
+<h2>What would change this page</h2>
+<ul>
+<li><strong>TPU 8t/8i shipping in late 2027.</strong> Every number in the hardware table for those parts is a
+vendor target. Replace with measurements when they exist.</li>
+<li><strong>A confirmed active-parameter count for Kimi K3.</strong> Currently unavailable, which is why the
+table says so rather than guessing.</li>
+<li><strong>Sub-8-bit training becoming standard.</strong> Rescales finding 1 entirely.</li>
+<li><strong>Any of the five experiments above.</strong> Each one either confirms or kills a projection here.</li>
+</ul>
+<h2>Sources</h2>
+<p>Hardware specifications, Google Cloud documentation, retrieved 2026-08-13:</p>
+<ul>
+<li><a href="https://docs.cloud.google.com/tpu/docs/v5e">Cloud TPU v5e</a></li>
+<li><a href="https://docs.cloud.google.com/tpu/docs/tpu7x">TPU7x (Ironwood)</a></li>
+<li><a href="https://cloud.google.com/blog/products/compute/ironwood-tpus-and-new-axion-based-vms-for-your-ai-workloads">Ironwood TPUs and new Axion-based VMs</a></li>
+<li><a href="https://blog.google/innovation-and-ai/infrastructure-and-cloud/google-cloud/ironwood-tpu-age-of-inference/">Ironwood: the first Google TPU for the age of inference</a></li>
+</ul>
+<p>Eighth-generation TPU split, secondary reporting from Google Cloud Next 2026:</p>
+<ul>
+<li><a href="https://thenextweb.com/news/google-ironwood-tpu-inference-cloud-next">Google previews eighth-gen split into training and inference chips at TSMC 2nm</a></li>
+<li><a href="https://hyperframeresearch.com/2026/04/22/google-cloud-next-2026-google-cloud-bifurcates-the-ai-future-specialized-tpu-8t-and-8i-architectures-signal-the-end-of-general-purpose-silicon/">Google Cloud Next 2026: specialized TPU 8t and 8i architectures</a></li>
+</ul>
+<p>Model architectures:</p>
+<ul>
+<li><a href="https://arxiv.org/html/2505.09388v1">Qwen3 Technical Report</a></li>
+<li><a href="https://www.marktechpost.com/2026/04/16/qwen-team-open-sources-qwen3-6-35b-a3b-a-sparse-moe-vision-language-model-with-3b-active-parameters-and-agentic-coding-capabilities/">Qwen3.6-35B-A3B release</a></li>
+<li><a href="https://www.marktechpost.com/2026/07/16/moonshot-ai-releases-kimi-k3-a-2-8-trillion-parameter-open-moe-model-with-kimi-delta-attention-and-1m-context/">Moonshot AI releases Kimi K3</a></li>
+<li><a href="https://developer.nvidia.com/blog/new-open-source-qwen3-next-models-preview-hybrid-moe-architecture-delivering-improved-accuracy-and-accelerated-parallel-processing-across-nvidia-platform/">Qwen3-Next hybrid MoE architecture</a></li>
+</ul>
+<p>All measurements attributed to &quot;this run&quot; come from
+<code>artifacts/qanh-20260813t194806z/</code> in this repository.</p>
+
+<footer>Anh Nguyen &middot; Stanford ME344, Summer 2026 &middot; run <code>qanh-20260813t194806z</code> &middot;
+generated by <code>publish_site.py</code></footer>
+</div>
+</body>
+</html>

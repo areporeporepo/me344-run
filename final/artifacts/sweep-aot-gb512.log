@@ -1,0 +1,76 @@
+[transformers] PyTorch was not found. Models won't be available and only tokenizers, configuration and file/data utilities can be used.
+[transformers] DeepseekV32Config got `key=rope_scaling` in kwargs but hasn't set it as attribute. For RoPE standardization you need to set `self.rope_parameters` in model's config. 
+[transformers] DeepseekV4Config got `key=rope_scaling` in kwargs but hasn't set it as attribute. For RoPE standardization you need to set `self.rope_parameters` in model's config. 
+2026-08-13 20:03:36.038847: I external/local_xla/xla/tsl/cuda/cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-08-13 20:03:36.078127: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-08-13 20:03:37.420765: I external/local_xla/xla/tsl/cuda/cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-08-13 20:03:40.963856: E external/local_xla/xla/stream_executor/cuda/cuda_platform.cc:51] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: UNKNOWN ERROR (303)
+Starting train_compile.py...
+I0813 20:03:41.191735 140591182691456 max_utils.py:265] Skipping jax distributed system initialization.
+I0813 20:03:41.232333   64274 pjrt_api.cc:119] GetPjrtApi was found for tpu at /home/student49/me344_final_project/.venv-me344-pretrain/lib/python3.12/site-packages/libtpu/libtpu.so
+I0813 20:03:41.232402   64274 pjrt_api.cc:168] The PJRT plugin has PJRT API version 0.112. The framework PJRT API version is 0.112.
+I0813 20:03:46.954788   64274 pjrt_c_api_client.cc:201] PjRtCApiClient created.
+I0813 20:03:46.955390   64274 pjrt_client.cc:579] PjRt-IFRT device count: total=8, addressable=8
+I0813 20:03:46.955406   64274 pjrt_client.cc:583] Addressable PjRt-IFRT device: TpuDevice(id=0, process_index=0, coords=(0,0,0), core_on_chip=0)
+I0813 20:03:46.955408   64274 pjrt_client.cc:583] Addressable PjRt-IFRT device: TpuDevice(id=1, process_index=0, coords=(1,0,0), core_on_chip=0)
+I0813 20:03:46.955410   64274 pjrt_client.cc:583] Addressable PjRt-IFRT device: TpuDevice(id=2, process_index=0, coords=(0,1,0), core_on_chip=0)
+I0813 20:03:46.955411   64274 pjrt_client.cc:583] Addressable PjRt-IFRT device: TpuDevice(id=3, process_index=0, coords=(1,1,0), core_on_chip=0)
+I0813 20:03:46.955412   64274 pjrt_client.cc:583] Addressable PjRt-IFRT device: TpuDevice(id=4, process_index=0, coords=(0,2,0), core_on_chip=0)
+I0813 20:03:46.955413   64274 pjrt_client.cc:583] Addressable PjRt-IFRT device: TpuDevice(id=5, process_index=0, coords=(1,2,0), core_on_chip=0)
+I0813 20:03:46.955415   64274 pjrt_client.cc:583] Addressable PjRt-IFRT device: TpuDevice(id=6, process_index=0, coords=(0,3,0), core_on_chip=0)
+I0813 20:03:46.955416   64274 pjrt_client.cc:583] Addressable PjRt-IFRT device: TpuDevice(id=7, process_index=0, coords=(1,3,0), core_on_chip=0)
+I0813 20:03:46.980363   64274 pjrt_client.cc:579] PjRt-IFRT device count: total=1, addressable=1
+I0813 20:03:46.980391   64274 pjrt_client.cc:583] Addressable PjRt-IFRT device: CpuDevice(id=0)
+I0813 20:03:46.986119 140591182691456 maxtext_utils.py:2243] Num_devices: 8, shape (1, 1, 1, 1, 1, 1, 1, 8, 1, 1, 1)
+I0813 20:03:46.986402 140591182691456 max_utils.py:830] System Information: Jax Version: 0.10.2
+I0813 20:03:46.986447 140591182691456 max_utils.py:831] System Information: Jaxlib Version: 0.10.2
+I0813 20:03:46.986491 140591182691456 max_utils.py:832] System Information: Jax Backend: PJRT C API
+TFRT TPU v5 lite
+Built on Jun 17 2026 11:08:48 (1781719728) cl/933746096
+Jitting and compiling train step...
+/home/student49/me344_final_project/.venv-me344-pretrain/lib/python3.12/site-packages/maxtext/trainers/pre_train/train_compile.py:221: DeprecationWarning: `with mesh:` context manager has been deprecated. Please use `with jax.set_mesh(mesh):` instead.
+  with jax.set_mesh(mesh), mesh, logical_axis_rules:
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/student49/me344_final_project/.venv-me344-pretrain/lib/python3.12/site-packages/maxtext/trainers/pre_train/train_compile.py", line 447, in <module>
+    app.run(main)
+  File "/home/student49/me344_final_project/.venv-me344-pretrain/lib/python3.12/site-packages/absl/app.py", line 367, in run
+    _run_main(main, args)
+  File "/home/student49/me344_final_project/.venv-me344-pretrain/lib/python3.12/site-packages/absl/app.py", line 312, in _run_main
+    sys.exit(main(argv))
+             ^^^^^^^^^^
+  File "/home/student49/me344_final_project/.venv-me344-pretrain/lib/python3.12/site-packages/maxtext/trainers/pre_train/train_compile.py", line 412, in main
+    compiled = jit_and_compile(
+               ^^^^^^^^^^^^^^^^
+  File "/home/student49/me344_final_project/.venv-me344-pretrain/lib/python3.12/site-packages/maxtext/trainers/pre_train/train_compile.py", line 233, in jit_and_compile
+    compiled = lowered.compile(compiler_options=compiler_options)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/student49/me344_final_project/.venv-me344-pretrain/lib/python3.12/site-packages/jax/_src/stages.py", line 592, in compile
+    return Compiled(self._lowering.compile(**kw), self._lowering.const_args,
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/student49/me344_final_project/.venv-me344-pretrain/lib/python3.12/site-packages/jax/_src/interpreters/pxla.py", line 1239, in compile
+    executable = UnloadedMeshExecutable.from_hlo(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/student49/me344_final_project/.venv-me344-pretrain/lib/python3.12/site-packages/jax/_src/interpreters/pxla.py", line 1733, in from_hlo
+    xla_executable = _cached_compilation(
+                     ^^^^^^^^^^^^^^^^^^^^
+  File "/home/student49/me344_final_project/.venv-me344-pretrain/lib/python3.12/site-packages/jax/_src/interpreters/pxla.py", line 1516, in _cached_compilation
+    xla_executable = compiler.compile_or_get_cached(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/student49/me344_final_project/.venv-me344-pretrain/lib/python3.12/site-packages/jax/_src/compiler.py", line 469, in compile_or_get_cached
+    return _compile_and_write_cache(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/student49/me344_final_project/.venv-me344-pretrain/lib/python3.12/site-packages/jax/_src/compiler.py", line 737, in _compile_and_write_cache
+    executable = backend_compile_and_load(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/student49/me344_final_project/.venv-me344-pretrain/lib/python3.12/site-packages/jax/_src/profiler.py", line 420, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/student49/me344_final_project/.venv-me344-pretrain/lib/python3.12/site-packages/jax/_src/compiler.py", line 363, in backend_compile_and_load
+    raise e
+  File "/home/student49/me344_final_project/.venv-me344-pretrain/lib/python3.12/site-packages/jax/_src/compiler.py", line 322, in backend_compile_and_load
+    return cross_compile_backend.compile(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+jax.errors.JaxRuntimeError: RESOURCE_EXHAUSTED: Ran out of memory on HBM, the total memory required for HLO temporaries (18.43G) exceeds available HBM (15.75G).

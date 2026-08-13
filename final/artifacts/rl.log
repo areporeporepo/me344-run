@@ -1,0 +1,846 @@
+/home/student49/me344_final_project/.venv-me344-posttrain/lib/python3.12/site-packages/torch/cuda/__init__.py:65: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+[transformers] DeepseekV32Config got `key=rope_scaling` in kwargs but hasn't set it as attribute. For RoPE standardization you need to set `self.rope_parameters` in model's config. 
+[transformers] DeepseekV4Config got `key=rope_scaling` in kwargs but hasn't set it as attribute. For RoPE standardization you need to set `self.rope_parameters` in model's config. 
+2026-08-13 20:16:26.567787: I external/local_xla/xla/tsl/cuda/cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-08-13 20:16:26.608208: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-08-13 20:16:27.834203: I external/local_xla/xla/tsl/cuda/cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+WARNING 08-13 20:16:29 [tpu_platform.py:402] Pin memory is not supported on TPU.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+E0000 00:00:1786652190.147860   85043 descriptor_database.cc:633] File already exists in database: google/protobuf/timestamp.proto
+F0000 00:00:1786652190.147947   85043 descriptor.cc:2236] Check failed: GeneratedDatabase()->Add(encoded_file_descriptor, size) 
+*** Check failure stack trace: ***
+    @     0x7f0f988a2fe4  absl::lts_20250127::log_internal::LogMessage::SendToLog()
+    @     0x7f0f988a2976  absl::lts_20250127::log_internal::LogMessage::Flush()
+    @     0x7f0f988a3539  absl::lts_20250127::log_internal::LogMessageFatal::~LogMessageFatal()
+    @     0x7f0f987955cb  google::protobuf::DescriptorPool::InternalAddGeneratedFile()
+    @     0x7f0f9880f308  google::protobuf::internal::AddDescriptors()
+    @     0x7f0f9880f2fa  google::protobuf::internal::AddDescriptors()
+    @     0x7f0b8a57f1ff  __static_initialization_and_destruction_0()
+    @     0x7f0b8a57f232  _GLOBAL__sub_I.00102_tpu_metric_service.pb.cc
+    @     0x7f107d45d47e  (unknown)
+Check failed with unknown exit code: -6.
+INFO 08-13 20:16:32 [importing.py:53] Triton is installed but 0 active driver(s) found (expected 1). Disabling Triton to prevent runtime errors.
+INFO 08-13 20:16:32 [importing.py:88] Triton not installed or not compatible; certain GPU-related functions will not be available.
+INFO 08-13 20:16:33 [__init__.py:76] TPU info: node_name=tpu-student49 | tpu_type=v5litepod-8 | worker_id=0 | num_chips=8 | num_cores_per_chip=1
+WARNING 08-13 20:16:33 [interface.py:368] Failed to import from vllm._C: ModuleNotFoundError("No module named 'vllm._C'")
+WARNING 08-13 20:16:33 [interface.py:368] Failed to import from vllm._C: ModuleNotFoundError("No module named 'vllm._C'")
+WARNING 08-13 20:16:33 [interface.py:368] Failed to import from vllm._C: ModuleNotFoundError("No module named 'vllm._C'")
+WARNING 08-13 20:16:33 [interface.py:368] Failed to import from vllm._C: ModuleNotFoundError("No module named 'vllm._C'")
+INFO 08-13 20:16:34 [__init__.py:112] Registered model loader `<class 'tpu_inference.models.jax.utils.weight_utils.JaxDummyModelLoader'>` with load format `jax_dummy`
+INFO 08-13 20:16:34 [__init__.py:31] Registering MaxTextForCausalLM model with tpu_inference and vllm.
+INFO 08-13 20:16:34 [model_loader.py:835] Registered JAX model MaxTextForCausalLM with tpu_inference and vLLM registries.
+INFO 08-13 20:16:34 [__init__.py:40] Successfully registered MaxTextForCausalLM model.
+2026-08-13 20:16:37.579577: E external/local_xla/xla/stream_executor/cuda/cuda_platform.cc:51] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: UNKNOWN ERROR (303)
+I0813 20:16:37.579811 139708797660288 max_utils.py:830] System Information: Jax Version: 0.11.0
+I0813 20:16:37.579921 139708797660288 max_utils.py:831] System Information: Jaxlib Version: 0.11.0
+I0813 20:16:37.628319   84828 pjrt_api.cc:119] GetPjrtApi was found for tpu at /home/student49/me344_final_project/.venv-me344-posttrain/lib/python3.12/site-packages/libtpu/libtpu.so
+I0813 20:16:37.628406   84828 pjrt_api.cc:168] The PJRT plugin has PJRT API version 0.113. The framework PJRT API version is 0.114.
+E0813 20:16:37.707476   84828 hugepage_text.cc:340] RAW: File offset incorrectly aligned for file-backed THP: (600000 & ~ffffffffffe00000) = 0 != 1000 = (201000 & ~ffffffffffe00000)
+I0813 20:16:43.511170   84828 pjrt_c_api_client.cc:187] PjRtCApiClient created.
+I0813 20:16:43.511305   84828 pjrt_client.cc:579] PjRt-IFRT device count: total=8, addressable=8
+I0813 20:16:43.511318   84828 pjrt_client.cc:583] Addressable PjRt-IFRT device: TpuDevice(id=0, process_index=0, coords=(0,0,0), core_on_chip=0)
+I0813 20:16:43.511320   84828 pjrt_client.cc:583] Addressable PjRt-IFRT device: TpuDevice(id=1, process_index=0, coords=(1,0,0), core_on_chip=0)
+I0813 20:16:43.511322   84828 pjrt_client.cc:583] Addressable PjRt-IFRT device: TpuDevice(id=2, process_index=0, coords=(0,1,0), core_on_chip=0)
+I0813 20:16:43.511323   84828 pjrt_client.cc:583] Addressable PjRt-IFRT device: TpuDevice(id=3, process_index=0, coords=(1,1,0), core_on_chip=0)
+I0813 20:16:43.511324   84828 pjrt_client.cc:583] Addressable PjRt-IFRT device: TpuDevice(id=4, process_index=0, coords=(0,2,0), core_on_chip=0)
+I0813 20:16:43.511325   84828 pjrt_client.cc:583] Addressable PjRt-IFRT device: TpuDevice(id=5, process_index=0, coords=(1,2,0), core_on_chip=0)
+I0813 20:16:43.511327   84828 pjrt_client.cc:583] Addressable PjRt-IFRT device: TpuDevice(id=6, process_index=0, coords=(0,3,0), core_on_chip=0)
+I0813 20:16:43.511328   84828 pjrt_client.cc:583] Addressable PjRt-IFRT device: TpuDevice(id=7, process_index=0, coords=(1,3,0), core_on_chip=0)
+I0813 20:16:43.536454   84828 pjrt_client.cc:579] PjRt-IFRT device count: total=1, addressable=1
+I0813 20:16:43.536484   84828 pjrt_client.cc:583] Addressable PjRt-IFRT device: CpuDevice(id=0)
+I0813 20:16:43.536666 139708797660288 max_utils.py:832] System Information: Jax Backend: PJRT C API
+TFRT TPU v5 lite
+Built on Jul 15 2026 04:02:29 (1784113349) cl/948136882
+I0813 20:16:43.642643 139708797660288 max_utils.py:245] Skipping jax distributed system due to skip_jax_distributed_system=True flag.
+/home/student49/me344_final_project/.venv-me344-posttrain/lib/python3.12/site-packages/pydantic/main.py:475: UserWarning: Pydantic serializer warnings:
+  PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='shard_mode', input_value='auto', input_type=str])
+  return self.__pydantic_serializer__.to_python(
+I0813 20:16:43.644150 139708797660288 model_creation_utils.py:672] Running on a single slice
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+W0813 20:16:43.853715 139708797660288 _http.py:951] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+I0813 20:16:44.459091 139708797660288 model_creation_utils.py:763] Creating reference model and also meshes for reference and rollout
+I0813 20:16:44.459348 139708797660288 abstract_checkpointer.py:35] orbax-checkpoint version: 0.12.1
+I0813 20:16:44.459448 139708797660288 pytree_checkpoint_handler.py:596] save_device_host_concurrent_bytes=None
+I0813 20:16:44.459614 139708797660288 base_pytree_checkpoint_handler.py:501] Created BasePyTreeCheckpointHandler: use_ocdbt=True, use_zarr3=False, pytree_metadata_options=PyTreeMetadataOptions(support_rich_types=False), array_metadata_store=<orbax.checkpoint._src.metadata.array_metadata_store.Store object at 0x7f0fac1326c0>, enable_pinned_host_transfer=False, save_concurrent_bytes: 96000000000 (89.4 GiB), restore_concurrent_bytes: 96000000000 (89.4 GiB)
+I0813 20:16:44.459859 139708797660288 async_checkpointer.py:192] [process=0][thread=MainThread] Using barrier_sync_fn: <function get_barrier_sync_fn.<locals>.<lambda> at 0x7f0ea10ab2e0> timeout: 1200 secs and primary_host=0 for async checkpoint writes
+W0813 20:16:44.576564 139708797660288 checkpoint.py:202] Metadata file does not exist: gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-sft/checkpoints/202/model_params/_CHECKPOINT_METADATA
+I0813 20:16:44.684597   86511 google_auth_provider.cc:181] Running on GCE, using service account 1045700421756-compute@developer.gserviceaccount.com
+I0813 20:16:44.815007 139708797660288 maxtext_utils.py:2243] Num_devices: 8, shape (1, 1, 1, 1, 1, 1, 1, 8, 1, 1, 1)
+I0813 20:16:44.955676 139708797660288 maxtext_utils.py:2243] Num_devices: 8, shape (1, 1, 1, 1, 1, 1, 1, 8, 1, 1, 1)
+I0813 20:16:49.172860 139708797660288 pytree_checkpoint_handler.py:596] save_device_host_concurrent_bytes=None
+I0813 20:16:49.173043 139708797660288 base_pytree_checkpoint_handler.py:501] Created BasePyTreeCheckpointHandler: use_ocdbt=False, use_zarr3=False, pytree_metadata_options=PyTreeMetadataOptions(support_rich_types=False), array_metadata_store=<orbax.checkpoint._src.metadata.array_metadata_store.Store object at 0x7f0fac1326c0>, enable_pinned_host_transfer=False, save_concurrent_bytes: 96000000000 (89.4 GiB), restore_concurrent_bytes: 96000000000 (89.4 GiB)
+W0813 20:16:49.261903 139708797660288 checkpoint.py:202] Metadata file does not exist: gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-sft/checkpoints/202/model_params/_CHECKPOINT_METADATA
+I0813 20:16:49.398633 139708797660288 event_tracking.py:76] [process=0] [sync] Started load checkpoint @ gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-sft/checkpoints/202/model_params.
+I0813 20:16:49.478777 139708797660288 checkpointer.py:309] Restoring checkpoint from gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-sft/checkpoints/202/model_params.
+I0813 20:16:49.478921 139708797660288 event_tracking.py:172] [process=0] [sync] Finished blocking load in 0.08 seconds. Continuing load @ gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-sft/checkpoints/202/model_params.
+I0813 20:16:56.446321 139708797660288 jax_array_handlers.py:249] [process=0] /jax/orbax/read/worker/io/requested throughput: 1.123 GiB/s (total gbytes: 7.5 GiB) (time elapsed: 6.671729803085327 s) (per-host)
+I0813 20:16:56.446849 139708797660288 jax_array_handlers.py:308] [process=0] Raw /jax/orbax/read/worker/io/raw throughput: 2.045 GiB/s (total gbytes: 13.6 GiB) (time elapsed: 6.671729803085327 s) (per-host)
+I0813 20:16:56.446922 139708797660288 jax_array_handlers.py:330] [process=0] Read ratio (raw/logical): 1.821 (13.6 GiB / 7.5 GiB)
+W0813 20:16:56.448501 139708797660288 transform_utils.py:230] The transformations API will eventually be replaced by an upgraded design. The current API will not be removed until this point, but it will no longer be actively worked on.
+I0813 20:16:56.449038 139708797660288 event_tracking.py:185] [process=0] [sync] Finished load in 7.05 seconds @ gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-sft/checkpoints/202/model_params
+I0813 20:16:56.452984 139708797660288 maxtext_utils.py:2243] Num_devices: 8, shape (1, 1, 1, 1, 1, 1, 1, 8, 1, 1, 1)
+I0813 20:16:56.453070 139708797660288 model_creation_utils.py:789] Creating policy model with same config as reference model on trainer mesh
+I0813 20:16:56.453212 139708797660288 pytree_checkpoint_handler.py:596] save_device_host_concurrent_bytes=None
+I0813 20:16:56.453289 139708797660288 base_pytree_checkpoint_handler.py:501] Created BasePyTreeCheckpointHandler: use_ocdbt=True, use_zarr3=False, pytree_metadata_options=PyTreeMetadataOptions(support_rich_types=False), array_metadata_store=<orbax.checkpoint._src.metadata.array_metadata_store.Store object at 0x7f0fac1326c0>, enable_pinned_host_transfer=False, save_concurrent_bytes: 96000000000 (89.4 GiB), restore_concurrent_bytes: 96000000000 (89.4 GiB)
+I0813 20:16:56.453398 139708797660288 async_checkpointer.py:192] [process=0][thread=MainThread] Using barrier_sync_fn: <function get_barrier_sync_fn.<locals>.<lambda> at 0x7f0ee54d4040> timeout: 1200 secs and primary_host=0 for async checkpoint writes
+W0813 20:16:56.557873 139708797660288 checkpoint.py:202] Metadata file does not exist: gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-sft/checkpoints/202/model_params/_CHECKPOINT_METADATA
+I0813 20:16:56.749226 139708797660288 maxtext_utils.py:2243] Num_devices: 8, shape (1, 1, 1, 1, 1, 1, 1, 8, 1, 1, 1)
+I0813 20:16:56.848332 139708797660288 maxtext_utils.py:2243] Num_devices: 8, shape (1, 1, 1, 1, 1, 1, 1, 8, 1, 1, 1)
+I0813 20:17:00.719234 139708797660288 pytree_checkpoint_handler.py:596] save_device_host_concurrent_bytes=None
+I0813 20:17:00.719411 139708797660288 base_pytree_checkpoint_handler.py:501] Created BasePyTreeCheckpointHandler: use_ocdbt=False, use_zarr3=False, pytree_metadata_options=PyTreeMetadataOptions(support_rich_types=False), array_metadata_store=<orbax.checkpoint._src.metadata.array_metadata_store.Store object at 0x7f0fac1326c0>, enable_pinned_host_transfer=False, save_concurrent_bytes: 96000000000 (89.4 GiB), restore_concurrent_bytes: 96000000000 (89.4 GiB)
+W0813 20:17:00.802466 139708797660288 checkpoint.py:202] Metadata file does not exist: gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-sft/checkpoints/202/model_params/_CHECKPOINT_METADATA
+I0813 20:17:00.945674 139708797660288 event_tracking.py:76] [process=0] [sync] Started load checkpoint @ gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-sft/checkpoints/202/model_params.
+I0813 20:17:01.014633 139708797660288 checkpointer.py:309] Restoring checkpoint from gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-sft/checkpoints/202/model_params.
+I0813 20:17:01.014765 139708797660288 event_tracking.py:172] [process=0] [sync] Finished blocking load in 0.07 seconds. Continuing load @ gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-sft/checkpoints/202/model_params.
+I0813 20:17:08.927844 139708797660288 jax_array_handlers.py:249] [process=0] /jax/orbax/read/worker/io/requested throughput: 1006.642 MiB/s (total gbytes: 7.5 GiB) (time elapsed: 7.621624708175659 s) (per-host)
+I0813 20:17:08.928560 139708797660288 jax_array_handlers.py:308] [process=0] Raw /jax/orbax/read/worker/io/raw throughput: 1.790 GiB/s (total gbytes: 13.6 GiB) (time elapsed: 7.621624708175659 s) (per-host)
+I0813 20:17:08.928637 139708797660288 jax_array_handlers.py:330] [process=0] Read ratio (raw/logical): 1.821 (13.6 GiB / 7.5 GiB)
+W0813 20:17:08.930275 139708797660288 transform_utils.py:230] The transformations API will eventually be replaced by an upgraded design. The current API will not be removed until this point, but it will no longer be actively worked on.
+I0813 20:17:08.930862 139708797660288 event_tracking.py:185] [process=0] [sync] Finished load in 7.99 seconds @ gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-sft/checkpoints/202/model_params
+I0813 20:17:08.939028 139708797660288 train_rl.py:257] prepare_datasets: using custom process_data from /home/student49/me344-artifacts/qanh-20260813t194806z/rl_task.py
+
+Generating train split: 0 examples [00:00, ? examples/s]
+Generating train split: 32 examples [00:00, 11238.19 examples/s]
+
+Generating test split: 0 examples [00:00, ? examples/s]
+Generating test split: 16 examples [00:00, 10283.31 examples/s]
+I0813 20:17:09.287589 139708797660288 _schedule.py:129] A polynomial schedule was set with a non-positive `transition_steps` value; this results in a constant schedule with value `init_value`.
+W0813 20:17:09.316953 139708797660288 pyconfig.py:112] base_output_directory is not provided; Using local directory called maxtext_output
+I0813 20:17:09.340062 139708797660288 max_utils.py:245] Skipping jax distributed system due to skip_jax_distributed_system=True flag.
+/home/student49/me344_final_project/.venv-me344-posttrain/lib/python3.12/site-packages/pydantic/main.py:475: UserWarning: Pydantic serializer warnings:
+  PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='decoder_block', input_value='llama2', input_type=str])
+  PydanticSerializationUnexpectedValue(Expected `enum` - serialized value may not be as expected [field_name='shard_mode', input_value='auto', input_type=str])
+  return self.__pydantic_serializer__.to_python(
+I0813 20:17:09.341501 139708797660288 train_rl.py:515] Creating RL cluster...
+wandb: WARNING The anonymous setting has no effect and will be removed in a future version.
+wandb: Tracking run with wandb version 0.28.2
+wandb: W&B syncing is set to `offline` in this directory. Run `wandb online` or set WANDB_MODE=online to enable cloud syncing.
+wandb: Run data is saved locally in /home/student49/me344_final_project/wandb/offline-run-20260813_201710-99rm11h0
+wandb: View this run in the terminal with `wandb leet`
+wandb: Detected [openai] in use.
+wandb: Use W&B Weave for improved LLM call tracing. Install Weave with `pip install weave` then add `import weave` to the top of your script.
+wandb: For more information, check out the docs at: https://weave-docs.wandb.ai
+wandb: WARNING URL not available in offline run
+I0813 20:17:11.356844 139708797660288 wandb_backend.py:60] W&B run URL: None
+I0813 20:17:11.357391 139708797660288 vllm_sampler.py:105] Engine kwargs setting key 'model' with value 'Qwen/Qwen3-4B-Instruct-2507'.
+I0813 20:17:11.357581 139708797660288 vllm_sampler.py:105] Engine kwargs setting key 'max_model_len' with value '640'.
+I0813 20:17:11.357751 139708797660288 vllm_sampler.py:105] Engine kwargs setting key 'async_scheduling' with value 'False'.
+I0813 20:17:11.357860 139708797660288 vllm_sampler.py:105] Engine kwargs setting key 'max_num_batched_tokens' with value '1024'.
+I0813 20:17:11.357959 139708797660288 vllm_sampler.py:105] Engine kwargs setting key 'max_num_seqs' with value '4'.
+I0813 20:17:11.358047 139708797660288 vllm_sampler.py:105] Engine kwargs setting key 'hf_config_path' with value ''.
+I0813 20:17:11.358132 139708797660288 vllm_sampler.py:105] Engine kwargs setting key 'max_logprobs' with value '1'.
+I0813 20:17:11.358218 139708797660288 vllm_sampler.py:105] Engine kwargs setting key 'logprobs_mode' with value 'processed_logprobs'.
+I0813 20:17:11.358304 139708797660288 vllm_sampler.py:105] Engine kwargs setting key 'hf_overrides' with value '{}'.
+I0813 20:17:11.358390 139708797660288 vllm_sampler.py:105] Engine kwargs setting key 'enable_expert_parallel' with value 'False'.
+I0813 20:17:11.358473 139708797660288 vllm_sampler.py:105] Engine kwargs setting key 'enable_prefix_caching' with value 'True'.
+I0813 20:17:11.358560 139708797660288 vllm_sampler.py:105] Engine kwargs setting key 'dtype' with value 'bfloat16'.
+INFO 08-13 20:17:11 [attention_interface.py:59] Using default RPA kernel
+INFO 08-13 20:17:11 [__init__.py:112] Registered model loader `<class 'tpu_inference.models.common.pathways_dummy_loader.PathwaysDummyModelLoader'>` with load format `pathways_dummy`
+INFO 08-13 20:17:11 [__init__.py:112] Registered model loader `<class 'tpu_inference.models.vllm.vllm_model_loader.IncrementalModelLoader'>` with load format `tpu_streaming_loader`
+WARNING 08-13 20:17:11 [__init__.py:101] Load format `runai_streamer` is already registered, and will be overwritten by the new loader class `<class 'tpu_inference.models.vllm.vllm_model_loader.RunaiIncrementalModelLoader'>`.
+INFO 08-13 20:17:11 [__init__.py:112] Registered model loader `<class 'tpu_inference.models.vllm.vllm_model_loader.RunaiIncrementalModelLoader'>` with load format `runai_streamer`
+INFO 08-13 20:17:12 [__init__.py:31] Registering MaxTextForCausalLM model with tpu_inference and vllm.
+INFO 08-13 20:17:12 [model_loader.py:835] Registered JAX model MaxTextForCausalLM with tpu_inference and vLLM registries.
+I0813 20:17:12.691019 139708797660288 adapter.py:523] Successfully applied KVCacheManager patch for hybrid GDN models.
+INFO 08-13 20:17:12 [__init__.py:40] Successfully registered MaxTextForCausalLM model.
+INFO 08-13 20:17:12 [api_utils.py:273] non-default args: {'hf_config_path': '', 'load_format': 'dummy', 'dtype': 'bfloat16', 'max_model_len': 640, 'tensor_parallel_size': 8, 'enable_prefix_caching': True, 'gpu_memory_utilization': 0.35, 'max_num_batched_tokens': 1024, 'max_num_seqs': 4, 'max_logprobs': 1, 'logprobs_mode': 'processed_logprobs', 'disable_log_stats': True, 'additional_config': {'sharding': {'sharding_strategy': {'expert_parallelism': 1, 'device_indexes': [0, 1, 2, 3, 7, 6, 5, 4], 'enable_dp_attention': False}}}, 'async_scheduling': False, 'model': 'Qwen/Qwen3-4B-Instruct-2507'}
+WARNING 08-13 20:17:13 [arg_utils.py:1628] The global random seed is set to 0. Since VLLM_ENABLE_V1_MULTIPROCESSING is set to False, this may affect the random state of the Python process that launched vLLM.
+INFO 08-13 20:17:28 [model.py:627] Resolved architecture: Qwen3ForCausalLM
+INFO 08-13 20:17:28 [model.py:1799] Using max model len 640
+INFO 08-13 20:17:28 [scheduler.py:242] Chunked prefill is enabled with max_num_batched_tokens=1024.
+INFO 08-13 20:17:28 [vllm.py:1114] Asynchronous scheduling is disabled.
+WARNING 08-13 20:17:28 [vllm.py:1218] Inductor compilation was disabled by user settings, optimizations settings that are only active during inductor compilation will be ignored.
+INFO 08-13 20:17:28 [kernel.py:303] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'])
+INFO 08-13 20:17:28 [tpu_platform.py:233] Initialized sharding configuration: ShardingConfigManager(total_devices=8, sharding_strategy=ShardingStrategy(tensor_parallelism=8, expert_parallelism=1, sequence_parallelism=1, data_parallelism=1, attention_data_parallelism=1, attention_data_expert_parallelism=1, decode_context_parallelism=1, prefill_context_parallelism=1), mm_encoder_tp_mode=weights, device_indexes=[0, 1, 2, 3, 7, 6, 5, 4])
+INFO 08-13 20:17:28 [tpu_platform.py:318] Force using UniProcExecutor for JAX on single host without pipeline parallelism.
+WARNING 08-13 20:17:28 [vllm.py:582] Model Runner V2 requires Triton; using the V1 model runner instead.
+INFO 08-13 20:17:28 [compilation.py:329] Enabled custom fusions: norm_quant, act_quant
+INFO 08-13 20:17:31 [core.py:116] Initializing a V1 LLM engine (v0.23.1rc1.dev1474+g0ba2aa35a) with config: model='Qwen/Qwen3-4B-Instruct-2507', speculative_config=None, tokenizer='Qwen/Qwen3-4B-Instruct-2507', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.bfloat16, max_seq_len=640, download_dir=None, load_format=dummy, tensor_parallel_size=8, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=True, quantization=None, quantization_config=None, enforce_eager=False, enable_return_routed_experts=False, kv_cache_dtype=auto, device_config=None, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, kv_cache_metrics=False, kv_cache_metrics_sample=0.01, cudagraph_metrics=False, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False, jit_monitor_mode='warn', jit_monitor_verbose=False), seed=0, served_model_name=Qwen/Qwen3-4B-Instruct-2507, enable_prefix_caching=True, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.VLLM_COMPILE: 3>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'eager', 'custom_ops': ['all'], 'ir_enable_torch_wrap': False, 'splitting_ops': ['vllm::unified_attention_with_output', 'vllm::unified_mla_attention_with_output', 'vllm::mamba_mixer2', 'vllm::mamba_mixer', 'vllm::short_conv', 'vllm::linear_attention', 'vllm::qwen_gdn_attention_core', 'vllm::gdn_attention_core_xpu', 'vllm::olmo_hybrid_gdn_full_forward', 'vllm::kda_attention', 'vllm::sparse_attn_indexer', 'vllm::rocm_aiter_sparse_attn_indexer', 'vllm::deepseek_v4_attention', 'vllm::hpc_rope_norm_forward', 'vllm::unified_kv_cache_update', 'vllm::unified_mla_kv_cache_update'], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': None, 'compile_ranges_endpoints': [1024], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'size_asserts': False, 'alignment_asserts': False, 'scalar_asserts': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.NONE: 0>, 'cudagraph_num_of_warmups': 0, 'cudagraph_capture_sizes': None, 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': True, 'fuse_act_quant': True, 'fuse_attn_quant': False, 'enable_sp': False, 'fuse_gemm_comms': False, 'fuse_allreduce_rms': False, 'enable_qk_norm_rope_fusion': False, 'fuse_rope_kvcache_cat_mla': False, 'fuse_act_padding': False, 'fuse_qk_norm_rope_kvcache': False}, 'max_cudagraph_capture_size': None, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': True, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native']), enable_flashinfer_autotune=True, enable_cutedsl_warmup=True, enable_jit_warmup=True, enable_bf16x3_router_gemm=False, moe_backend='auto', linear_backend='auto')
+INFO 08-13 20:17:32 [parallel_state.py:1612] world_size=1 rank=0 local_rank=0 distributed_init_method=file:///tmp/tmpygfe2xjy backend=gloo
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+INFO 08-13 20:17:32 [parallel_state.py:1943] rank 0 in world size 1 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 0, EP rank N/A, EPLB rank N/A
+INFO 08-13 20:17:32 [tpu_runner.py:884] Creating new model mesh | devices=8, num_slices=1
+INFO 08-13 20:17:32 [tpu_runner.py:879] Init mesh | mesh=Mesh('data': 1, 'attn_dp': 1, 'attn_dp_expert': 1, 'expert': 1, 'model': 8, 'dcp': 1, 'pcp': 1, axis_types=(Auto, Auto, Auto, Auto, Auto, Auto, Auto))
+INFO 08-13 20:17:32 [utils.py:211] Prepared token paddings: [16, 32, 64, 128, 256, 512, 1024]
+INFO 08-13 20:17:32 [utils.py:157] Prepared request paddings: [8]
+INFO 08-13 20:17:32 [utils.py:176] Prepared attn request paddings: [4]
+INFO 08-13 20:17:32 [tpu_worker.py:466] Init worker | rank=0 | is_first_rank=True | is_last_rank=True | topology_order_id=0 | is_driver_worker=True | hbm=[(1.87, 15.75), (1.87, 15.75), (1.87, 15.75), (1.87, 15.75), (1.87, 15.75), (1.87, 15.75), (1.87, 15.75), (1.87, 15.75)]GiB |self.devices=[TpuDevice(id=0, process_index=0, coords=(0,0,0), core_on_chip=0), TpuDevice(id=1, process_index=0, coords=(1,0,0), core_on_chip=0), TpuDevice(id=2, process_index=0, coords=(0,1,0), core_on_chip=0), TpuDevice(id=3, process_index=0, coords=(1,1,0), core_on_chip=0), TpuDevice(id=7, process_index=0, coords=(1,3,0), core_on_chip=0), TpuDevice(id=6, process_index=0, coords=(0,3,0), core_on_chip=0), TpuDevice(id=5, process_index=0, coords=(1,2,0), core_on_chip=0), TpuDevice(id=4, process_index=0, coords=(0,2,0), core_on_chip=0)] | total devices=[TpuDevice(id=0, process_index=0, coords=(0,0,0), core_on_chip=0), TpuDevice(id=1, process_index=0, coords=(1,0,0), core_on_chip=0), TpuDevice(id=2, process_index=0, coords=(0,1,0), core_on_chip=0), TpuDevice(id=3, process_index=0, coords=(1,1,0), core_on_chip=0), TpuDevice(id=4, process_index=0, coords=(0,2,0), core_on_chip=0), TpuDevice(id=5, process_index=0, coords=(1,2,0), core_on_chip=0), TpuDevice(id=6, process_index=0, coords=(0,3,0), core_on_chip=0), TpuDevice(id=7, process_index=0, coords=(1,3,0), core_on_chip=0)] | local_devices=[TpuDevice(id=0, process_index=0, coords=(0,0,0), core_on_chip=0), TpuDevice(id=1, process_index=0, coords=(1,0,0), core_on_chip=0), TpuDevice(id=2, process_index=0, coords=(0,1,0), core_on_chip=0), TpuDevice(id=3, process_index=0, coords=(1,1,0), core_on_chip=0), TpuDevice(id=4, process_index=0, coords=(0,2,0), core_on_chip=0), TpuDevice(id=5, process_index=0, coords=(1,2,0), core_on_chip=0), TpuDevice(id=6, process_index=0, coords=(0,3,0), core_on_chip=0), TpuDevice(id=7, process_index=0, coords=(1,3,0), core_on_chip=0)]
+INFO 08-13 20:17:32 [model_loader.py:625] Loading model with MODEL_IMPL_TYPE=auto
+INFO 08-13 20:17:32 [model_loader.py:628] Resolved MODEL_IMPL_TYPE 'auto' to 'flax_nnx'
+INFO 08-13 20:17:32 [qwen3.py:92] Running with attention Q-Projection laid out as DNH
+INFO 08-13 20:17:44 [weight_utils.py:1166] Loading dummy weights took 7.92 seconds.
+INFO 08-13 20:17:45 [tpu_runner.py:1249] Cleared JIT caches after weight loading
+INFO 08-13 20:17:45 [tpu_runner.py:1251] Init model | hbm=[(2.81, 15.75), (2.81, 15.75), (2.81, 15.75), (2.81, 15.75), (2.81, 15.75), (2.81, 15.75), (2.81, 15.75), (2.81, 15.75)]GiB
+INFO 08-13 20:17:45 [tpu_platform.py:393] Using cache_config.block_size: 64 instead of overriding with _align_hybrid_block_size() since we set mamba_page_size_padded in kv_cache_manager.py
+INFO 08-13 20:17:45 [tpu_worker.py:552] Memory statistics | total_hbm_limit_gb=125.98GiB | total_hbm_limit_cap_gb=44.09GiB | total_hbm_used_gb=22.48GiB | total_hbm_avail_gb=21.61GiB
+INFO 08-13 20:17:45 [kv_cache_utils.py:2214] GPU KV cache size: 157,376 tokens
+INFO 08-13 20:17:45 [kv_cache_utils.py:2215] Maximum concurrency for 640 tokens per request: 245.90x
+INFO 08-13 20:17:45 [compilation_manager.py:931] Compiling sampling with different input shapes.
+INFO 08-13 20:17:46 [compilation_manager.py:136] Precompile worker0 sample --> {'num_reqs': 8, 'do_sampling': True, 'logprobs': True}
+INFO 08-13 20:17:47 [compilation_manager.py:187] Compilation of worker0 sample --> {'num_reqs': 8, 'do_sampling': True, 'logprobs': True} finished in 0.86 [secs].
+INFO 08-13 20:17:47 [compilation_manager.py:136] Precompile worker0 sample --> {'num_reqs': 8, 'do_sampling': True, 'logprobs': False}
+INFO 08-13 20:17:48 [compilation_manager.py:187] Compilation of worker0 sample --> {'num_reqs': 8, 'do_sampling': True, 'logprobs': False} finished in 0.88 [secs].
+INFO 08-13 20:17:48 [compilation_manager.py:136] Precompile worker0 sample --> {'num_reqs': 8, 'do_sampling': False, 'logprobs': True}
+INFO 08-13 20:17:48 [compilation_manager.py:187] Compilation of worker0 sample --> {'num_reqs': 8, 'do_sampling': False, 'logprobs': True} finished in 0.13 [secs].
+INFO 08-13 20:17:48 [compilation_manager.py:136] Precompile worker0 sample --> {'num_reqs': 8, 'do_sampling': False, 'logprobs': False}
+INFO 08-13 20:17:48 [compilation_manager.py:187] Compilation of worker0 sample --> {'num_reqs': 8, 'do_sampling': False, 'logprobs': False} finished in 0.12 [secs].
+INFO 08-13 20:17:48 [compilation_manager.py:1025] Compiling gather_logprobs with different input shapes.
+INFO 08-13 20:17:48 [compilation_manager.py:136] Precompile worker0 gather_logprobs --> {'num_reqs': 8}
+INFO 08-13 20:17:48 [compilation_manager.py:187] Compilation of worker0 gather_logprobs --> {'num_reqs': 8} finished in 0.23 [secs].
+INFO 08-13 20:17:48 [compilation_manager.py:1081] Compiling compute_and_gather_prompt_logprobs with different input shapes.
+INFO 08-13 20:17:48 [compilation_manager.py:136] Precompile worker0 compute_and_gather_prompt_logprobs --> {'num_tokens': 16}
+INFO 08-13 20:17:48 [compilation_manager.py:187] Compilation of worker0 compute_and_gather_prompt_logprobs --> {'num_tokens': 16} finished in 0.25 [secs].
+INFO 08-13 20:17:48 [compilation_manager.py:136] Precompile worker0 compute_and_gather_prompt_logprobs --> {'num_tokens': 32}
+INFO 08-13 20:17:49 [compilation_manager.py:187] Compilation of worker0 compute_and_gather_prompt_logprobs --> {'num_tokens': 32} finished in 0.26 [secs].
+INFO 08-13 20:17:49 [compilation_manager.py:136] Precompile worker0 compute_and_gather_prompt_logprobs --> {'num_tokens': 64}
+INFO 08-13 20:17:49 [compilation_manager.py:187] Compilation of worker0 compute_and_gather_prompt_logprobs --> {'num_tokens': 64} finished in 0.41 [secs].
+INFO 08-13 20:17:49 [compilation_manager.py:136] Precompile worker0 compute_and_gather_prompt_logprobs --> {'num_tokens': 128}
+INFO 08-13 20:17:51 [compilation_manager.py:187] Compilation of worker0 compute_and_gather_prompt_logprobs --> {'num_tokens': 128} finished in 1.48 [secs].
+INFO 08-13 20:17:51 [compilation_manager.py:136] Precompile worker0 compute_and_gather_prompt_logprobs --> {'num_tokens': 256}
+INFO 08-13 20:17:52 [compilation_manager.py:187] Compilation of worker0 compute_and_gather_prompt_logprobs --> {'num_tokens': 256} finished in 1.48 [secs].
+INFO 08-13 20:17:52 [compilation_manager.py:136] Precompile worker0 compute_and_gather_prompt_logprobs --> {'num_tokens': 512}
+INFO 08-13 20:17:54 [compilation_manager.py:187] Compilation of worker0 compute_and_gather_prompt_logprobs --> {'num_tokens': 512} finished in 1.56 [secs].
+INFO 08-13 20:17:54 [compilation_manager.py:136] Precompile worker0 compute_and_gather_prompt_logprobs --> {'num_tokens': 1024}
+INFO 08-13 20:17:55 [compilation_manager.py:187] Compilation of worker0 compute_and_gather_prompt_logprobs --> {'num_tokens': 1024} finished in 1.55 [secs].
+INFO 08-13 20:17:55 [compilation_manager.py:227] Warm-up call pass finished in 0.01 [secs] over 4 tasks.
+INFO 08-13 20:17:55 [kv_cache_manager.py:985] Hybrid KV cache layout: num_kv_cache_groups=1, num_kv_cache_tensors=36, kv_cache_config.num_blocks=2459, duplicate_shared_layers=False
+INFO 08-13 20:17:55 [kv_cache_manager.py:1013] Init kv-cache | num_total_layers=36 | num_blocks=[2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459] | regular_attn_layers=36 | regular_attn_shape=(num_blocks, (64, 8, 2, 128)) | regular_attn_sharding=NamedSharding(mesh=Mesh('data': 1, 'attn_dp': 1, 'attn_dp_expert': 1, 'expert': 1, 'model': 8, 'dcp': 1, 'pcp': 1, axis_types=(Auto, Auto, Auto, Auto, Auto, Auto, Auto)), spec=P(('data', 'attn_dp', 'attn_dp_expert'), ('pcp', 'dcp'), ('model', 'expert')), memory_kind=device) | regular_attn_dtype=bfloat16 | hbm=[(5.51, 15.75), (5.51, 15.75), (5.51, 15.75), (5.51, 15.75), (5.51, 15.75), (5.51, 15.75), (5.51, 15.75), (5.51, 15.75)]Gb
+INFO 08-13 20:17:55 [compilation_manager.py:235] Precompile all the subgraphs with possible input shapes.
+INFO 08-13 20:17:56 [compilation_manager.py:136] Precompile worker0 backbone --> {'num_tokens': 16, 'num_reqs': 4, 'shared_attention_metadata': SharedAttentionMetadata(input_positions=Array([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], dtype=int32), seq_lens=Array([1, 1, 1, 1, 1, 1, 1, 1], dtype=int32), query_start_loc=Array([1, 1, 1, 1, 1, 1, 1, 1, 1], dtype=int32), request_distribution=Array([0, 0, 0], dtype=int32), mamba_state_indices=None, padded_num_reqs=4)}
+INFO 08-13 20:17:56 [compilation_manager.py:159] AOT lower skipped for worker0 backbone (not a jit); will compile in warmup.
+INFO 08-13 20:17:56 [compilation_manager.py:136] Precompile worker0 backbone --> {'num_tokens': 32, 'num_reqs': 4, 'shared_attention_metadata': SharedAttentionMetadata(input_positions=Array([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1], dtype=int32), seq_lens=Array([1, 1, 1, 1, 1, 1, 1, 1], dtype=int32), query_start_loc=Array([1, 1, 1, 1, 1, 1, 1, 1, 1], dtype=int32), request_distribution=Array([0, 0, 0], dtype=int32), mamba_state_indices=None, padded_num_reqs=4)}
+INFO 08-13 20:17:56 [compilation_manager.py:159] AOT lower skipped for worker0 backbone (not a jit); will compile in warmup.
+INFO 08-13 20:17:56 [compilation_manager.py:136] Precompile worker0 backbone --> {'num_tokens': 64, 'num_reqs': 4, 'shared_attention_metadata': SharedAttentionMetadata(input_positions=Array([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],      dtype=int32), seq_lens=Array([1, 1, 1, 1, 1, 1, 1, 1], dtype=int32), query_start_loc=Array([1, 1, 1, 1, 1, 1, 1, 1, 1], dtype=int32), request_distribution=Array([0, 0, 0], dtype=int32), mamba_state_indices=None, padded_num_reqs=4)}
+INFO 08-13 20:17:56 [compilation_manager.py:159] AOT lower skipped for worker0 backbone (not a jit); will compile in warmup.
+INFO 08-13 20:17:56 [compilation_manager.py:136] Precompile worker0 backbone --> {'num_tokens': 128, 'num_reqs': 4, 'shared_attention_metadata': SharedAttentionMetadata(input_positions=Array([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], dtype=int32), seq_lens=Array([1, 1, 1, 1, 1, 1, 1, 1], dtype=int32), query_start_loc=Array([1, 1, 1, 1, 1, 1, 1, 1, 1], dtype=int32), request_distribution=Array([0, 0, 0], dtype=int32), mamba_state_indices=None, padded_num_reqs=4)}
+INFO 08-13 20:17:56 [compilation_manager.py:159] AOT lower skipped for worker0 backbone (not a jit); will compile in warmup.
+INFO 08-13 20:17:56 [compilation_manager.py:136] Precompile worker0 backbone --> {'num_tokens': 256, 'num_reqs': 4, 'shared_attention_metadata': SharedAttentionMetadata(input_positions=Array([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], dtype=int32), seq_lens=Array([1, 1, 1, 1, 1, 1, 1, 1], dtype=int32), query_start_loc=Array([1, 1, 1, 1, 1, 1, 1, 1, 1], dtype=int32), request_distribution=Array([0, 0, 0], dtype=int32), mamba_state_indices=None, padded_num_reqs=4)}
+INFO 08-13 20:17:56 [compilation_manager.py:159] AOT lower skipped for worker0 backbone (not a jit); will compile in warmup.
+INFO 08-13 20:17:56 [compilation_manager.py:136] Precompile worker0 backbone --> {'num_tokens': 512, 'num_reqs': 4, 'shared_attention_metadata': SharedAttentionMetadata(input_positions=Array([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+INFO 08-13 20:17:56 [compilation_manager.py:136]        1, 1, 1, 1, 1, 1], dtype=int32), seq_lens=Array([1, 1, 1, 1, 1, 1, 1, 1], dtype=int32), query_start_loc=Array([1, 1, 1, 1, 1, 1, 1, 1, 1], dtype=int32), request_distribution=Array([0, 0, 0], dtype=int32), mamba_state_indices=None, padded_num_reqs=4)}
+INFO 08-13 20:17:56 [compilation_manager.py:159] AOT lower skipped for worker0 backbone (not a jit); will compile in warmup.
+INFO 08-13 20:17:56 [compilation_manager.py:136] Precompile worker0 backbone --> {'num_tokens': 1024, 'num_reqs': 4, 'shared_attention_metadata': SharedAttentionMetadata(input_positions=Array([1, 1, 1, ..., 1, 1, 1], dtype=int32), seq_lens=Array([1, 1, 1, 1, 1, 1, 1, 1], dtype=int32), query_start_loc=Array([1, 1, 1, 1, 1, 1, 1, 1, 1], dtype=int32), request_distribution=Array([0, 0, 0], dtype=int32), mamba_state_indices=None, padded_num_reqs=4)}
+INFO 08-13 20:17:56 [compilation_manager.py:159] AOT lower skipped for worker0 backbone (not a jit); will compile in warmup.
+INFO 08-13 20:18:46 [compilation_manager.py:227] Warm-up call pass finished in 49.59 [secs] over 7 tasks.
+INFO 08-13 20:18:46 [compilation_manager.py:844] Compiling select_from_array with different input shapes.
+INFO 08-13 20:18:46 [compilation_manager.py:811] Compiling select_from_array for worker0 select all logits.
+INFO 08-13 20:18:46 [compilation_manager.py:136] Precompile select_from_array [worker0 select all logits] --> {'array_size': 16, 'index_size': 8}
+INFO 08-13 20:18:46 [compilation_manager.py:187] Compilation of select_from_array [worker0 select all logits] --> {'array_size': 16, 'index_size': 8} finished in 0.07 [secs].
+INFO 08-13 20:18:46 [compilation_manager.py:136] Precompile select_from_array [worker0 select all logits] --> {'array_size': 32, 'index_size': 8}
+INFO 08-13 20:18:46 [compilation_manager.py:187] Compilation of select_from_array [worker0 select all logits] --> {'array_size': 32, 'index_size': 8} finished in 0.10 [secs].
+INFO 08-13 20:18:46 [compilation_manager.py:136] Precompile select_from_array [worker0 select all logits] --> {'array_size': 64, 'index_size': 8}
+INFO 08-13 20:18:46 [compilation_manager.py:187] Compilation of select_from_array [worker0 select all logits] --> {'array_size': 64, 'index_size': 8} finished in 0.08 [secs].
+INFO 08-13 20:18:46 [compilation_manager.py:136] Precompile select_from_array [worker0 select all logits] --> {'array_size': 128, 'index_size': 8}
+INFO 08-13 20:18:46 [compilation_manager.py:187] Compilation of select_from_array [worker0 select all logits] --> {'array_size': 128, 'index_size': 8} finished in 0.09 [secs].
+INFO 08-13 20:18:46 [compilation_manager.py:136] Precompile select_from_array [worker0 select all logits] --> {'array_size': 256, 'index_size': 8}
+INFO 08-13 20:18:46 [compilation_manager.py:187] Compilation of select_from_array [worker0 select all logits] --> {'array_size': 256, 'index_size': 8} finished in 0.13 [secs].
+INFO 08-13 20:18:46 [compilation_manager.py:136] Precompile select_from_array [worker0 select all logits] --> {'array_size': 512, 'index_size': 8}
+INFO 08-13 20:18:46 [compilation_manager.py:187] Compilation of select_from_array [worker0 select all logits] --> {'array_size': 512, 'index_size': 8} finished in 0.20 [secs].
+INFO 08-13 20:18:46 [compilation_manager.py:136] Precompile select_from_array [worker0 select all logits] --> {'array_size': 1024, 'index_size': 8}
+INFO 08-13 20:18:47 [compilation_manager.py:187] Compilation of select_from_array [worker0 select all logits] --> {'array_size': 1024, 'index_size': 8} finished in 0.35 [secs].
+INFO 08-13 20:18:47 [compilation_manager.py:891] Compiling compute_logits with different input shapes.
+INFO 08-13 20:18:47 [compilation_manager.py:136] Precompile worker0 compute_logits --> {'num_reqs': 8}
+INFO 08-13 20:18:47 [compilation_manager.py:187] Compilation of worker0 compute_logits --> {'num_reqs': 8} finished in 0.48 [secs].
+INFO 08-13 20:18:47 [compilation_manager.py:1858] Compiling structured_decoding with different input shapes.
+INFO 08-13 20:18:47 [compilation_manager.py:136] Precompile structured_decode --> {'num_reqs': 8}
+INFO 08-13 20:18:50 [compilation_manager.py:187] Compilation of structured_decode --> {'num_reqs': 8} finished in 2.31 [secs].
+INFO 08-13 20:18:50 [compilation_manager.py:227] Warm-up call pass finished in 0.00 [secs] over 1 tasks.
+INFO 08-13 20:18:50 [core.py:340] init engine (profile, create kv cache, warmup model) took 64.42 s (compilation: 54.23 s)
+INFO 08-13 20:18:51 [block_pool.py:790] Successfully reset prefix cache
+INFO 08-13 20:18:51 [kv_cache_manager.py:1035] Deleting kv-cache | num_layers=36 | hbm_before=[(5.88, 15.75), (5.88, 15.75), (5.88, 15.75), (5.88, 15.75), (5.88, 15.75), (5.88, 15.75), (5.88, 15.75), (5.88, 15.75)]Gb
+INFO 08-13 20:18:51 [kv_cache_manager.py:1047] KV cache delete complete | hbm_after=[(3.17, 15.75), (3.17, 15.75), (3.17, 15.75), (3.17, 15.75), (3.17, 15.75), (3.17, 15.75), (3.17, 15.75), (3.17, 15.75)]Gb
+I0813 20:18:53.315492 139606282749504 reshard.py:232] Reshard finished in 0.10s
+INFO 08-13 20:18:53 [kv_cache_manager.py:1069] Reinitializing kv-cache | hbm_before=[(3.08, 15.75), (3.08, 15.75), (3.08, 15.75), (3.08, 15.75), (3.08, 15.75), (3.08, 15.75), (3.08, 15.75), (3.08, 15.75)]Gb
+INFO 08-13 20:18:53 [kv_cache_manager.py:985] Hybrid KV cache layout: num_kv_cache_groups=1, num_kv_cache_tensors=36, kv_cache_config.num_blocks=2459, duplicate_shared_layers=False
+INFO 08-13 20:18:53 [kv_cache_manager.py:1013] Init kv-cache | num_total_layers=36 | num_blocks=[2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459] | regular_attn_layers=36 | regular_attn_shape=(num_blocks, (64, 8, 2, 128)) | regular_attn_sharding=NamedSharding(mesh=Mesh('data': 1, 'attn_dp': 1, 'attn_dp_expert': 1, 'expert': 1, 'model': 8, 'dcp': 1, 'pcp': 1, axis_types=(Auto, Auto, Auto, Auto, Auto, Auto, Auto)), spec=P(('data', 'attn_dp', 'attn_dp_expert'), ('pcp', 'dcp'), ('model', 'expert')), memory_kind=device) | regular_attn_dtype=bfloat16 | hbm=[(5.79, 15.75), (5.79, 15.75), (5.79, 15.75), (5.79, 15.75), (5.79, 15.75), (5.79, 15.75), (5.79, 15.75), (5.79, 15.75)]Gb
+I0813 20:18:54.318207 139708797660288 train_rl.py:375] reward_fns: using 3 custom reward function(s) ['me344_format_reward', 'me344_exact_reward', 'me344_closeness_reward'] from /home/student49/me344-artifacts/qanh-20260813t194806z/rl_task.py
+I0813 20:18:54.319207 139708797660288 train_rl.py:553] Setting up RL trainer...
+I0813 20:18:54.319911 139708797660288 train_rl.py:594] Using standard GRPOLearner with offline rollouts.
+I0813 20:18:54.322443 139708797660288 utils.py:167] RLLearner init - Pathways not available. Using default HBM stats collector
+I0813 20:18:54.322773 139708797660288 utils.py:174] Using 7.7 GiB / 15.7 GiB (0.4863948266277156) on TPU_0(process=0,(0,0,0,0))
+I0813 20:18:54.322976 139708797660288 utils.py:174] Using 7.7 GiB / 15.7 GiB (0.48633021094869383) on TPU_1(process=0,(1,0,0,0))
+I0813 20:18:54.323314 139708797660288 utils.py:174] Using 7.7 GiB / 15.7 GiB (0.48633021094869383) on TPU_2(process=0,(0,1,0,0))
+I0813 20:18:54.323483 139708797660288 utils.py:174] Using 7.7 GiB / 15.7 GiB (0.48633021094869383) on TPU_3(process=0,(1,1,0,0))
+I0813 20:18:54.323606 139708797660288 utils.py:174] Using 7.7 GiB / 15.7 GiB (0.48633021094869383) on TPU_4(process=0,(0,2,0,0))
+I0813 20:18:54.323969 139708797660288 utils.py:174] Using 7.7 GiB / 15.7 GiB (0.48633021094869383) on TPU_5(process=0,(1,2,0,0))
+I0813 20:18:54.324145 139708797660288 utils.py:174] Using 7.7 GiB / 15.7 GiB (0.48633021094869383) on TPU_6(process=0,(0,3,0,0))
+I0813 20:18:54.324307 139708797660288 utils.py:174] Using 7.7 GiB / 15.7 GiB (0.48633021094869383) on TPU_7(process=0,(1,3,0,0))
+
+0it [00:00, ?it/s]WARNING 08-13 20:18:54 [model.py:1553] Default vLLM sampling parameters have been overridden by the model's `generation_config.json`: `{'temperature': 0.7, 'top_k': 20, 'top_p': 0.8}`. If this is not intended, please relaunch vLLM instance with `--generation-config vllm`.
+I0813 20:18:54.597752 139708797660288 vllm_sampler.py:496] Received additional kwargs that are not explicitly defined in the method signature: {'stop': None, 'detokenize': False, 'include_stop_str_in_output': False}. These will be forwarded to the underlying sampler, but please ensure that they are valid.
+
+
+Rendering prompts:   0%|          | 0/4 [00:00<?, ?it/s][A
+Rendering prompts: 100%|██████████| 4/4 [00:00<00:00, 1428.82it/s]
+
+
+Processed prompts:   0%|          | 0/4 [00:00<?, ?it/s, est. speed input: 0.00 toks/s, output: 0.00 toks/s][A
+
+Processed prompts:  25%|██▌       | 1/4 [00:23<01:09, 23.19s/it, est. speed input: 5.26 toks/s, output: 6.90 toks/s][A
+
+Processed prompts:  75%|███████▌  | 3/4 [00:23<00:06,  6.26s/it, est. speed input: 13.58 toks/s, output: 24.74 toks/s][A
+
+Processed prompts: 100%|██████████| 4/4 [00:23<00:00,  6.26s/it, est. speed input: 17.94 toks/s, output: 35.47 toks/s][A
+Processed prompts: 100%|██████████| 4/4 [00:23<00:00,  5.96s/it, est. speed input: 17.94 toks/s, output: 35.47 toks/s]
+W0813 20:19:18.555465 139708797660288 parser.py:694] Timeout is disabled as parsing_timeout is None or <= 0, you must provide                         the logic for timeout interuption yourself to prevent code getting stuck.
+W0813 20:19:18.631082 139708797660288 grader.py:820] Timeout is disabled as timeout_seconds is None or <= 0, you must provide                         the logic for timeout interuption yourself to prevent code getting stuck.
+
+1it [00:24, 24.31s/it]
+
+Rendering prompts:   0%|          | 0/4 [00:00<?, ?it/s][A
+Rendering prompts: 100%|██████████| 4/4 [00:00<00:00, 3196.27it/s]
+
+
+Processed prompts:   0%|          | 0/4 [00:00<?, ?it/s, est. speed input: 0.00 toks/s, output: 0.00 toks/s][A
+
+Processed prompts:  25%|██▌       | 1/4 [00:01<00:03,  1.22s/it, est. speed input: 98.86 toks/s, output: 144.62 toks/s][A
+
+Processed prompts:  50%|█████     | 2/4 [00:01<00:01,  1.52it/s, est. speed input: 150.17 toks/s, output: 263.97 toks/s][A
+
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  1.52it/s, est. speed input: 278.43 toks/s, output: 536.62 toks/s][A
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  2.53it/s, est. speed input: 278.43 toks/s, output: 536.62 toks/s]
+
+2it [00:25, 10.95s/it]
+
+Rendering prompts:   0%|          | 0/4 [00:00<?, ?it/s][A
+Rendering prompts: 100%|██████████| 4/4 [00:00<00:00, 4415.06it/s]
+
+
+Processed prompts:   0%|          | 0/4 [00:00<?, ?it/s, est. speed input: 0.00 toks/s, output: 0.00 toks/s][A
+
+Processed prompts:  25%|██▌       | 1/4 [00:00<00:02,  1.12it/s, est. speed input: 90.57 toks/s, output: 143.12 toks/s][A
+
+Processed prompts:  50%|█████     | 2/4 [00:01<00:00,  2.10it/s, est. speed input: 181.70 toks/s, output: 262.34 toks/s][A
+
+Processed prompts:  75%|███████▌  | 3/4 [00:01<00:00,  2.12it/s, est. speed input: 217.95 toks/s, output: 327.89 toks/s][A
+
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  2.69it/s, est. speed input: 257.63 toks/s, output: 432.98 toks/s][A
+
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  2.69it/s, est. speed input: 257.63 toks/s, output: 432.98 toks/s][A
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  2.27it/s, est. speed input: 257.63 toks/s, output: 432.98 toks/s]
+I0813 20:19:22.014379 139708797660288 evaluate_rl.py:314] ===> corr=8, total=10, corr / total * 100=80.0, partially_corr / total * 100=80.0, corr_format / total * 100=50.0
+
+3it [00:27,  6.76s/it]
+
+Rendering prompts:   0%|          | 0/4 [00:00<?, ?it/s][A
+Rendering prompts: 100%|██████████| 4/4 [00:00<00:00, 3813.87it/s]
+
+
+Processed prompts:   0%|          | 0/4 [00:00<?, ?it/s, est. speed input: 0.00 toks/s, output: 0.00 toks/s][A
+
+Processed prompts:  25%|██▌       | 1/4 [00:01<00:04,  1.52s/it, est. speed input: 57.06 toks/s, output: 144.94 toks/s][A
+
+Processed prompts:  50%|█████     | 2/4 [00:01<00:01,  1.30it/s, est. speed input: 113.99 toks/s, output: 270.50 toks/s][A
+
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  1.30it/s, est. speed input: 257.97 toks/s, output: 560.73 toks/s][A
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  2.27it/s, est. speed input: 257.97 toks/s, output: 560.73 toks/s]
+
+4it [00:29,  4.80s/it]
+4it [00:29,  7.37s/it]
+W0813 20:19:23.800074 139708797660288 train_rl.py:738] Pre RL Training: corr=10, total=16, accuracy=62.5%, partial_accuracy=62.5%, format_accuracy=37.5%, mean_reward=1.0671
+W0813 20:19:23.800241 139708797660288 train_rl.py:752] Starting RL training...
+I0813 20:19:23.808276 139708797660288 rl_learner.py:556] Training with full_batch_size=1, mini_batch_size=1, train_micro_batch_size=1, self._rollout_micro_batch_size=1, self._compute_logps_micro_batch_size=1, grad_acc_steps=1
+
+Rendering prompts:   0%|          | 0/4 [00:00<?, ?it/s]
+Rendering prompts: 100%|██████████| 4/4 [00:00<00:00, 4155.86it/s]
+
+Processed prompts:   0%|          | 0/4 [00:00<?, ?it/s, est. speed input: 0.00 toks/s, output: 0.00 toks/s]
+Processed prompts:  25%|██▌       | 1/4 [00:19<00:58, 19.64s/it, est. speed input: 7.08 toks/s, output: 0.81 toks/s]
+Processed prompts:  50%|█████     | 2/4 [00:21<00:17,  8.89s/it, est. speed input: 13.24 toks/s, output: 11.09 toks/s]
+Processed prompts:  75%|███████▌  | 3/4 [00:21<00:04,  4.95s/it, est. speed input: 19.61 toks/s, output: 22.99 toks/s]
+Processed prompts: 100%|██████████| 4/4 [00:21<00:00,  4.95s/it, est. speed input: 26.14 toks/s, output: 35.03 toks/s]
+Processed prompts: 100%|██████████| 4/4 [00:21<00:00,  5.32s/it, est. speed input: 26.14 toks/s, output: 35.03 toks/s]
+I0813 20:19:48.150284 139708797660288 peft_trainer.py:598] Training with mesh: Mesh('data': 1, 'stage': 1, 'fsdp': 1, 'fsdp_transpose': 1, 'sequence': 1, 'context': 1, 'context_autoregressive': 1, 'tensor': 8, 'tensor_sequence': 1, 'expert': 1, 'autoregressive': 1, axis_types=(Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto))
+I0813 20:19:49.456955 139708797660288 peft_trainer.py:608] Compiled train_step cache size: 0
+I0813 20:19:57.342880 139708797660288 peft_trainer.py:748] Train loop finished in: 7.8854 seconds
+INFO 08-13 20:19:57 [block_pool.py:790] Successfully reset prefix cache
+INFO 08-13 20:19:57 [kv_cache_manager.py:1035] Deleting kv-cache | num_layers=36 | hbm_before=[(7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75)]Gb
+INFO 08-13 20:19:57 [kv_cache_manager.py:1047] KV cache delete complete | hbm_after=[(5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75)]Gb
+I0813 20:19:59.705247 139604910380608 reshard.py:232] Reshard finished in 0.11s
+INFO 08-13 20:19:59 [kv_cache_manager.py:1069] Reinitializing kv-cache | hbm_before=[(5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75)]Gb
+INFO 08-13 20:19:59 [kv_cache_manager.py:985] Hybrid KV cache layout: num_kv_cache_groups=1, num_kv_cache_tensors=36, kv_cache_config.num_blocks=2459, duplicate_shared_layers=False
+INFO 08-13 20:19:59 [kv_cache_manager.py:1013] Init kv-cache | num_total_layers=36 | num_blocks=[2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459] | regular_attn_layers=36 | regular_attn_shape=(num_blocks, (64, 8, 2, 128)) | regular_attn_sharding=NamedSharding(mesh=Mesh('data': 1, 'attn_dp': 1, 'attn_dp_expert': 1, 'expert': 1, 'model': 8, 'dcp': 1, 'pcp': 1, axis_types=(Auto, Auto, Auto, Auto, Auto, Auto, Auto)), spec=P(('data', 'attn_dp', 'attn_dp_expert'), ('pcp', 'dcp'), ('model', 'expert')), memory_kind=device) | regular_attn_dtype=bfloat16 | hbm=[(7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75)]Gb
+I0813 20:20:16.424669 139708797660288 rl_cluster.py:714] Rollout string metric trajectory_ids: ['0_0' '0_1' '0_2' '0_3']
+I0813 20:20:16.425466 139708797660288 rl_cluster.py:714] Rollout string metric prompts: [["<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nEve wants to buy her 3 nieces cooking gear that's made for kids.  The hand mitts cost $14.00 and the apron is $16.00.  A set of 3 cooking utensils is $10.00 and a small knife is twice the amount of the utensils.  The store is offering a 25% off sale on all cooking gear.  How much will Eve spend on the gifts?<|im_end|>\n<|im_start|>assistant\n"
+  "<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nEve wants to buy her 3 nieces cooking gear that's made for kids.  The hand mitts cost $14.00 and the apron is $16.00.  A set of 3 cooking utensils is $10.00 and a small knife is twice the amount of the utensils.  The store is offering a 25% off sale on all cooking gear.  How much will Eve spend on the gifts?<|im_end|>\n<|im_start|>assistant\n"
+  "<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nEve wants to buy her 3 nieces cooking gear that's made for kids.  The hand mitts cost $14.00 and the apron is $16.00.  A set of 3 cooking utensils is $10.00 and a small knife is twice the amount of the utensils.  The store is offering a 25% off sale on all cooking gear.  How much will Eve spend on the gifts?<|im_end|>\n<|im_start|>assistant\n"
+  "<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nEve wants to buy her 3 nieces cooking gear that's made for kids.  The hand mitts cost $14.00 and the apron is $16.00.  A set of 3 cooking utensils is $10.00 and a small knife is twice the amount of the utensils.  The store is offering a 25% off sale on all cooking gear.  How much will Eve spend on the gifts?<|im_end|>\n<|im_start|>assistant\n"]]
+I0813 20:20:16.426239 139708797660288 rl_cluster.py:714] Rollout string metric completions: [['First, calculate the cost of each item:\n\n- Hand mitts: $14.00  \n- Apron: $16.00  \n- Set of 3 cooking utensils: $10.00  \n- Small knife: twice the cost of utensils = 2 × $10.00 = $20.00  \n\nNow, sum the original prices for one set of gear:\n\n$14.00 (mitts) + $16.00 (apron) + $10.00 (utensils) + $20.00 (knife) = $60.00  \n\nEve is buying this gear for **3 nieces**, so:\n\n3 × $60.00 = $180.00  \n\nStore is offering **25% off** on all cooking gear:\n\n25% of $180.00 = 0.25 × 180 = $45.00  \n\nTotal cost after discount:\n\n$180.00 − $45.00 = $135.00  \n\n<reasoning>$180.00 - (0.'
+  '</reasoning>\n<answer>47.25</answer><|im_end|>'
+  '<reasoning>\nFirst, calculate the cost of each item before the discount:\n\n- Hand mitts: $14.00  \n- Apron: $16.00  \n- Set of 3 cooking utensils: $10.00  \n- Small knife: twice the cost of utensils = 2 × $10.00 = $20.00  \n\nNow, sum the total before discount:\n$14.00 (mitts) + $16.00 (apron) + $10.00 (utensils) + $20.00 (knife) = $60.00  \n\nThe store is offering 25% off, so Eve pays 75% of the total:\n75% of $60.00 = 0.75 × $60.00 = $45.00  \n\nThis is for one niece. Eve wants to buy gear for 3 nieces, so multiply by 3:\n$45.00 × 3 = $135.00  \n\nFinal amount Eve will spend: $135.00  \n</reasoning>  \n<answer'
+  '<reasoning>\nFirst, find the cost of each item before the discount:\n\n- Hand mitts: $14.00  \n- Apron: $16.00  \n- Set of 3 cooking utensils: $10.00  \n- Small knife: twice the utensils = 2 × $10.00 = $20.00  \n\nTotal before discount:  \n$14 + $16 + $10 + $20 = $60.00  \n\nStore is offering 25% off, so Eve pays 75% of the total:  \n0.75 × $60.00 = $45.00  \n\nThis is the total cost for one niece.  \n\nEve wants to buy gifts for 3 nieces, so:  \n3 × $45.00 = $135.00  \n\nFinal cost: $135.00  \n</reasoning>  \n<answer>135</answer><|im_end|>']]
+
+Rendering prompts:   0%|          | 0/4 [00:00<?, ?it/s]
+Rendering prompts: 100%|██████████| 4/4 [00:00<00:00, 2928.98it/s]
+
+Processed prompts:   0%|          | 0/4 [00:00<?, ?it/s, est. speed input: 0.00 toks/s, output: 0.00 toks/s]
+Processed prompts:  25%|██▌       | 1/4 [00:00<00:02,  1.15it/s, est. speed input: 116.44 toks/s, output: 142.95 toks/s]
+Processed prompts:  50%|█████     | 2/4 [00:01<00:00,  2.26it/s, est. speed input: 199.72 toks/s, output: 265.96 toks/s]
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  2.26it/s, est. speed input: 374.30 toks/s, output: 527.16 toks/s]
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  3.70it/s, est. speed input: 374.30 toks/s, output: 527.16 toks/s]
+I0813 20:20:17.543141 139708797660288 peft_trainer.py:608] Compiled train_step cache size: 1
+I0813 20:20:17.712158 139708797660288 peft_trainer.py:488] Train step 1 training loss: 0.001269  - training perplexity: 1.001270
+I0813 20:20:17.717492 139708797660288 peft_trainer.py:748] Train loop finished in: 0.1741 seconds
+INFO 08-13 20:20:17 [block_pool.py:790] Successfully reset prefix cache
+INFO 08-13 20:20:17 [kv_cache_manager.py:1035] Deleting kv-cache | num_layers=36 | hbm_before=[(7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75)]Gb
+INFO 08-13 20:20:17 [kv_cache_manager.py:1047] KV cache delete complete | hbm_after=[(5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75)]Gb
+I0813 20:20:18.548848 139604910380608 reshard.py:232] Reshard finished in 0.10s
+INFO 08-13 20:20:18 [kv_cache_manager.py:1069] Reinitializing kv-cache | hbm_before=[(5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75)]Gb
+INFO 08-13 20:20:18 [kv_cache_manager.py:985] Hybrid KV cache layout: num_kv_cache_groups=1, num_kv_cache_tensors=36, kv_cache_config.num_blocks=2459, duplicate_shared_layers=False
+INFO 08-13 20:20:18 [kv_cache_manager.py:1013] Init kv-cache | num_total_layers=36 | num_blocks=[2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459] | regular_attn_layers=36 | regular_attn_shape=(num_blocks, (64, 8, 2, 128)) | regular_attn_sharding=NamedSharding(mesh=Mesh('data': 1, 'attn_dp': 1, 'attn_dp_expert': 1, 'expert': 1, 'model': 8, 'dcp': 1, 'pcp': 1, axis_types=(Auto, Auto, Auto, Auto, Auto, Auto, Auto)), spec=P(('data', 'attn_dp', 'attn_dp_expert'), ('pcp', 'dcp'), ('model', 'expert')), memory_kind=device) | regular_attn_dtype=bfloat16 | hbm=[(7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75)]Gb
+I0813 20:20:27.678790 139708797660288 rl_cluster.py:714] Rollout string metric trajectory_ids: ['1_0' '1_1' '1_2' '1_3']
+I0813 20:20:27.679489 139708797660288 rl_cluster.py:714] Rollout string metric prompts: [['<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nMike and Ted planted tomatoes.  In the morning, Mike planted 50 tomato seeds while Ted planted twice as much as Mike.  In the afternoon, Mike planted 60 tomato seeds while Ted planted 20 fewer tomato seeds than Mike. How many tomato seeds did they plant altogether?<|im_end|>\n<|im_start|>assistant\n'
+  '<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nMike and Ted planted tomatoes.  In the morning, Mike planted 50 tomato seeds while Ted planted twice as much as Mike.  In the afternoon, Mike planted 60 tomato seeds while Ted planted 20 fewer tomato seeds than Mike. How many tomato seeds did they plant altogether?<|im_end|>\n<|im_start|>assistant\n'
+  '<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nMike and Ted planted tomatoes.  In the morning, Mike planted 50 tomato seeds while Ted planted twice as much as Mike.  In the afternoon, Mike planted 60 tomato seeds while Ted planted 20 fewer tomato seeds than Mike. How many tomato seeds did they plant altogether?<|im_end|>\n<|im_start|>assistant\n'
+  '<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nMike and Ted planted tomatoes.  In the morning, Mike planted 50 tomato seeds while Ted planted twice as much as Mike.  In the afternoon, Mike planted 60 tomato seeds while Ted planted 20 fewer tomato seeds than Mike. How many tomato seeds did they plant altogether?<|im_end|>\n<|im_start|>assistant\n']]
+I0813 20:20:27.680166 139708797660288 rl_cluster.py:714] Rollout string metric completions: [['<reasoning>  \nIn the morning:  \n- Mike planted 50 seeds.  \n- Ted planted twice as much as Mike: 2 × 50 = 100 seeds.  \n\nIn the afternoon:  \n- Mike planted 60 seeds.  \n- Ted planted 20 fewer than Mike: 60 - 20 = 40 seeds.  \n\nTotal seeds planted:  \nMike: 50 + 60 = 110  \nTed: 100 + 40 = 140  \nTogether: 110 + 140 = 250  \n\nFinal answer: 250</reasoning>  \n<answer>250</answer><|im_end|>'
+  'Mike planted **50** tomato seeds.  \nTed planted **20 fewer** than Mike, so:\n\n$$\n50 - 20 = 30\n$$\n\nSo, Ted planted **30** tomato seeds.\n\nTotal seeds planted by both:\n\n$$\n50 + 30 = 80\n$$\n\n<reasoning>Mike planted 50 seeds, Ted planted 50 - 20 = 30 seeds. Together, they planted 50 + 30 = 80 seeds.</reasoning>\n\n<answer>80</answer><|im_end|>'
+  '<reasoning>  \nMorning:  \n- Mike planted 50 seeds.  \n- Ted planted twice as much as Mike: 2 × 50 = 100 seeds.  \n\nAfternoon:  \n- Mike planted 60 seeds.  \n- Ted planted 20 fewer than Mike: 60 - 20 = 40 seeds.  \n\nTotal seeds planted:  \nMike: 50 + 60 = 110  \nTed: 100 + 40 = 140  \nTogether: 110 + 140 = 250  \n</reasoning>  \n<answer>250</answer><|im_end|>'
+  '<reasoning>  \nMorning:  \n- Mike planted 50 seeds.  \n- Ted planted twice as much as Mike: 2 × 50 = 100 seeds.  \n\nAfternoon:  \n- Mike planted 60 seeds.  \n- Ted planted 20 fewer than Mike: 60 - 20 = 40 seeds.  \n\nTotal seeds planted:  \nMike: 50 + 60 = 110  \nTed: 100 + 40 = 140  \nTotal: 110 + 140 = 250  \n</reasoning>  \n<answer>250</answer><|im_end|>']]
+
+Rendering prompts:   0%|          | 0/4 [00:00<?, ?it/s]
+Rendering prompts: 100%|██████████| 4/4 [00:00<00:00, 4015.61it/s]
+
+Processed prompts:   0%|          | 0/4 [00:00<?, ?it/s, est. speed input: 0.00 toks/s, output: 0.00 toks/s]
+Processed prompts:  25%|██▌       | 1/4 [00:13<00:40, 13.49s/it, est. speed input: 12.60 toks/s, output: 12.83 toks/s]
+Processed prompts: 100%|██████████| 4/4 [00:14<00:00,  2.71s/it, est. speed input: 48.33 toks/s, output: 55.86 toks/s]
+Processed prompts: 100%|██████████| 4/4 [00:14<00:00,  2.71s/it, est. speed input: 48.33 toks/s, output: 55.86 toks/s]
+Processed prompts: 100%|██████████| 4/4 [00:14<00:00,  3.52s/it, est. speed input: 48.33 toks/s, output: 55.86 toks/s]
+I0813 20:20:41.787201 139708797660288 peft_trainer.py:608] Compiled train_step cache size: 2
+I0813 20:20:41.956440 139708797660288 peft_trainer.py:488] Train step 2 training loss: 0.000962  - training perplexity: 1.000962
+I0813 20:20:41.961997 139708797660288 peft_trainer.py:748] Train loop finished in: 0.1745 seconds
+INFO 08-13 20:20:41 [block_pool.py:790] Successfully reset prefix cache
+INFO 08-13 20:20:41 [kv_cache_manager.py:1035] Deleting kv-cache | num_layers=36 | hbm_before=[(7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75)]Gb
+INFO 08-13 20:20:41 [kv_cache_manager.py:1047] KV cache delete complete | hbm_after=[(5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75)]Gb
+I0813 20:20:42.788844 139605469636160 reshard.py:232] Reshard finished in 0.10s
+INFO 08-13 20:20:42 [kv_cache_manager.py:1069] Reinitializing kv-cache | hbm_before=[(5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75)]Gb
+INFO 08-13 20:20:42 [kv_cache_manager.py:985] Hybrid KV cache layout: num_kv_cache_groups=1, num_kv_cache_tensors=36, kv_cache_config.num_blocks=2459, duplicate_shared_layers=False
+INFO 08-13 20:20:42 [kv_cache_manager.py:1013] Init kv-cache | num_total_layers=36 | num_blocks=[2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459] | regular_attn_layers=36 | regular_attn_shape=(num_blocks, (64, 8, 2, 128)) | regular_attn_sharding=NamedSharding(mesh=Mesh('data': 1, 'attn_dp': 1, 'attn_dp_expert': 1, 'expert': 1, 'model': 8, 'dcp': 1, 'pcp': 1, axis_types=(Auto, Auto, Auto, Auto, Auto, Auto, Auto)), spec=P(('data', 'attn_dp', 'attn_dp_expert'), ('pcp', 'dcp'), ('model', 'expert')), memory_kind=device) | regular_attn_dtype=bfloat16 | hbm=[(7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75)]Gb
+I0813 20:20:59.005052 139708797660288 rl_cluster.py:714] Rollout string metric trajectory_ids: ['2_0' '2_1' '2_2' '2_3']
+I0813 20:20:59.006494 139708797660288 rl_cluster.py:714] Rollout string metric prompts: [['<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nMark was caught speeding and the judge wants to make an example out of him. The base fine for speeding is $50 but additional penalties apply in this case.  The fine is increased by $2 for every mile per hour Mark was going over the speed limit. He was going 75 miles per hour in a 30 mile per hour zone. The fine is also doubled because he was in a school zone. Finally, the judge makes Mark pay $300 in court costs and he also has to pay his lawyer $80/hour for three hours of work. How much does Mark owe for this speeding ticket?<|im_end|>\n<|im_start|>assistant\n'
+  '<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nMark was caught speeding and the judge wants to make an example out of him. The base fine for speeding is $50 but additional penalties apply in this case.  The fine is increased by $2 for every mile per hour Mark was going over the speed limit. He was going 75 miles per hour in a 30 mile per hour zone. The fine is also doubled because he was in a school zone. Finally, the judge makes Mark pay $300 in court costs and he also has to pay his lawyer $80/hour for three hours of work. How much does Mark owe for this speeding ticket?<|im_end|>\n<|im_start|>assistant\n'
+  '<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nMark was caught speeding and the judge wants to make an example out of him. The base fine for speeding is $50 but additional penalties apply in this case.  The fine is increased by $2 for every mile per hour Mark was going over the speed limit. He was going 75 miles per hour in a 30 mile per hour zone. The fine is also doubled because he was in a school zone. Finally, the judge makes Mark pay $300 in court costs and he also has to pay his lawyer $80/hour for three hours of work. How much does Mark owe for this speeding ticket?<|im_end|>\n<|im_start|>assistant\n'
+  '<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nMark was caught speeding and the judge wants to make an example out of him. The base fine for speeding is $50 but additional penalties apply in this case.  The fine is increased by $2 for every mile per hour Mark was going over the speed limit. He was going 75 miles per hour in a 30 mile per hour zone. The fine is also doubled because he was in a school zone. Finally, the judge makes Mark pay $300 in court costs and he also has to pay his lawyer $80/hour for three hours of work. How much does Mark owe for this speeding ticket?<|im_end|>\n<|im_start|>assistant\n']]
+I0813 20:20:59.007036 139708797660288 rl_cluster.py:714] Rollout string metric completions: [["<reasoning>  \nBase fine: $50  \nMark was going 75 mph in a 30 mph zone, so he was going 75 - 30 = 45 mph over the limit.  \nAdditional penalty: $2 per mph over, so 45 × $2 = $90  \nTotal before doubling: $50 + $90 = $140  \nFine is doubled because it's a school zone: $140 × 2 = $280  \nCourt costs: $300  \nLawyer fees: $80/hour × 3 hours = $240  \nTotal owed: $280 + $300 + $240 = $820  \n</reasoning>  \n<answer>820</answer><|im_end|>"
+  "Let's break down the costs step by step:\n\n1. **Base fine**: $50  \n2. **Over-speeding penalty**:  \n   Mark was going 75 mph in a 30 mph zone.  \n   Over the limit: $75 - 30 = 45$ mph  \n   Penalty: $2 per mph over the limit → $45 \\times 2 = $90  \n3. **Total before doubling**: $50 + $90 = $140  \n4. **Doubled because it was a school zone**: $140 \\times 2 = $280  \n5. **Lawyer fee**: $80/hour for 3 hours → $80 \\times 3 = $240  \n\nNow, add the lawyer fee to the doubled fine:  \n$280 + $240 = $520\n\n<reasoning>  \nBase fine: $50  \nOver-speeding penalty: (75 - 30) × $2 = 45 × $2 = $90  \nTotal before doubling: $50 + $90 = $140  \nSchool zone multiplier: $14"
+  "<reasoning>  \nBase fine: $50  \nMark was going 75 mph in a 30 mph zone, so he was going 75 - 30 = 45 mph over the limit.  \nAdditional fine: $2 per mph over = 45 × $2 = $90  \nTotal before doubling: $50 + $90 = $140  \nFine is doubled because it's a school zone: $140 × 2 = $280  \nCourt costs: $300  \nLawyer fees: $80/hour × 3 hours = $240  \nTotal owed: $280 + $300 + $240 = $820  \n</reasoning>  \n<answer>820</answer><|im_end|>"
+  "<reasoning>  \nBase fine: $50  \nMark was going 75 mph in a 30 mph zone, so he was going 75 - 30 = 45 mph over the limit.  \nAdditional penalty: $2 per mph over = 45 × $2 = $90  \nSo, fine before doubling: $50 + $90 = $140  \nThe fine is doubled because it's a school zone: $140 × 2 = $280  \nCourt costs: $300  \nLegal fees: $80/hour for 3 hours = 3 × $80 = $240  \nTotal amount owed: $280 + $300 + $240 = $820  \n</reasoning>  \n<answer>820</answer><|im_end|>"]]
+
+Rendering prompts:   0%|          | 0/4 [00:00<?, ?it/s]
+Rendering prompts: 100%|██████████| 4/4 [00:00<00:00, 3169.70it/s]
+
+Processed prompts:   0%|          | 0/4 [00:00<?, ?it/s, est. speed input: 0.00 toks/s, output: 0.00 toks/s]
+Processed prompts:  25%|██▌       | 1/4 [00:00<00:02,  1.08it/s, est. speed input: 104.07 toks/s, output: 140.93 toks/s]
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  2.41it/s, est. speed input: 211.99 toks/s, output: 358.83 toks/s]
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  2.41it/s, est. speed input: 211.99 toks/s, output: 358.83 toks/s]
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  2.21it/s, est. speed input: 211.99 toks/s, output: 358.83 toks/s]
+I0813 20:21:01.021693 139708797660288 peft_trainer.py:488] Train step 3 training loss: 0.000802  - training perplexity: 1.000803
+I0813 20:21:01.026995 139708797660288 peft_trainer.py:748] Train loop finished in: 0.1749 seconds
+INFO 08-13 20:21:01 [block_pool.py:790] Successfully reset prefix cache
+INFO 08-13 20:21:01 [kv_cache_manager.py:1035] Deleting kv-cache | num_layers=36 | hbm_before=[(7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75)]Gb
+INFO 08-13 20:21:01 [kv_cache_manager.py:1047] KV cache delete complete | hbm_after=[(5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75)]Gb
+I0813 20:21:01.854736 139605452850752 reshard.py:232] Reshard finished in 0.10s
+INFO 08-13 20:21:01 [kv_cache_manager.py:1069] Reinitializing kv-cache | hbm_before=[(5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75)]Gb
+INFO 08-13 20:21:01 [kv_cache_manager.py:985] Hybrid KV cache layout: num_kv_cache_groups=1, num_kv_cache_tensors=36, kv_cache_config.num_blocks=2459, duplicate_shared_layers=False
+INFO 08-13 20:21:01 [kv_cache_manager.py:1013] Init kv-cache | num_total_layers=36 | num_blocks=[2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459] | regular_attn_layers=36 | regular_attn_shape=(num_blocks, (64, 8, 2, 128)) | regular_attn_sharding=NamedSharding(mesh=Mesh('data': 1, 'attn_dp': 1, 'attn_dp_expert': 1, 'expert': 1, 'model': 8, 'dcp': 1, 'pcp': 1, axis_types=(Auto, Auto, Auto, Auto, Auto, Auto, Auto)), spec=P(('data', 'attn_dp', 'attn_dp_expert'), ('pcp', 'dcp'), ('model', 'expert')), memory_kind=device) | regular_attn_dtype=bfloat16 | hbm=[(7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75)]Gb
+I0813 20:21:13.041535 139708797660288 rl_cluster.py:714] Rollout string metric trajectory_ids: ['3_0' '3_1' '3_2' '3_3']
+I0813 20:21:13.042062 139708797660288 rl_cluster.py:714] Rollout string metric prompts: [['<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nJohn runs a telethon to raise money.  For the first 12 hours, he generates $5000 per hour.  The remaining 14 hours, he generates 20% more per hour.  How much total money does he make?<|im_end|>\n<|im_start|>assistant\n'
+  '<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nJohn runs a telethon to raise money.  For the first 12 hours, he generates $5000 per hour.  The remaining 14 hours, he generates 20% more per hour.  How much total money does he make?<|im_end|>\n<|im_start|>assistant\n'
+  '<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nJohn runs a telethon to raise money.  For the first 12 hours, he generates $5000 per hour.  The remaining 14 hours, he generates 20% more per hour.  How much total money does he make?<|im_end|>\n<|im_start|>assistant\n'
+  '<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nJohn runs a telethon to raise money.  For the first 12 hours, he generates $5000 per hour.  The remaining 14 hours, he generates 20% more per hour.  How much total money does he make?<|im_end|>\n<|im_start|>assistant\n']]
+I0813 20:21:13.042457 139708797660288 rl_cluster.py:714] Rollout string metric completions: [['<reasoning>  \nFirst 12 hours: 12 hours × $5000/hour = $60,000  \nRemaining 14 hours: 20% more than $5000 = 1.2 × $5000 = $6000/hour  \n14 hours × $6000/hour = $84,000  \nTotal = $60,000 + $84,000 = $144,000  \n</reasoning>  \n<answer>144000</answer><|im_end|>'
+  'It seems like your question is cut off or incomplete. You mentioned that John runs a telethon and generates money for the first 12 hours at $5000 per hour, and then says he generates 20% more per hour for the remaining 14 hours — but you did not specify:\n\n- How much time in total the telethon lasts?\n- Or, more importantly, what the total earnings based on the rate changes are?\n\nLet’s assume the question is asking:  \n*"John runs a telethon for a total of 26 hours. For the first 12 hours, he generates $5000 per hour. For the remaining 14 hours, he generates 20% more per hour. How much total money does he make?"*\n\nThis is a reasonable interpretation based on the numbers given (12 hours + 14 hours).\n\n**Reasoning:**  \nFirst 12 hours:  \n$ 12 \\times 5000 = 60,000 $\n\nNext 14 hours:  \n20% more than $5000 = $5000 \\times 1.20 = $6000 per hour  \n$ 14'
+  '<reasoning>  \nFirst 12 hours: 12 hours × $5000 = $60,000  \nRemaining 14 hours: 20% more than $5000 = 1.2 × $5000 = $6000 per hour  \n14 hours × $6000 = $84,000  \nTotal = $60,000 + $84,000 = $144,000  \n</reasoning>  \n<answer>144000</answer><|im_end|>'
+  '<reasoning>  \nFirst 12 hours: 12 hours × $5000 = $60,000  \nRemaining 14 hours: 20% more than $5000 = 1.2 × $5000 = $6000 per hour  \n14 hours × $6000 = $84,000  \nTotal = $60,000 + $84,000 = $144,000  \n</reasoning>  \n<answer>144000</answer><|im_end|>']]
+
+Rendering prompts:   0%|          | 0/4 [00:00<?, ?it/s]
+Rendering prompts: 100%|██████████| 4/4 [00:00<00:00, 3924.49it/s]
+
+Processed prompts:   0%|          | 0/4 [00:00<?, ?it/s, est. speed input: 0.00 toks/s, output: 0.00 toks/s]
+Processed prompts:  25%|██▌       | 1/4 [00:00<00:02,  1.25it/s, est. speed input: 139.67 toks/s, output: 140.92 toks/s]
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  2.82it/s, est. speed input: 288.83 toks/s, output: 365.54 toks/s]
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  2.82it/s, est. speed input: 288.83 toks/s, output: 365.54 toks/s]
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  2.58it/s, est. speed input: 288.83 toks/s, output: 365.54 toks/s]
+I0813 20:21:14.794256 139708797660288 peft_trainer.py:488] Train step 4 training loss: 0.012066  - training perplexity: 1.012139
+I0813 20:21:14.799319 139708797660288 peft_trainer.py:748] Train loop finished in: 0.1745 seconds
+INFO 08-13 20:21:14 [block_pool.py:790] Successfully reset prefix cache
+INFO 08-13 20:21:14 [kv_cache_manager.py:1035] Deleting kv-cache | num_layers=36 | hbm_before=[(7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75)]Gb
+INFO 08-13 20:21:14 [kv_cache_manager.py:1047] KV cache delete complete | hbm_after=[(5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75)]Gb
+I0813 20:21:15.612650 139605452850752 reshard.py:232] Reshard finished in 0.10s
+INFO 08-13 20:21:15 [kv_cache_manager.py:1069] Reinitializing kv-cache | hbm_before=[(5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75)]Gb
+INFO 08-13 20:21:15 [kv_cache_manager.py:985] Hybrid KV cache layout: num_kv_cache_groups=1, num_kv_cache_tensors=36, kv_cache_config.num_blocks=2459, duplicate_shared_layers=False
+INFO 08-13 20:21:15 [kv_cache_manager.py:1013] Init kv-cache | num_total_layers=36 | num_blocks=[2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459] | regular_attn_layers=36 | regular_attn_shape=(num_blocks, (64, 8, 2, 128)) | regular_attn_sharding=NamedSharding(mesh=Mesh('data': 1, 'attn_dp': 1, 'attn_dp_expert': 1, 'expert': 1, 'model': 8, 'dcp': 1, 'pcp': 1, axis_types=(Auto, Auto, Auto, Auto, Auto, Auto, Auto)), spec=P(('data', 'attn_dp', 'attn_dp_expert'), ('pcp', 'dcp'), ('model', 'expert')), memory_kind=device) | regular_attn_dtype=bfloat16 | hbm=[(7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75)]Gb
+I0813 20:21:31.613022 139708797660288 rl_cluster.py:714] Rollout string metric trajectory_ids: ['4_0' '4_1' '4_2' '4_3']
+I0813 20:21:31.613721 139708797660288 rl_cluster.py:714] Rollout string metric prompts: [["<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nJoe plays a soccer tournament with his team. Matches won score 3 points for the winning team and tied matches score 1 point for both teams. Joe and his team won 1 game and drew 3. The first-place team has won 2 games and tied 2. By how many points did the first-place team beat Joe's team?<|im_end|>\n<|im_start|>assistant\n"
+  "<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nJoe plays a soccer tournament with his team. Matches won score 3 points for the winning team and tied matches score 1 point for both teams. Joe and his team won 1 game and drew 3. The first-place team has won 2 games and tied 2. By how many points did the first-place team beat Joe's team?<|im_end|>\n<|im_start|>assistant\n"
+  "<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nJoe plays a soccer tournament with his team. Matches won score 3 points for the winning team and tied matches score 1 point for both teams. Joe and his team won 1 game and drew 3. The first-place team has won 2 games and tied 2. By how many points did the first-place team beat Joe's team?<|im_end|>\n<|im_start|>assistant\n"
+  "<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nJoe plays a soccer tournament with his team. Matches won score 3 points for the winning team and tied matches score 1 point for both teams. Joe and his team won 1 game and drew 3. The first-place team has won 2 games and tied 2. By how many points did the first-place team beat Joe's team?<|im_end|>\n<|im_start|>assistant\n"]]
+I0813 20:21:31.614675 139708797660288 rl_cluster.py:714] Rollout string metric completions: [["<reasoning>  \nJoe's team: 1 win = 1 × 3 = 3 points, 3 draws = 3 × 1 = 3 points → total = 3 + 3 = 6 points.  \nFirst-place team: 2 wins = 2 × 3 = 6 points, 2 draws = 2 × 1 = 2 points → total = 6 + 2 = 8 points.  \nDifference: 8 - 6 = 2 points.  \n<answer>2</answer><|im_end|>"
+  "To solve this, we need to calculate the total points for each team based on wins and ties, then find the difference.\n\n- **Joe's team**:  \n  - 1 win = 1 × 3 = 3 points  \n  - 3 ties = 3 × 1 = 3 points  \n  - Total = 3 + 3 = **6 points**\n\n- **First-place team**:  \n  - 2 wins = 2 × 3 = 6 points  \n  - 2 ties = 2 × 1 = 2 points  \n  - Total = 6 + 2 = **8 points**\n\nDifference: 8 - 6 = **2 points**\n\n<reasoning>  \nJoe's team: 1 win (3 pts) + 3 ties (3 pts) = 6 points.  \nFirst-place team: 2 wins (6 pts) + 2 ties (2 pts) = 8 points.  \nDifference: 8 - 6 = 2 points.</reasoning>  \n<answer>2</answer><|im_end|>"
+  "<reasoning>  \nJoe's team: 1 win = 1 × 3 = 3 points, 3 draws = 3 × 1 = 3 points → total = 3 + 3 = 6 points  \nFirst-place team: 2 wins = 2 × 3 = 6 points, 2 draws = 2 × 1 = 2 points → total = 6 + 2 = 8 points  \nDifference = 8 - 6 = 2 points  \n<answer>2</answer><|im_end|>"
+  "<reasoning>  \nJoe's team: 1 win = 1 × 3 = 3 points, 3 draws = 3 × 1 = 3 points → total = 3 + 3 = 6 points.  \nFirst-place team: 2 wins = 2 × 3 = 6 points, 2 draws = 2 × 1 = 2 points → total = 6 + 2 = 8 points.  \nDifference: 8 - 6 = 2 points.  \n<answer>2</answer><|im_end|>"]]
+
+Rendering prompts:   0%|          | 0/4 [00:00<?, ?it/s]
+Rendering prompts: 100%|██████████| 4/4 [00:00<00:00, 3551.49it/s]
+
+Processed prompts:   0%|          | 0/4 [00:00<?, ?it/s, est. speed input: 0.00 toks/s, output: 0.00 toks/s]
+Processed prompts:  25%|██▌       | 1/4 [00:01<00:03,  1.04s/it, est. speed input: 134.06 toks/s, output: 140.76 toks/s]
+Processed prompts:  50%|█████     | 2/4 [00:01<00:01,  1.28it/s, est. speed input: 170.12 toks/s, output: 231.48 toks/s]
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  2.95it/s, est. speed input: 311.77 toks/s, output: 489.37 toks/s]
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  2.95it/s, est. speed input: 311.77 toks/s, output: 489.37 toks/s]
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  2.23it/s, est. speed input: 311.77 toks/s, output: 489.37 toks/s]
+I0813 20:21:33.613312 139708797660288 peft_trainer.py:488] Train step 5 training loss: 0.015787  - training perplexity: 1.015912
+I0813 20:21:33.618765 139708797660288 peft_trainer.py:748] Train loop finished in: 0.1742 seconds
+INFO 08-13 20:21:33 [block_pool.py:790] Successfully reset prefix cache
+INFO 08-13 20:21:33 [kv_cache_manager.py:1035] Deleting kv-cache | num_layers=36 | hbm_before=[(7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75)]Gb
+INFO 08-13 20:21:33 [kv_cache_manager.py:1047] KV cache delete complete | hbm_after=[(5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75)]Gb
+I0813 20:21:34.446523 139605452850752 reshard.py:232] Reshard finished in 0.10s
+INFO 08-13 20:21:34 [kv_cache_manager.py:1069] Reinitializing kv-cache | hbm_before=[(5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75)]Gb
+INFO 08-13 20:21:34 [kv_cache_manager.py:985] Hybrid KV cache layout: num_kv_cache_groups=1, num_kv_cache_tensors=36, kv_cache_config.num_blocks=2459, duplicate_shared_layers=False
+INFO 08-13 20:21:34 [kv_cache_manager.py:1013] Init kv-cache | num_total_layers=36 | num_blocks=[2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459] | regular_attn_layers=36 | regular_attn_shape=(num_blocks, (64, 8, 2, 128)) | regular_attn_sharding=NamedSharding(mesh=Mesh('data': 1, 'attn_dp': 1, 'attn_dp_expert': 1, 'expert': 1, 'model': 8, 'dcp': 1, 'pcp': 1, axis_types=(Auto, Auto, Auto, Auto, Auto, Auto, Auto)), spec=P(('data', 'attn_dp', 'attn_dp_expert'), ('pcp', 'dcp'), ('model', 'expert')), memory_kind=device) | regular_attn_dtype=bfloat16 | hbm=[(7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75)]Gb
+I0813 20:21:45.057162 139708797660288 rl_cluster.py:714] Rollout string metric trajectory_ids: ['5_0' '5_1' '5_2' '5_3']
+I0813 20:21:45.058048 139708797660288 rl_cluster.py:714] Rollout string metric prompts: [['<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nTobias is buying a new pair of shoes that costs $95. He has been saving up his money each month for the past three months. He gets a $5 allowance a month. He also mows lawns and shovels driveways. He charges $15 to mow a lawn and $7 to shovel. After buying the shoes, he has $15 in change. If he mows 4 lawns, how many driveways did he shovel?<|im_end|>\n<|im_start|>assistant\n'
+  '<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nTobias is buying a new pair of shoes that costs $95. He has been saving up his money each month for the past three months. He gets a $5 allowance a month. He also mows lawns and shovels driveways. He charges $15 to mow a lawn and $7 to shovel. After buying the shoes, he has $15 in change. If he mows 4 lawns, how many driveways did he shovel?<|im_end|>\n<|im_start|>assistant\n'
+  '<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nTobias is buying a new pair of shoes that costs $95. He has been saving up his money each month for the past three months. He gets a $5 allowance a month. He also mows lawns and shovels driveways. He charges $15 to mow a lawn and $7 to shovel. After buying the shoes, he has $15 in change. If he mows 4 lawns, how many driveways did he shovel?<|im_end|>\n<|im_start|>assistant\n'
+  '<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nTobias is buying a new pair of shoes that costs $95. He has been saving up his money each month for the past three months. He gets a $5 allowance a month. He also mows lawns and shovels driveways. He charges $15 to mow a lawn and $7 to shovel. After buying the shoes, he has $15 in change. If he mows 4 lawns, how many driveways did he shovel?<|im_end|>\n<|im_start|>assistant\n']]
+I0813 20:21:45.058659 139708797660288 rl_cluster.py:714] Rollout string metric completions: [['Allowance: 3 months × $5 = $15  \nMowing lawns: 4 × $15 = $60  \nTotal from mowing and allowance: $15 + $60 = $75  \nShoes cost $95, and he has $15 left, so total money saved = $95 + $15 = $110  \nMoney from shoveling = $110 - $75 = $35  \nEach driveway is $7, so number of driveways = $35 ÷ $7 = 5  \n\n<reasoning>  \nTotal saved = $95 + $15 = $110  \nAllowance: 3 × $5 = $15  \nMowing 4 lawns: 4 × $15 = $60  \nTotal from mowing and allowance: $15 + $60 = $75  \nRemaining from shoveling: $110 - $75 = $35  \nDriveways: $35 ÷ $7 = 5  \n</reasoning>  \n<answer>5</answer><|im_end|>'
+  "Let's break it down step by step:\n\n- Shoes cost $95  \n- After buying them, he has $15 left  \n- So, total money he had = $95 + $15 = $110  \n\nHe earns:  \n- $5 per month for 3 months → 3 × $5 = $15  \n- Mows 4 lawns at $15 each → 4 × $15 = $60  \n- Shovels some driveways at $7 each → let’s say he shovels *x* driveways → 7x  \n\nTotal earnings = 15 + 60 + 7x = 75 + 7x  \n\nSet equal to total money:  \n75 + 7x = 110  \n7x = 35  \nx = 5  \n\nSo he shoveled 5 driveways.  \n\nBut the question is: **How many driveways did he shovel?**  \nAnswer: 5  \n\n<reasoning>  \nTotal money: $95 (shoes) + $15 (leftover) = $110  \nAllowance: 3 × $5 = $15  \nLawn m"
+  '<reasoning>  \nTotal cost of shoes: $95  \nMoney left after purchase: $15  \nSo total money saved: 95 + 15 = $110  \n\nAllowance: $5/month × 3 months = $15  \nEarnings from mowing: 4 lawns × $15 = $60  \nLet x = number of driveways shoveled → earnings = 7x  \n\nTotal money: 15 (allowance) + 60 + 7x = 110  \n75 + 7x = 110  \n7x = 35  \nx = 5  \n\n<answer>5</answer><|im_end|>'
+  'Allowance: 3 months × $5 = $15  \nMowing 4 lawns: 4 × $15 = $60  \nTotal money earned = $15 (allowance) + $60 (lawns) + $7×(driveways)  \nShoes cost $95, and he has $15 left, so total money = $95 + $15 = $110  \nSo: 15 + 60 + 7d = 110  \n75 + 7d = 110  \n7d = 35  \nd = 5  \n\n<reasoning>  \nTotal money = allowance (3×5) + mowing (4×15) + shoveling (d×7) = 15 + 60 + 7d  \nSet equal to 95 + 15 = 110  \n75 + 7d = 110 → 7d = 35 → d = 5</reasoning>  \n<answer>5</answer><|im_end|>']]
+
+Rendering prompts:   0%|          | 0/4 [00:00<?, ?it/s]
+Rendering prompts: 100%|██████████| 4/4 [00:00<00:00, 2512.69it/s]
+
+Processed prompts:   0%|          | 0/4 [00:00<?, ?it/s, est. speed input: 0.00 toks/s, output: 0.00 toks/s]
+Processed prompts:  25%|██▌       | 1/4 [00:01<00:04,  1.40s/it, est. speed input: 74.07 toks/s, output: 143.16 toks/s]
+Processed prompts:  75%|███████▌  | 3/4 [00:01<00:00,  2.36it/s, est. speed input: 199.62 toks/s, output: 409.48 toks/s]
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  2.84it/s, est. speed input: 233.49 toks/s, output: 502.91 toks/s]
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  2.84it/s, est. speed input: 233.49 toks/s, output: 502.91 toks/s]
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  2.24it/s, est. speed input: 233.49 toks/s, output: 502.91 toks/s]
+I0813 20:21:47.042737 139708797660288 peft_trainer.py:488] Train step 6 training loss: 0.019549  - training perplexity: 1.019741
+I0813 20:21:47.047979 139708797660288 peft_trainer.py:748] Train loop finished in: 0.1747 seconds
+INFO 08-13 20:21:47 [block_pool.py:790] Successfully reset prefix cache
+INFO 08-13 20:21:47 [kv_cache_manager.py:1035] Deleting kv-cache | num_layers=36 | hbm_before=[(7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75)]Gb
+INFO 08-13 20:21:47 [kv_cache_manager.py:1047] KV cache delete complete | hbm_after=[(5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75)]Gb
+I0813 20:21:47.862064 139607493350976 reshard.py:232] Reshard finished in 0.10s
+INFO 08-13 20:21:47 [kv_cache_manager.py:1069] Reinitializing kv-cache | hbm_before=[(5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75)]Gb
+INFO 08-13 20:21:47 [kv_cache_manager.py:985] Hybrid KV cache layout: num_kv_cache_groups=1, num_kv_cache_tensors=36, kv_cache_config.num_blocks=2459, duplicate_shared_layers=False
+INFO 08-13 20:21:47 [kv_cache_manager.py:1013] Init kv-cache | num_total_layers=36 | num_blocks=[2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459] | regular_attn_layers=36 | regular_attn_shape=(num_blocks, (64, 8, 2, 128)) | regular_attn_sharding=NamedSharding(mesh=Mesh('data': 1, 'attn_dp': 1, 'attn_dp_expert': 1, 'expert': 1, 'model': 8, 'dcp': 1, 'pcp': 1, axis_types=(Auto, Auto, Auto, Auto, Auto, Auto, Auto)), spec=P(('data', 'attn_dp', 'attn_dp_expert'), ('pcp', 'dcp'), ('model', 'expert')), memory_kind=device) | regular_attn_dtype=bfloat16 | hbm=[(7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75)]Gb
+I0813 20:22:03.821833 139708797660288 rl_cluster.py:714] Rollout string metric trajectory_ids: ['6_0' '6_1' '6_2' '6_3']
+I0813 20:22:03.822668 139708797660288 rl_cluster.py:714] Rollout string metric prompts: [['<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nBetty picked 16 strawberries. Matthew picked 20 more strawberries than Betty and twice as many as Natalie. They used their strawberries to make jam. One jar of jam used 7 strawberries and they sold each jar at $4. How much money were they able to make from the strawberries they picked?<|im_end|>\n<|im_start|>assistant\n'
+  '<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nBetty picked 16 strawberries. Matthew picked 20 more strawberries than Betty and twice as many as Natalie. They used their strawberries to make jam. One jar of jam used 7 strawberries and they sold each jar at $4. How much money were they able to make from the strawberries they picked?<|im_end|>\n<|im_start|>assistant\n'
+  '<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nBetty picked 16 strawberries. Matthew picked 20 more strawberries than Betty and twice as many as Natalie. They used their strawberries to make jam. One jar of jam used 7 strawberries and they sold each jar at $4. How much money were they able to make from the strawberries they picked?<|im_end|>\n<|im_start|>assistant\n'
+  '<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nBetty picked 16 strawberries. Matthew picked 20 more strawberries than Betty and twice as many as Natalie. They used their strawberries to make jam. One jar of jam used 7 strawberries and they sold each jar at $4. How much money were they able to make from the strawberries they picked?<|im_end|>\n<|im_start|>assistant\n']]
+I0813 20:22:03.824428 139708797660288 rl_cluster.py:714] Rollout string metric completions: [['Betty: 16 strawberries  \nMatthew: 20 more than Betty → 16 + 20 = 36  \nMatthew also picked twice as many as Natalie → Natalie = 36 ÷ 2 = 18  \n\nTotal strawberries = 16 + 36 + 18 = 70  \n\nStraws per jar = 7 → jars = 70 ÷ 7 = 10  \n\nEach jar sold at $4 → total money = 10 × 4 = 40  \n\n<reasoning>  \nBetty: 16  \nMatthew: 16 + 20 = 36, so Natalie = 36 ÷ 2 = 18  \nTotal strawberries: 16 + 36 + 18 = 70  \nJars: 70 ÷ 7 = 10  \nRevenue: 10 × 4 = 40</reasoning>  \n<answer>40</answer><|im_end|>'
+  'We are told:\n\n- Betty picked 16 strawberries.  \n- Matthew picked 20 more than Betty, so Matthew picked:  \n  16 + 20 = 36 strawberries.  \n- Matthew picked twice as many as Natalie, so Natalie picked:  \n  36 ÷ 2 = 18 strawberries.\n\nNow, they used their strawberries to make jam.  \nEach jar of jam uses 7 strawberries.\n\nSo, total strawberries picked:  \nBetty: 16  \nMatthew: 36  \nNatalie: 18  \nTotal = 16 + 36 + 18 = 70 strawberries.\n\nNumber of jars they can make:  \n70 ÷ 7 = 10 jars.\n\nEach jar sells for $4, so total money made:  \n10 × 4 = $40.\n\n<reasoning>  \nMatthew picked 16 + 20 = 36 strawberries.  \nNatalie picked 36 ÷ 2 = 18.  \nTotal strawberries: 16 + 36 + 18 = 70.  \nJars made: 70 ÷ 7 = 10.  \n'
+  'Betty: 16 strawberries  \nMatthew: 20 more than Betty = 16 + 20 = 36  \nMatthew also picked twice as many as Natalie → Natalie = 36 ÷ 2 = 18  \n\nTotal strawberries = 16 + 36 + 18 = 70  \n\nJars of jam = 70 ÷ 7 = 10  \n\nMoney made = 10 × $4 = $40  \n\n<reasoning>  \nBetty: 16  \nMatthew: 16 + 20 = 36; so Natalie = 36 / 2 = 18  \nTotal: 16 + 36 + 18 = 70  \nJars: 70 ÷ 7 = 10  \nRevenue: 10 × 4 = 40</reasoning>  \n<answer>40</answer><|im_end|>'
+  'Betty: 16 strawberries  \nMatthew: 20 more than Betty → 16 + 20 = 36  \nMatthew also picked twice as many as Natalie → Natalie = 36 ÷ 2 = 18  \n\nTotal strawberries: 16 + 36 + 18 = 70  \n\nJars of jam: 70 ÷ 7 = 10  \n\nMoney from sale: 10 × $4 = $40  \n\n<reasoning>  \nBetty picked 16. Matthew picked 16 + 20 = 36. Since Matthew picked twice as many as Natalie, Natalie picked 36 ÷ 2 = 18. Total strawberries = 16 + 36 + 18 = 70. Each jar uses 7 strawberries → 70 ÷ 7 = 10 jars. Each jar sold for $4 → 10 × 4 = $40.  \n</reasoning>  \n<answer>40</answer><|im_end|>']]
+
+Rendering prompts:   0%|          | 0/4 [00:00<?, ?it/s]
+Rendering prompts: 100%|██████████| 4/4 [00:00<00:00, 3777.80it/s]
+
+Processed prompts:   0%|          | 0/4 [00:00<?, ?it/s, est. speed input: 0.00 toks/s, output: 0.00 toks/s]
+Processed prompts:  25%|██▌       | 1/4 [00:01<00:04,  1.37s/it, est. speed input: 79.60 toks/s, output: 143.13 toks/s]
+Processed prompts:  50%|█████     | 2/4 [00:01<00:01,  1.36it/s, est. speed input: 131.40 toks/s, output: 261.59 toks/s]
+Processed prompts:  75%|███████▌  | 3/4 [00:01<00:00,  2.19it/s, est. speed input: 183.09 toks/s, output: 386.34 toks/s]
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  2.19it/s, est. speed input: 244.08 toks/s, output: 529.58 toks/s]
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  2.24it/s, est. speed input: 244.08 toks/s, output: 529.58 toks/s]
+I0813 20:22:05.814115 139708797660288 peft_trainer.py:488] Train step 7 training loss: 0.015732  - training perplexity: 1.015856
+I0813 20:22:05.819497 139708797660288 peft_trainer.py:748] Train loop finished in: 0.1744 seconds
+INFO 08-13 20:22:05 [block_pool.py:790] Successfully reset prefix cache
+INFO 08-13 20:22:05 [kv_cache_manager.py:1035] Deleting kv-cache | num_layers=36 | hbm_before=[(7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75)]Gb
+INFO 08-13 20:22:05 [kv_cache_manager.py:1047] KV cache delete complete | hbm_after=[(5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75)]Gb
+I0813 20:22:06.638419 139605397157440 reshard.py:232] Reshard finished in 0.11s
+INFO 08-13 20:22:06 [kv_cache_manager.py:1069] Reinitializing kv-cache | hbm_before=[(5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75)]Gb
+INFO 08-13 20:22:06 [kv_cache_manager.py:985] Hybrid KV cache layout: num_kv_cache_groups=1, num_kv_cache_tensors=36, kv_cache_config.num_blocks=2459, duplicate_shared_layers=False
+INFO 08-13 20:22:06 [kv_cache_manager.py:1013] Init kv-cache | num_total_layers=36 | num_blocks=[2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459] | regular_attn_layers=36 | regular_attn_shape=(num_blocks, (64, 8, 2, 128)) | regular_attn_sharding=NamedSharding(mesh=Mesh('data': 1, 'attn_dp': 1, 'attn_dp_expert': 1, 'expert': 1, 'model': 8, 'dcp': 1, 'pcp': 1, axis_types=(Auto, Auto, Auto, Auto, Auto, Auto, Auto)), spec=P(('data', 'attn_dp', 'attn_dp_expert'), ('pcp', 'dcp'), ('model', 'expert')), memory_kind=device) | regular_attn_dtype=bfloat16 | hbm=[(7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75)]Gb
+I0813 20:22:12.592356 139708797660288 rl_cluster.py:714] Rollout string metric trajectory_ids: ['7_0' '7_1' '7_2' '7_3']
+I0813 20:22:12.593105 139708797660288 rl_cluster.py:714] Rollout string metric prompts: [['<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nApple sold 100 iPhones at their New York store today for an average cost of $1000. They also sold 20 iPads for an average cost of $900 and 80 Apple TVs for an average cost of $200. What was the average cost across all products sold today?<|im_end|>\n<|im_start|>assistant\n'
+  '<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nApple sold 100 iPhones at their New York store today for an average cost of $1000. They also sold 20 iPads for an average cost of $900 and 80 Apple TVs for an average cost of $200. What was the average cost across all products sold today?<|im_end|>\n<|im_start|>assistant\n'
+  '<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nApple sold 100 iPhones at their New York store today for an average cost of $1000. They also sold 20 iPads for an average cost of $900 and 80 Apple TVs for an average cost of $200. What was the average cost across all products sold today?<|im_end|>\n<|im_start|>assistant\n'
+  '<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nApple sold 100 iPhones at their New York store today for an average cost of $1000. They also sold 20 iPads for an average cost of $900 and 80 Apple TVs for an average cost of $200. What was the average cost across all products sold today?<|im_end|>\n<|im_start|>assistant\n']]
+I0813 20:22:12.593983 139708797660288 rl_cluster.py:714] Rollout string metric completions: [['Total revenue = (100 × 1000) + (20 × 900) + (80 × 200) = 100,000 + 18,000 + 16,000 = 134,000  \nTotal units = 100 + 20 + 80 = 200  \nAverage cost = 134,000 / 200 = 670  \n\n<reasoning>  \nTotal revenue: 100×1000 = 100,000; 20×900 = 18,000; 80×200 = 16,000 → sum = 134,000  \nTotal units: 100 + 20 + 80 = 200  \nAverage = 134,000 / 200 = 670</reasoning>  \n<answer>670</answer><|im_end|>'
+  'To find the **average cost across all products sold**, we need to compute the **total cost** of all items sold and divide it by the **total number of items** sold.\n\n---\n\n**Step 1: Total cost of iPhones**  \n100 iPhones × $1000 = $100,000\n\n**Step 2: Total cost of Apple TVs**  \n80 Apple TVs × $200 = $16,000\n\n**Step 3: Total cost**  \n$100,000 + $16,000 = $116,000\n\n**Step 4: Total number of products**  \n100 + 80 = 180\n\n**Step 5: Average cost**  \n$116,000 ÷ 180 ≈ $644.44\n\n<reasoning>  \nTotal cost = (100 × 1000) + (80 × 200) = 100,000 + 16,000 = 116,000  \nTotal units = 100 + '
+  'Total revenue = (100 × 1000) + (20 × 900) + (80 × 200) = 100,000 + 18,000 + 16,000 = 134,000  \nTotal units = 100 + 20 + 80 = 200  \nAverage cost = 134,000 / 200 = 670  \n<reasoning>Total revenue: 100*1000 + 20*900 + 80*200 = 134,000. Total units: 200. Average = 134000 / 200 = 670</reasoning>  \n<answer>670</answer><|im_end|>'
+  'Total iPhones: 100 × $1000 = $100,000  \nTotal iPads: 20 × $900 = $18,000  \nTotal Apple TVs: 80 × $200 = $16,000  \nTotal revenue: 100,000 + 18,000 + 16,000 = $134,000  \nTotal units: 100 + 20 + 80 = 200  \nAverage cost: 134,000 / 200 = $670  \n\n<reasoning>  \nTotal revenue = (100×1000) + (20×900) + (80×200) = 100,000 + 18,000 + 16,000 = 134,000  \nTotal units = 100 + 20 + 80 = 200  \nAverage = 134,000 / 200 = 67']]
+
+Rendering prompts:   0%|          | 0/4 [00:00<?, ?it/s]
+Rendering prompts: 100%|██████████| 4/4 [00:00<00:00, 4358.85it/s]
+
+Processed prompts:   0%|          | 0/4 [00:00<?, ?it/s, est. speed input: 0.00 toks/s, output: 0.00 toks/s]
+Processed prompts:  25%|██▌       | 1/4 [00:01<00:05,  1.80s/it, est. speed input: 69.51 toks/s, output: 142.36 toks/s]
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  1.80s/it, est. speed input: 277.99 toks/s, output: 569.32 toks/s]
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  2.22it/s, est. speed input: 277.99 toks/s, output: 569.32 toks/s]
+I0813 20:22:14.595961 139708797660288 peft_trainer.py:488] Train step 8 training loss: 0.012547  - training perplexity: 1.012626
+I0813 20:22:14.601206 139708797660288 peft_trainer.py:748] Train loop finished in: 0.1749 seconds
+INFO 08-13 20:22:14 [block_pool.py:790] Successfully reset prefix cache
+INFO 08-13 20:22:14 [kv_cache_manager.py:1035] Deleting kv-cache | num_layers=36 | hbm_before=[(7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75)]Gb
+INFO 08-13 20:22:14 [kv_cache_manager.py:1047] KV cache delete complete | hbm_after=[(5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75)]Gb
+I0813 20:22:15.428458 139605397157440 reshard.py:232] Reshard finished in 0.10s
+INFO 08-13 20:22:15 [kv_cache_manager.py:1069] Reinitializing kv-cache | hbm_before=[(5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75)]Gb
+INFO 08-13 20:22:15 [kv_cache_manager.py:985] Hybrid KV cache layout: num_kv_cache_groups=1, num_kv_cache_tensors=36, kv_cache_config.num_blocks=2459, duplicate_shared_layers=False
+INFO 08-13 20:22:15 [kv_cache_manager.py:1013] Init kv-cache | num_total_layers=36 | num_blocks=[2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459] | regular_attn_layers=36 | regular_attn_shape=(num_blocks, (64, 8, 2, 128)) | regular_attn_sharding=NamedSharding(mesh=Mesh('data': 1, 'attn_dp': 1, 'attn_dp_expert': 1, 'expert': 1, 'model': 8, 'dcp': 1, 'pcp': 1, axis_types=(Auto, Auto, Auto, Auto, Auto, Auto, Auto)), spec=P(('data', 'attn_dp', 'attn_dp_expert'), ('pcp', 'dcp'), ('model', 'expert')), memory_kind=device) | regular_attn_dtype=bfloat16 | hbm=[(7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75)]Gb
+I0813 20:22:31.384395 139708797660288 rl_cluster.py:714] Rollout string metric trajectory_ids: ['8_0' '8_1' '8_2' '8_3']
+I0813 20:22:31.385159 139708797660288 rl_cluster.py:714] Rollout string metric prompts: [['<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nLast year Jessica paid $1000 for rent, $200 for food, and $100 for car insurance each month. This year her rent goes up by 30%, food costs increase by 50%, and the cost of her car insurance triples because she was at fault in an accident. How much more does Jessica pay for her expenses over the whole year compared to last year?<|im_end|>\n<|im_start|>assistant\n'
+  '<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nLast year Jessica paid $1000 for rent, $200 for food, and $100 for car insurance each month. This year her rent goes up by 30%, food costs increase by 50%, and the cost of her car insurance triples because she was at fault in an accident. How much more does Jessica pay for her expenses over the whole year compared to last year?<|im_end|>\n<|im_start|>assistant\n'
+  '<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nLast year Jessica paid $1000 for rent, $200 for food, and $100 for car insurance each month. This year her rent goes up by 30%, food costs increase by 50%, and the cost of her car insurance triples because she was at fault in an accident. How much more does Jessica pay for her expenses over the whole year compared to last year?<|im_end|>\n<|im_start|>assistant\n'
+  '<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nLast year Jessica paid $1000 for rent, $200 for food, and $100 for car insurance each month. This year her rent goes up by 30%, food costs increase by 50%, and the cost of her car insurance triples because she was at fault in an accident. How much more does Jessica pay for her expenses over the whole year compared to last year?<|im_end|>\n<|im_start|>assistant\n']]
+I0813 20:22:31.385693 139708797660288 rl_cluster.py:714] Rollout string metric completions: [['Last year: rent = $1000, food = $200, car insurance = $100 → monthly total = $1300 → annual = $15,600  \nThis year: rent = $1000 × 1.30 = $1300, food = $200 × 1.50 = $300, car insurance = $100 × 3 = $300 → monthly = $1900 → annual = $22,800  \nDifference = $22,800 - $15,600 = $7,200  \n<reasoning>  \nLast year: 12 × (1000 + 200 + 100) = 12 × 1300 = 15,600  \nThis year: 12 × (1300 + 300 + 300) = 12 × 1900 = 22,800  \nDifference: 22,800 - 15,600 = 7,2'
+  "Let's break down Jessica's expenses last year and this year:\n\n**Last Year:**\n- Rent: $1000  \n- Food: $200  \n- Car insurance: $100  \n**Total last year:**  \n1000 + 200 + 100 = $1300 per month  \nAnnual (12 months): 1300 × 12 = $15,600\n\n**This Year:**\n- Rent: 30% increase → 1000 × 1.30 = $1300  \n- Food: 50% increase → 200 × 1.50 = $300  \n- Car insurance: triples → 100 × 3 = $300  \n**Monthly total this year:**  \n1300 + 300 + 300 = $1900  \nAnnual: 1900 × 12 = $22,800\n\n**Difference:**  \n22,800 - 15,600 = $7,200\n\n<reasoning>  \nLast year: "
+  'Last year:  \nRent: $1000 × 12 = $12,000  \nFood: $200 × 12 = $2,400  \nCar insurance: $100 × 12 = $1,200  \nTotal: $12,000 + $2,400 + $1,200 = $15,600  \n\nThis year:  \nRent: $1000 × 1.30 = $1300 × 12 = $15,600  \nFood: $200 × 1.50 = $300 × 12 = $3,600  \nCar insurance: $100 × 3 = $300 × 12 = $3,600  \nTotal: $15,600 + $3,600 + $3,600 = $22,800  \n\nDifference: $22,800 - $15,600 = $7,200  \n\n<reasoning>  \nLast year total: 12×('
+  'Last year: rent = $1000, food = $200, car insurance = $100 → monthly = $1300 → yearly = $15,600  \nThis year: rent = 1000×1.3 = $1300, food = 200×1.5 = $300, insurance = 100×3 = $300 → monthly = $1900 → yearly = $22,800  \nDifference = 22,800 - 15,600 = $7,200  \n<reasoning>  \nLast year total: 12×(1000+200+100)=12×1300=15,600  \nThis year: 12×(1300+300+300)=12×1900=22,800  \nDifference: 22,800 - 15,600 = 7,200</reasoning>  \n<answer>7200</answer><|im_end|>']]
+
+Rendering prompts:   0%|          | 0/4 [00:00<?, ?it/s]
+Rendering prompts: 100%|██████████| 4/4 [00:00<00:00, 4437.24it/s]
+
+Processed prompts:   0%|          | 0/4 [00:00<?, ?it/s, est. speed input: 0.00 toks/s, output: 0.00 toks/s]
+Processed prompts:  25%|██▌       | 1/4 [00:00<00:02,  1.15it/s, est. speed input: 112.69 toks/s, output: 140.28 toks/s]
+Processed prompts:  75%|███████▌  | 3/4 [00:00<00:00,  3.71it/s, est. speed input: 297.48 toks/s, output: 395.62 toks/s]
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  3.71it/s, est. speed input: 218.57 toks/s, output: 360.75 toks/s]
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  2.23it/s, est. speed input: 218.57 toks/s, output: 360.75 toks/s]
+I0813 20:22:33.379342 139708797660288 peft_trainer.py:488] Train step 9 training loss: 0.019675  - training perplexity: 1.019870
+I0813 20:22:33.384396 139708797660288 peft_trainer.py:748] Train loop finished in: 0.1746 seconds
+INFO 08-13 20:22:33 [block_pool.py:790] Successfully reset prefix cache
+INFO 08-13 20:22:33 [kv_cache_manager.py:1035] Deleting kv-cache | num_layers=36 | hbm_before=[(7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75)]Gb
+INFO 08-13 20:22:33 [kv_cache_manager.py:1047] KV cache delete complete | hbm_after=[(5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75)]Gb
+I0813 20:22:34.187191 139605397157440 reshard.py:232] Reshard finished in 0.10s
+INFO 08-13 20:22:34 [kv_cache_manager.py:1069] Reinitializing kv-cache | hbm_before=[(5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75)]Gb
+INFO 08-13 20:22:34 [kv_cache_manager.py:985] Hybrid KV cache layout: num_kv_cache_groups=1, num_kv_cache_tensors=36, kv_cache_config.num_blocks=2459, duplicate_shared_layers=False
+INFO 08-13 20:22:34 [kv_cache_manager.py:1013] Init kv-cache | num_total_layers=36 | num_blocks=[2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459] | regular_attn_layers=36 | regular_attn_shape=(num_blocks, (64, 8, 2, 128)) | regular_attn_sharding=NamedSharding(mesh=Mesh('data': 1, 'attn_dp': 1, 'attn_dp_expert': 1, 'expert': 1, 'model': 8, 'dcp': 1, 'pcp': 1, axis_types=(Auto, Auto, Auto, Auto, Auto, Auto, Auto)), spec=P(('data', 'attn_dp', 'attn_dp_expert'), ('pcp', 'dcp'), ('model', 'expert')), memory_kind=device) | regular_attn_dtype=bfloat16 | hbm=[(7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75)]Gb
+I0813 20:22:40.411255 139708797660288 rl_cluster.py:714] Rollout string metric trajectory_ids: ['9_0' '9_1' '9_2' '9_3']
+I0813 20:22:40.411914 139708797660288 rl_cluster.py:714] Rollout string metric prompts: [['<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nA school has 15 classrooms. One-third of these classrooms have 30 desks in each classroom and the rest have 25 desks in each classroom. Only one student can sit at one desk. How many students can this school accommodate so that everyone has their own desk?<|im_end|>\n<|im_start|>assistant\n'
+  '<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nA school has 15 classrooms. One-third of these classrooms have 30 desks in each classroom and the rest have 25 desks in each classroom. Only one student can sit at one desk. How many students can this school accommodate so that everyone has their own desk?<|im_end|>\n<|im_start|>assistant\n'
+  '<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nA school has 15 classrooms. One-third of these classrooms have 30 desks in each classroom and the rest have 25 desks in each classroom. Only one student can sit at one desk. How many students can this school accommodate so that everyone has their own desk?<|im_end|>\n<|im_start|>assistant\n'
+  '<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nA school has 15 classrooms. One-third of these classrooms have 30 desks in each classroom and the rest have 25 desks in each classroom. Only one student can sit at one desk. How many students can this school accommodate so that everyone has their own desk?<|im_end|>\n<|im_start|>assistant\n']]
+I0813 20:22:40.412438 139708797660288 rl_cluster.py:714] Rollout string metric completions: [['One-third of 15 classrooms = 5 classrooms with 30 desks → 5 × 30 = 150 desks  \nRemaining 10 classrooms have 25 desks → 10 × 25 = 250 desks  \nTotal desks = 150 + 250 = 400  \n<reasoning>5 × 30 = 150; 10 × 25 = 250; 150 + 250 = 400</reasoning>  \n<answer>400</answer><|im_end|>'
+  'We are told:\n\n- The school has **15 classrooms**.\n- **One-third** of the classrooms have **30 desks** each.\n- The **rest** have **25 desks** each.\n- Each desk seats one student.\n- We need to find the **total number of students** the school can accommodate (i.e., total desks).\n\n---\n\nStep 1: Find how many classrooms have 30 desks  \nOne-third of 15:  \n$ \\frac{1}{3} \\times 15 = 5 $ classrooms\n\nSo, 5 classrooms have 30 desks each.\n\nStep 2: The rest have 25 desks  \nRemaining classrooms: $ 15 - 5 = 10 $  \nSo, 10 classrooms have 25 desks each.\n\nStep 3: Total desks (total students)  \n$ 5 \\times 30 = 150 $  \n$ 10 \\times 25 = 250 $  \nTotal = $ 150 + 250 = 400 $\n\n<reasoning>  \n1/3 of 15 = 5 classrooms with 30 desks → 5×30 ='
+  'One-third of 15 is 5, so 5 classrooms have 30 desks: 5 × 30 = 150 desks.  \nThe other 10 classrooms have 25 desks: 10 × 25 = 250 desks.  \nTotal desks = 150 + 250 = 400.  \n<reasoning>5 classes × 30 = 150; 10 classes × 25 = 250; 150 + 250 = 400</reasoning>  \n<answer>400</answer><|im_end|>'
+  '1/3 of 15 = 5 classrooms with 30 desks → 5 × 30 = 150  \nRemaining 10 classrooms with 25 desks → 10 × 25 = 250  \nTotal desks = 150 + 250 = 400  \n<reasoning>5 classrooms × 30 = 150; 10 classrooms × 25 = 250; total = 400</reasoning>  \n<answer>400</answer><|im_end|>']]
+
+Rendering prompts:   0%|          | 0/4 [00:00<?, ?it/s]
+Rendering prompts: 100%|██████████| 4/4 [00:00<00:00, 4157.92it/s]
+
+Processed prompts:   0%|          | 0/4 [00:00<?, ?it/s, est. speed input: 0.00 toks/s, output: 0.00 toks/s]
+Processed prompts:  25%|██▌       | 1/4 [00:00<00:02,  1.22it/s, est. speed input: 127.86 toks/s, output: 140.04 toks/s]
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  3.03it/s, est. speed input: 285.98 toks/s, output: 381.30 toks/s]
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  3.03it/s, est. speed input: 285.98 toks/s, output: 381.30 toks/s]
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  2.72it/s, est. speed input: 285.98 toks/s, output: 381.30 toks/s]
+I0813 20:22:42.081186 139708797660288 peft_trainer.py:488] Train step 10 training loss: 0.038897  - training perplexity: 1.039663
+I0813 20:22:42.086001 139708797660288 peft_trainer.py:748] Train loop finished in: 0.1739 seconds
+INFO 08-13 20:22:42 [block_pool.py:790] Successfully reset prefix cache
+INFO 08-13 20:22:42 [kv_cache_manager.py:1035] Deleting kv-cache | num_layers=36 | hbm_before=[(7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75)]Gb
+INFO 08-13 20:22:42 [kv_cache_manager.py:1047] KV cache delete complete | hbm_after=[(5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75)]Gb
+I0813 20:22:42.889847 139605397157440 reshard.py:232] Reshard finished in 0.10s
+INFO 08-13 20:22:42 [kv_cache_manager.py:1069] Reinitializing kv-cache | hbm_before=[(5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75)]Gb
+INFO 08-13 20:22:42 [kv_cache_manager.py:985] Hybrid KV cache layout: num_kv_cache_groups=1, num_kv_cache_tensors=36, kv_cache_config.num_blocks=2459, duplicate_shared_layers=False
+INFO 08-13 20:22:42 [kv_cache_manager.py:1013] Init kv-cache | num_total_layers=36 | num_blocks=[2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459] | regular_attn_layers=36 | regular_attn_shape=(num_blocks, (64, 8, 2, 128)) | regular_attn_sharding=NamedSharding(mesh=Mesh('data': 1, 'attn_dp': 1, 'attn_dp_expert': 1, 'expert': 1, 'model': 8, 'dcp': 1, 'pcp': 1, axis_types=(Auto, Auto, Auto, Auto, Auto, Auto, Auto)), spec=P(('data', 'attn_dp', 'attn_dp_expert'), ('pcp', 'dcp'), ('model', 'expert')), memory_kind=device) | regular_attn_dtype=bfloat16 | hbm=[(7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75)]Gb
+I0813 20:22:58.727908 139708797660288 rl_cluster.py:714] Rollout string metric trajectory_ids: ['10_0' '10_1' '10_2' '10_3']
+I0813 20:22:58.728533 139708797660288 rl_cluster.py:714] Rollout string metric prompts: [['<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nLily has 5 lottery tickets to sell.  She sells the first ticket for $1.  She then sells each successive ticket for a dollar more than the previous ticket. She plans to keep a $4 profit and give the remaining money as the prize. How much money will the winner of the lottery receive?<|im_end|>\n<|im_start|>assistant\n'
+  '<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nLily has 5 lottery tickets to sell.  She sells the first ticket for $1.  She then sells each successive ticket for a dollar more than the previous ticket. She plans to keep a $4 profit and give the remaining money as the prize. How much money will the winner of the lottery receive?<|im_end|>\n<|im_start|>assistant\n'
+  '<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nLily has 5 lottery tickets to sell.  She sells the first ticket for $1.  She then sells each successive ticket for a dollar more than the previous ticket. She plans to keep a $4 profit and give the remaining money as the prize. How much money will the winner of the lottery receive?<|im_end|>\n<|im_start|>assistant\n'
+  '<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nLily has 5 lottery tickets to sell.  She sells the first ticket for $1.  She then sells each successive ticket for a dollar more than the previous ticket. She plans to keep a $4 profit and give the remaining money as the prize. How much money will the winner of the lottery receive?<|im_end|>\n<|im_start|>assistant\n']]
+I0813 20:22:58.729088 139708797660288 rl_cluster.py:714] Rollout string metric completions: [['Prices: $1, $2, $3, $4, $5 → Total revenue = 1+2+3+4+5 = 15  \nProfit kept = $4  \nPrize = 15 - 4 = 11  \n<reasoning>Sum of arithmetic sequence: 5 terms, first 1, last 5 → sum = 5*(1+5)/2 = 15. Subtract $4 profit → prize = 11</reasoning>  \n<answer>11</answer><|im_end|>'
+  'We are told:\n\n- Lily has 5 lottery tickets to sell.\n- She sells the first ticket for $1.\n- Each successive ticket is sold for $1 more than the previous one.\n- She keeps a $4 profit.\n- The rest of the money goes to the winner as a prize.\n\nLet’s find the total revenue from selling the 5 tickets:\n\nTicket prices:  \n1st: $1  \n2nd: $2  \n3rd: $3  \n4th: $4  \n5th: $5  \n\nTotal revenue = 1 + 2 + 3 + 4 + 5 = 15 dollars.\n\nShe keeps $4, so the prize amount is:  \n15 - 4 = 11\n\n<reasoning>  \nSum of prices: 1+2+3+4+5 = 15.  \nProfit: $4 → prize = 15 - 4 = 11</reasoning>  \n<answer>11</answer><|im_end|>'
+  'Prices: $1, $2, $3, $4, $5 → Total revenue = 1+2+3+4+5 = 15  \nProfit kept = $4  \nPrize = 15 - 4 = 11  \n<reasoning>Sum of arithmetic sequence: 5 terms, first 1, last 5 → sum = 5*(1+5)/2 = 15. Subtract $4 profit → prize = 11</reasoning>  \n<answer>11</answer><|im_end|>'
+  'Prices: $1, $2, $3, $4, $5 → Total revenue = 1+2+3+4+5 = 15  \nLily keeps $4 profit → Prize = 15 - 4 = 11  \n<reasoning>Sum of arithmetic sequence: 5 terms, first 1, last 5 → sum = 5×(1+5)/2 = 15. Subtract $4 profit → 15 - 4 = 11</reasoning>  \n<answer>11</answer><|im_end|>']]
+
+Rendering prompts:   0%|          | 0/4 [00:00<?, ?it/s]
+Rendering prompts: 100%|██████████| 4/4 [00:00<00:00, 4235.60it/s]
+
+Processed prompts:   0%|          | 0/4 [00:00<?, ?it/s, est. speed input: 0.00 toks/s, output: 0.00 toks/s]
+Processed prompts:  25%|██▌       | 1/4 [00:01<00:03,  1.05s/it, est. speed input: 99.11 toks/s, output: 141.99 toks/s]
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  2.52it/s, est. speed input: 233.43 toks/s, output: 404.58 toks/s]
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  2.52it/s, est. speed input: 233.43 toks/s, output: 404.58 toks/s]
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  2.24it/s, est. speed input: 233.43 toks/s, output: 404.58 toks/s]
+I0813 20:23:00.712033 139708797660288 peft_trainer.py:488] Train step 11 training loss: 0.044017  - training perplexity: 1.045000
+I0813 20:23:00.717354 139708797660288 peft_trainer.py:748] Train loop finished in: 0.1747 seconds
+INFO 08-13 20:23:00 [block_pool.py:790] Successfully reset prefix cache
+INFO 08-13 20:23:00 [kv_cache_manager.py:1035] Deleting kv-cache | num_layers=36 | hbm_before=[(7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75), (7.8, 15.75)]Gb
+INFO 08-13 20:23:00 [kv_cache_manager.py:1047] KV cache delete complete | hbm_after=[(5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75), (5.1, 15.75)]Gb
+I0813 20:23:01.525132 139605397157440 reshard.py:232] Reshard finished in 0.10s
+INFO 08-13 20:23:01 [kv_cache_manager.py:1069] Reinitializing kv-cache | hbm_before=[(5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75), (5.01, 15.75)]Gb
+INFO 08-13 20:23:01 [kv_cache_manager.py:985] Hybrid KV cache layout: num_kv_cache_groups=1, num_kv_cache_tensors=36, kv_cache_config.num_blocks=2459, duplicate_shared_layers=False
+INFO 08-13 20:23:01 [kv_cache_manager.py:1013] Init kv-cache | num_total_layers=36 | num_blocks=[2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459, 2459] | regular_attn_layers=36 | regular_attn_shape=(num_blocks, (64, 8, 2, 128)) | regular_attn_sharding=NamedSharding(mesh=Mesh('data': 1, 'attn_dp': 1, 'attn_dp_expert': 1, 'expert': 1, 'model': 8, 'dcp': 1, 'pcp': 1, axis_types=(Auto, Auto, Auto, Auto, Auto, Auto, Auto)), spec=P(('data', 'attn_dp', 'attn_dp_expert'), ('pcp', 'dcp'), ('model', 'expert')), memory_kind=device) | regular_attn_dtype=bfloat16 | hbm=[(7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75), (7.71, 15.75)]Gb
+I0813 20:23:09.716743 139708797660288 rl_cluster.py:714] Rollout string metric trajectory_ids: ['11_0' '11_1' '11_2' '11_3']
+I0813 20:23:09.717356 139708797660288 rl_cluster.py:714] Rollout string metric prompts: [['<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nRuby is taking dance lessons. They cost $75 for 10 classes in one pack. She can add additional classes at the price of 1/3 more than the average price of a class on the lesson in the pack. if she takes 13 total classes, how much does she pay?<|im_end|>\n<|im_start|>assistant\n'
+  '<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nRuby is taking dance lessons. They cost $75 for 10 classes in one pack. She can add additional classes at the price of 1/3 more than the average price of a class on the lesson in the pack. if she takes 13 total classes, how much does she pay?<|im_end|>\n<|im_start|>assistant\n'
+  '<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nRuby is taking dance lessons. They cost $75 for 10 classes in one pack. She can add additional classes at the price of 1/3 more than the average price of a class on the lesson in the pack. if she takes 13 total classes, how much does she pay?<|im_end|>\n<|im_start|>assistant\n'
+  '<|im_start|>system\nSolve the problem. Put concise work inside <reasoning>...</reasoning>, then end with exactly <answer>number</answer>.<|im_end|>\n<|im_start|>user\nRuby is taking dance lessons. They cost $75 for 10 classes in one pack. She can add additional classes at the price of 1/3 more than the average price of a class on the lesson in the pack. if she takes 13 total classes, how much does she pay?<|im_end|>\n<|im_start|>assistant\n']]
+I0813 20:23:09.717994 139708797660288 rl_cluster.py:714] Rollout string metric completions: [['Pack: 10 classes @ $75 → $7.50/class  \nAdditional classes: 3 classes at 1/3 more than $7.50 → 1.333 × 7.50 = $10/class  \n3 × 10 = $30  \nTotal: 75 + 30 = $105  \n<reasoning>10 classes: $75 → $7.50/class. Extra 3 classes at 1/3 × 7.50 = $10 each → 3×10=30. Total: 75+30=105</reasoning>  \n<answer>105</answer><|im_end|>'
+  'We are given:\n\n- A pack of 10 classes costs $75.\n- Ruby takes 13 total classes.\n- She pays 1/3 more than the average price per class in the pack for additional classes.\n- We need to find total cost.\n\n---\n\nStep 1: Find average price per class in the pack:  \n$75 ÷ 10 = $7.50 per class.\n\nStep 2: Additional classes = 13 - 10 = 3 classes.\n\nStep 3: Price per additional class = 7.50 + (1/3 of 7.50)  \n= 7.50 + (7.50 ÷ 3) = 7.50 + 2.50 = $10.00 per extra class.\n\nStep 4: Cost for 3 extra classes = 3 × $10 = $30.\n\nStep 5: Total cost = pack cost + extra classes = 75 + 30 = $105.\n\n<reasoning>  \nAverage class price: 75/10 = 7.50.  \nExtra classes: 3.  \nExtra price: 7'
+  'Pack: 10 classes at $75 → $7.50/class  \nAdditional classes: 3 classes at 1/3 more than $7.50 → 1.333 × 7.50 = $10/class  \n3 × 10 = $30  \nTotal: 75 + 30 = $105  \n<reasoning>10 classes: $75 → $7.50/class; 3 extra at 1/3 more: 7.50 × (4/3) = $10; 3×10 = $30; 75+30=105</reasoning>  \n<answer>105</answer><|im_end|>'
+  'Pack: 10 classes at $75 → $7.50/class  \nAdditional 3 classes: 1/3 more than $7.50 = $7.50 × (1 + 1/3) = $10  \n3 × $10 = $30  \nTotal: $75 + $30 = $105  \n<reasoning>10 classes: $75 → $7.50/class; 3 extra at 1/3 more: $10 each → 3×10=30; total = 75+30=105</reasoning>  \n<answer>105</answer><|im_end|>']]
+I0813 20:23:09.743106 139708797660288 peft_trainer.py:488] Train step 12 training loss: 0.056771  - training perplexity: 1.058413
+wandb: 
+wandb: Run history:
+wandb:           actor/train/grad_norm █▄▂▂▃▃▃▂▁▃▁▃
+wandb:                  actor/train/kl ▁▁▁▂▂▄▃▃▄▄▆█
+wandb:       actor/train/learning_rate ██▇▇▆▆▅▄▃▂▁▁
+wandb:                actor/train/loss ▁▁▁▂▃▃▃▂▃▆▆█
+wandb:          actor/train/perplexity ▁▁▁▂▃▃▃▂▃▆▆█
+wandb:         actor/train/pg_clipfrac ▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:    completions/train/max_length █▁██▆█████▅█
+wandb:   completions/train/mean_length ▄▁▄▂▁▆▆▇█▂▁▃
+wandb:    completions/train/min_length ▁▄▆▄▄▅▆▆█▄▄▅
+wandb: global/train/actor_dequeue_time █▁▅▁▁▁▁▁▁▁▁▁
+wandb:                             +13 ...
+wandb: 
+wandb: Run summary:
+wandb:           actor/train/grad_norm 21.875
+wandb:                  actor/train/kl 0.54061
+wandb:       actor/train/learning_rate 0.0
+wandb:                actor/train/loss 0.05677
+wandb:          actor/train/perplexity 1.05841
+wandb:         actor/train/pg_clipfrac 0
+wandb:    completions/train/max_length 256
+wandb:   completions/train/mean_length 180.25
+wandb:    completions/train/min_length 149
+wandb: global/train/actor_dequeue_time 1.79179
+wandb:                             +13 ...
+wandb: 
+wandb: You can sync this run to the cloud by running:
+wandb: wandb sync /home/student49/me344_final_project/wandb/offline-run-20260813_201710-99rm11h0
+wandb: Find logs at: ./wandb/offline-run-20260813_201710-99rm11h0/logs
+W0813 20:23:09.754813 139708797660288 train_rl.py:763] RL Training Completed Successfully!
+
+0it [00:00, ?it/s]
+
+Rendering prompts:   0%|          | 0/4 [00:00<?, ?it/s][A
+Rendering prompts: 100%|██████████| 4/4 [00:00<00:00, 4619.28it/s]
+
+
+Processed prompts:   0%|          | 0/4 [00:00<?, ?it/s, est. speed input: 0.00 toks/s, output: 0.00 toks/s][A
+
+Processed prompts:  25%|██▌       | 1/4 [00:00<00:02,  1.13it/s, est. speed input: 138.43 toks/s, output: 141.83 toks/s][A
+
+Processed prompts:  75%|███████▌  | 3/4 [00:01<00:00,  2.49it/s, est. speed input: 240.54 toks/s, output: 335.57 toks/s][A
+
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  2.68it/s, est. speed input: 256.93 toks/s, output: 415.41 toks/s][A
+
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  2.68it/s, est. speed input: 256.93 toks/s, output: 415.41 toks/s][A
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  2.40it/s, est. speed input: 256.93 toks/s, output: 415.41 toks/s]
+
+1it [00:01,  1.69s/it]
+
+Rendering prompts:   0%|          | 0/4 [00:00<?, ?it/s][A
+Rendering prompts: 100%|██████████| 4/4 [00:00<00:00, 5855.92it/s]
+
+
+Processed prompts:   0%|          | 0/4 [00:00<?, ?it/s, est. speed input: 0.00 toks/s, output: 0.00 toks/s][A
+
+Processed prompts:  25%|██▌       | 1/4 [00:01<00:03,  1.18s/it, est. speed input: 85.78 toks/s, output: 143.52 toks/s][A
+
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  3.44it/s, est. speed input: 307.67 toks/s, output: 516.04 toks/s][A
+
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  3.44it/s, est. speed input: 307.67 toks/s, output: 516.04 toks/s][A
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  2.80it/s, est. speed input: 307.67 toks/s, output: 516.04 toks/s]
+
+2it [00:03,  1.54s/it]
+
+Rendering prompts:   0%|          | 0/4 [00:00<?, ?it/s][A
+Rendering prompts: 100%|██████████| 4/4 [00:00<00:00, 5793.24it/s]
+
+
+Processed prompts:   0%|          | 0/4 [00:00<?, ?it/s, est. speed input: 0.00 toks/s, output: 0.00 toks/s][A
+
+Processed prompts:  25%|██▌       | 1/4 [00:00<00:02,  1.41it/s, est. speed input: 162.14 toks/s, output: 142.40 toks/s][A
+
+Processed prompts:  50%|█████     | 2/4 [00:00<00:00,  2.38it/s, est. speed input: 211.15 toks/s, output: 252.08 toks/s][A
+
+Processed prompts:  75%|███████▌  | 3/4 [00:01<00:00,  3.19it/s, est. speed input: 281.23 toks/s, output: 354.01 toks/s][A
+
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  4.31it/s, est. speed input: 371.76 toks/s, output: 466.74 toks/s][A
+
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  4.31it/s, est. speed input: 371.76 toks/s, output: 466.74 toks/s][A
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  3.27it/s, est. speed input: 371.76 toks/s, output: 466.74 toks/s]
+I0813 20:23:14.116819 139708797660288 evaluate_rl.py:314] ===> corr=9, total=10, corr / total * 100=90.0, partially_corr / total * 100=90.0, corr_format / total * 100=100.0
+
+3it [00:04,  1.40s/it]
+
+Rendering prompts:   0%|          | 0/4 [00:00<?, ?it/s][A
+Rendering prompts: 100%|██████████| 4/4 [00:00<00:00, 5890.88it/s]
+
+
+Processed prompts:   0%|          | 0/4 [00:00<?, ?it/s, est. speed input: 0.00 toks/s, output: 0.00 toks/s][A
+
+Processed prompts:  25%|██▌       | 1/4 [00:01<00:03,  1.02s/it, est. speed input: 111.48 toks/s, output: 143.75 toks/s][A
+
+Processed prompts:  75%|███████▌  | 3/4 [00:01<00:00,  2.98it/s, est. speed input: 268.49 toks/s, output: 394.49 toks/s][A
+
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  2.45it/s, est. speed input: 258.48 toks/s, output: 417.54 toks/s][A
+
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  2.45it/s, est. speed input: 258.48 toks/s, output: 417.54 toks/s][A
+Processed prompts: 100%|██████████| 4/4 [00:01<00:00,  2.27it/s, est. speed input: 258.48 toks/s, output: 417.54 toks/s]
+
+4it [00:06,  1.55s/it]
+4it [00:06,  1.53s/it]
+W0813 20:23:15.893390 139708797660288 train_rl.py:776] Post RL Training: corr=12, total=16, accuracy=75.0%, partial_accuracy=75.0%, format_accuracy=93.75%, mean_reward=1.5309
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/home/student49/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/weakref.py", line 666, in _exitfunc
+[rank0]:     f()
+[rank0]:   File "/home/student49/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/weakref.py", line 590, in __call__
+[rank0]:     return info.func(*info.args, **(info.kwargs or {}))
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/student49/me344_final_project/.venv-me344-posttrain/lib/python3.12/site-packages/vllm/v1/engine/llm_engine.py", line 441, in _cleanup_instance_caches
+[rank0]:     for module in model.modules():
+[rank0]:                   ^^^^^^^^^^^^^
+[rank0]: AttributeError: 'Qwen3ForCausalLM' object has no attribute 'modules'
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/home/student49/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/weakref.py", line 666, in _exitfunc
+[rank0]:     f()
+[rank0]:   File "/home/student49/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/weakref.py", line 590, in __call__
+[rank0]:     return info.func(*info.args, **(info.kwargs or {}))
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/student49/me344_final_project/.venv-me344-posttrain/lib/python3.12/site-packages/vllm/v1/engine/llm_engine.py", line 441, in _cleanup_instance_caches
+[rank0]:     for module in model.modules():
+[rank0]:                   ^^^^^^^^^^^^^
+[rank0]: AttributeError: 'Qwen3ForCausalLM' object has no attribute 'modules'

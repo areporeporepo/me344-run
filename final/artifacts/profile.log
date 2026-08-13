@@ -1,0 +1,80 @@
+[transformers] PyTorch was not found. Models won't be available and only tokenizers, configuration and file/data utilities can be used.
+[transformers] DeepseekV32Config got `key=rope_scaling` in kwargs but hasn't set it as attribute. For RoPE standardization you need to set `self.rope_parameters` in model's config. 
+[transformers] DeepseekV4Config got `key=rope_scaling` in kwargs but hasn't set it as attribute. For RoPE standardization you need to set `self.rope_parameters` in model's config. 
+2026-08-13 20:04:03.531031: I external/local_xla/xla/tsl/cuda/cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-08-13 20:04:03.569952: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-08-13 20:04:04.928193: I external/local_xla/xla/tsl/cuda/cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-08-13 20:04:08.103492: E external/local_xla/xla/stream_executor/cuda/cuda_platform.cc:51] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: UNKNOWN ERROR (303)
+I0813 20:04:08.333263 140184723160192 max_utils.py:296] Attempting to initialize the jax distributed system for TPU backend...
+I0813 20:04:08.373885   65932 pjrt_api.cc:119] GetPjrtApi was found for tpu at /home/student49/me344_final_project/.venv-me344-pretrain/lib/python3.12/site-packages/libtpu/libtpu.so
+I0813 20:04:08.373946   65932 pjrt_api.cc:168] The PJRT plugin has PJRT API version 0.112. The framework PJRT API version is 0.112.
+I0813 20:04:14.061004   65932 pjrt_c_api_client.cc:201] PjRtCApiClient created.
+I0813 20:04:14.061740   65932 pjrt_client.cc:579] PjRt-IFRT device count: total=8, addressable=8
+I0813 20:04:14.061755   65932 pjrt_client.cc:583] Addressable PjRt-IFRT device: TpuDevice(id=0, process_index=0, coords=(0,0,0), core_on_chip=0)
+I0813 20:04:14.061758   65932 pjrt_client.cc:583] Addressable PjRt-IFRT device: TpuDevice(id=1, process_index=0, coords=(1,0,0), core_on_chip=0)
+I0813 20:04:14.061759   65932 pjrt_client.cc:583] Addressable PjRt-IFRT device: TpuDevice(id=2, process_index=0, coords=(0,1,0), core_on_chip=0)
+I0813 20:04:14.061760   65932 pjrt_client.cc:583] Addressable PjRt-IFRT device: TpuDevice(id=3, process_index=0, coords=(1,1,0), core_on_chip=0)
+I0813 20:04:14.061762   65932 pjrt_client.cc:583] Addressable PjRt-IFRT device: TpuDevice(id=4, process_index=0, coords=(0,2,0), core_on_chip=0)
+I0813 20:04:14.061763   65932 pjrt_client.cc:583] Addressable PjRt-IFRT device: TpuDevice(id=5, process_index=0, coords=(1,2,0), core_on_chip=0)
+I0813 20:04:14.061764   65932 pjrt_client.cc:583] Addressable PjRt-IFRT device: TpuDevice(id=6, process_index=0, coords=(0,3,0), core_on_chip=0)
+I0813 20:04:14.061765   65932 pjrt_client.cc:583] Addressable PjRt-IFRT device: TpuDevice(id=7, process_index=0, coords=(1,3,0), core_on_chip=0)
+I0813 20:04:14.087158   65932 pjrt_client.cc:579] PjRt-IFRT device count: total=1, addressable=1
+I0813 20:04:14.087185   65932 pjrt_client.cc:583] Addressable PjRt-IFRT device: CpuDevice(id=0)
+I0813 20:04:14.088953 140184723160192 max_utils.py:830] System Information: Jax Version: 0.10.2
+I0813 20:04:14.089168 140184723160192 max_utils.py:831] System Information: Jaxlib Version: 0.10.2
+I0813 20:04:14.089218 140184723160192 max_utils.py:832] System Information: Jax Backend: PJRT C API
+TFRT TPU v5 lite
+Built on Jun 17 2026 11:08:48 (1781719728) cl/933746096
+I0813 20:04:14.089267 140184723160192 train_utils.py:426] WARNING: Sequence packing is essentially ignored for synthetic data. Please use a real dataset to use sequence packing.
+I0813 20:04:14.464467 140184723160192 maxtext_utils.py:2243] Num_devices: 8, shape (1, 1, 1, 1, 1, 1, 1, 8, 1, 1, 1)
+I0813 20:04:14.596383 140184723160192 checkpointing.py:640] Setting up checkpoint logger...
+I0813 20:04:14.596463 140184723160192 checkpointing.py:358] Checkpointing disabled, not creating checkpoint manager.
+I0813 20:04:15.115811 140184723160192 checkpointing.py:628] No existing checkpoints found, not restoring checkpoint.
+/home/student49/me344_final_project/.venv-me344-pretrain/lib/python3.12/site-packages/maxtext/trainers/pre_train/train.py:832: DeprecationWarning: `with mesh:` context manager has been deprecated. Please use `with jax.set_mesh(mesh):` instead.
+  with jax.set_mesh(mesh), mesh, nn_partitioning.axis_rules(config.logical_axis_rules):
+I0813 20:04:23.930007 140184723160192 max_utils.py:818] Total estimated memory size: 9.3 GB, estimated output size: 5.6 GB, estimated temp size: 3.7 GB, estimated argument size: 5.6 GB, Estimated host temp size: 0.0 GB.
+I0813 20:04:23.930131 140184723160192 max_utils.py:824] Note that compiler could over-estimate the HBM usage.
+I0813 20:04:23.945920 140184723160192 metric_logger.py:365] number parameters: 4.022 billion
+I0813 20:04:24.764343 140184723160192 max_utils.py:777] 
+Memstats: After params initialized:
+I0813 20:04:24.764518 140184723160192 max_utils.py:783] 	Using (GB) 5.65 / 15.75 (35.873016%) on TPU_0(process=0,(0,0,0,0))
+I0813 20:04:24.764568 140184723160192 max_utils.py:783] 	Using (GB) 5.65 / 15.75 (35.873016%) on TPU_1(process=0,(1,0,0,0))
+I0813 20:04:24.764607 140184723160192 max_utils.py:783] 	Using (GB) 5.65 / 15.75 (35.873016%) on TPU_2(process=0,(0,1,0,0))
+I0813 20:04:24.764642 140184723160192 max_utils.py:783] 	Using (GB) 5.65 / 15.75 (35.873016%) on TPU_3(process=0,(1,1,0,0))
+I0813 20:04:24.764675 140184723160192 max_utils.py:783] 	Using (GB) 5.65 / 15.75 (35.873016%) on TPU_4(process=0,(0,2,0,0))
+I0813 20:04:24.764719 140184723160192 max_utils.py:783] 	Using (GB) 5.65 / 15.75 (35.873016%) on TPU_5(process=0,(1,2,0,0))
+I0813 20:04:24.764756 140184723160192 max_utils.py:783] 	Using (GB) 5.65 / 15.75 (35.873016%) on TPU_6(process=0,(0,3,0,0))
+I0813 20:04:24.764790 140184723160192 max_utils.py:783] 	Using (GB) 5.65 / 15.75 (35.873016%) on TPU_7(process=0,(1,3,0,0))
+I0813 20:04:25.258369 140184723160192 metric_logger.py:226] completed step: 0, seconds: 0.752, TFLOP/s/device: 33.193, Tokens/s/device: 1362.604, total_weights: 8192, loss: 494.061, lm_loss: 494.061, perplexity: inf
+W0813 20:04:25.259849 140184723160192 x2num.py:13] NaN or Inf found in input tensor.
+I0813 20:04:25.260772 140184723160192 metric_logger.py:333] To see full metrics 'tensorboard --logdir=gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-profile/tensorboard/'
+I0813 20:04:25.753744 140184723160192 metric_logger.py:226] completed step: 1, seconds: 0.282, TFLOP/s/device: 88.530, Tokens/s/device: 3634.221, total_weights: 8192, loss: 494.061, lm_loss: 494.061, perplexity: inf
+W0813 20:04:25.755481 140184723160192 x2num.py:13] NaN or Inf found in input tensor.
+I0813 20:04:26.250134   65932 profiler_session.cc:119] Profiler session initializing.
+I0813 20:04:26.250151   65932 profiler_session.cc:134] Profiler session started.
+I0813 20:04:26.301099 140184723160192 metric_logger.py:226] completed step: 2, seconds: 0.323, TFLOP/s/device: 77.254, Tokens/s/device: 3171.339, total_weights: 8192, loss: 494.061, lm_loss: 494.061, perplexity: inf
+W0813 20:04:26.303108 140184723160192 x2num.py:13] NaN or Inf found in input tensor.
+I0813 20:04:26.795029 140184723160192 metric_logger.py:226] completed step: 3, seconds: 0.931, TFLOP/s/device: 26.782, Tokens/s/device: 1099.401, total_weights: 8192, loss: 494.061, lm_loss: 494.061, perplexity: inf
+W0813 20:04:26.796739 140184723160192 x2num.py:13] NaN or Inf found in input tensor.
+I0813 20:04:27.786072   65932 profiler_session.cc:82] Profiler session collecting data.
+I0813 20:04:29.592404   65932 save_profile.cc:151] Collecting XSpace to repository: gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-profile/tensorboard/plugins/profile/2026_08_13_20_04_29/t1v-n-c72a46ac-w-0.xplane.pb
+I0813 20:04:37.551502   65932 save_profile.cc:124] Creating directory: gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-profile/tensorboard/plugins/profile/2026_08_13_20_04_29
+
+I0813 20:04:46.337984   65932 save_profile.cc:130] Dumped gzipped tool data for trace.json.gz to gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-profile/tensorboard/plugins/profile/2026_08_13_20_04_29/t1v-n-c72a46ac-w-0.trace.json.gz
+I0813 20:04:46.992134   65932 profiler_session.cc:152] Profiler session tear down.
+I0813 20:04:46.993681 140184723160192 metric_logger.py:226] completed step: 4, seconds: 0.011, TFLOP/s/device: 2301.390, Tokens/s/device: 94473.660, total_weights: 8192, loss: 494.061, lm_loss: 494.061, perplexity: inf
+W0813 20:04:46.995977 140184723160192 x2num.py:13] NaN or Inf found in input tensor.
+I0813 20:04:47.004624 140184723160192 metric_logger.py:226] completed step: 5, seconds: 0.492, TFLOP/s/device: 50.673, Tokens/s/device: 2080.151, total_weights: 8192, loss: 494.061, lm_loss: 494.061, perplexity: inf
+W0813 20:04:47.005699 140184723160192 x2num.py:13] NaN or Inf found in input tensor.
+I0813 20:04:47.499032 140184723160192 metric_logger.py:226] completed step: 6, seconds: 20.201, TFLOP/s/device: 1.235, Tokens/s/device: 50.692, total_weights: 8192, loss: 494.061, lm_loss: 494.061, perplexity: inf
+W0813 20:04:47.500236 140184723160192 x2num.py:13] NaN or Inf found in input tensor.
+I0813 20:04:47.994362 140184723160192 metric_logger.py:226] completed step: 7, seconds: 0.007, TFLOP/s/device: 3559.978, Tokens/s/device: 146139.575, total_weights: 8192, loss: 494.061, lm_loss: 494.061, perplexity: inf
+W0813 20:04:47.995543 140184723160192 x2num.py:13] NaN or Inf found in input tensor.
+I0813 20:04:48.489634 140184723160192 metric_logger.py:226] completed step: 8, seconds: 0.494, TFLOP/s/device: 50.515, Tokens/s/device: 2073.685, total_weights: 8192, loss: 494.061, lm_loss: 494.061, perplexity: inf
+W0813 20:04:48.490747 140184723160192 x2num.py:13] NaN or Inf found in input tensor.
+I0813 20:04:48.985018 140184723160192 metric_logger.py:226] completed step: 9, seconds: 0.495, TFLOP/s/device: 50.380, Tokens/s/device: 2068.144, total_weights: 8192, loss: 494.061, lm_loss: 494.061, perplexity: inf
+W0813 20:04:48.986190 140184723160192 x2num.py:13] NaN or Inf found in input tensor.
+Per train step:
+ Total TFLOPs: 24.94 
+ split as 99.07% learnable weight flops and 0.93% attention flops

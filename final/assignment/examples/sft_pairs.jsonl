@@ -1,0 +1,4 @@
+{"input": "Explain what a TPU is in one sentence.", "output": "A TPU is a specialized accelerator designed to run machine learning workloads efficiently."}
+{"input": "What does a checkpoint store during training?", "output": "A checkpoint stores model state so a training run can be resumed or reused later."}
+{"input": "Why should we run a tiny smoke test before a long training job?", "output": "A smoke test catches setup, dependency, device, and permission problems before spending more time or money."}
+

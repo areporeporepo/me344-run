@@ -1,0 +1,63 @@
+{
+  "hardware": {
+    "chips": 8,
+    "hbm_decimal_gb_per_chip": 16.0,
+    "hbm_gib_per_chip": 14.901161193847656,
+    "hbm_bandwidth_gib_per_second_per_chip": 800,
+    "ici_bidirectional_gb_per_second_per_chip": 400,
+    "peak_bf16_tflops_per_chip": 197,
+    "aggregate_hbm_gib": 119.20928955078125,
+    "visible_host_ram_gib": 377.83587646484375
+  },
+  "model": {
+    "parameter_count_estimate": 4022468096,
+    "bf16_checkpoint_gib": 7.492430686950684,
+    "fp32_parameters_gib": 14.984861373901367,
+    "persistent_training_state_gib": 44.9545841217041,
+    "transient_fp32_gradient_gib": 14.984861373901367,
+    "rough_peak_before_activations_gib": 59.93944549560547
+  },
+  "assumptions": [
+    "The imported parameter checkpoint is roughly BF16-sized.",
+    "MaxText keeps FP32 weights and two FP32 Adam moments; a full FP32 gradient is temporary.",
+    "Tensor and FSDP ideally shard dense persistent state; data parallelism replicates it.",
+    "Activations, temporary buffers, uneven sharding, padding, and fragmentation are excluded."
+  ],
+  "cases": [
+    {
+      "name": "TP8 AOT",
+      "data": 1,
+      "fsdp": 1,
+      "tensor": 8,
+      "mesh_product": 8,
+      "optimistic_state_shards": 8,
+      "training_gib_per_chip": 7.492430686950684,
+      "prediction": "fit_candidate",
+      "observed": "fit",
+      "global_batch": 2,
+      "sequence_length": 512,
+      "aot_reported_argument_gib_per_chip": 5.619541645050049,
+      "aot_reported_output_gib_per_chip": 5.619471073150635,
+      "aot_reported_temporary_gib_per_chip": 2.606477737426758,
+      "aot_reported_alias_gib_per_chip": 5.619465351104736,
+      "aot_reported_net_output_gib_per_chip": 5.7220458984375e-06,
+      "aot_reported_total_gib_per_chip": 8.226025104522705,
+      "aot_reported_host_temporary_gib": 0.0
+    },
+    {
+      "name": "DP8 AOT",
+      "data": 8,
+      "fsdp": 1,
+      "tensor": 1,
+      "mesh_product": 8,
+      "optimistic_state_shards": 1,
+      "training_gib_per_chip": 59.93944549560547,
+      "prediction": "oom",
+      "observed": "oom",
+      "global_batch": 8,
+      "sequence_length": 128,
+      "evidence_excerpt": "jax.errors.JaxRuntimeError: RESOURCE_EXHAUSTED: Ran out of memory on HBM, the total memory required for HLO temporaries (65.47G) exceeds available HBM (15.75G)."
+    }
+  ],
+  "aot_executes_optimizer_steps": false
+}

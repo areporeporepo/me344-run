@@ -1,0 +1,195 @@
+[transformers] PyTorch was not found. Models won't be available and only tokenizers, configuration and file/data utilities can be used.
+[transformers] DeepseekV32Config got `key=rope_scaling` in kwargs but hasn't set it as attribute. For RoPE standardization you need to set `self.rope_parameters` in model's config. 
+[transformers] DeepseekV4Config got `key=rope_scaling` in kwargs but hasn't set it as attribute. For RoPE standardization you need to set `self.rope_parameters` in model's config. 
+2026-08-13 19:51:32.202878: I external/local_xla/xla/tsl/cuda/cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-08-13 19:51:32.241532: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-08-13 19:51:33.583907: I external/local_xla/xla/tsl/cuda/cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-08-13 19:51:36.738498: E external/local_xla/xla/stream_executor/cuda/cuda_platform.cc:51] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: UNKNOWN ERROR (303)
+I0813 19:51:36.970456 140166964481152 max_utils.py:296] Attempting to initialize the jax distributed system for TPU backend...
+I0813 19:51:36.979597 140166964481152 distributed.py:149] Starting JAX distributed service on [::]:8482
+I0813 19:51:36.979797   32624 grpc_credentials.cc:38] gRPC insecure server credentials are used.
+I0813 19:51:36.981641 140166964481152 distributed.py:172] Connecting to JAX distributed service on 10.182.0.91:8482
+I0813 19:51:36.984591 140166964481152 max_utils.py:312] Jax distributed system initialized on TPUs!
+I0813 19:51:42.883349 140166964481152 max_utils.py:830] System Information: Jax Version: 0.10.2
+I0813 19:51:42.883682 140166964481152 max_utils.py:831] System Information: Jaxlib Version: 0.10.2
+I0813 19:51:42.883783 140166964481152 max_utils.py:832] System Information: Jax Backend: PJRT C API
+TFRT TPU v5 lite
+Built on Jun 17 2026 11:08:48 (1781719728) cl/933746096
+I0813 19:51:43.270123 140166964481152 maxtext_utils.py:2243] Num_devices: 8, shape (1, 1, 1, 1, 1, 1, 1, 8, 1, 1, 1)
+I0813 19:51:43.407779 140166964481152 checkpointing.py:640] Setting up checkpoint logger...
+I0813 19:51:43.407886 140166964481152 checkpointing.py:361] Creating checkpoint manager with ocdbt=True and zarr3=True
+I0813 19:51:43.407946 140166964481152 pytree_checkpoint_handler.py:596] save_device_host_concurrent_bytes=None
+I0813 19:51:43.408179 140166964481152 base_pytree_checkpoint_handler.py:501] Created BasePyTreeCheckpointHandler: use_ocdbt=True, use_zarr3=True, pytree_metadata_options=PyTreeMetadataOptions(support_rich_types=False), array_metadata_store=<orbax.checkpoint._src.metadata.array_metadata_store.Store object at 0x7f7a7191d610>, enable_pinned_host_transfer=False, save_concurrent_bytes: 96000000000 (89.4 GiB), restore_concurrent_bytes: 96000000000 (89.4 GiB)
+I0813 19:51:44.084155 140166964481152 checkpointing.py:393] Enabling policy for fixed interval checkpointing.
+I0813 19:51:44.084292 140166964481152 checkpoint_manager.py:709] [process=0][thread=MainThread] CheckpointManager init: checkpointers=None, item_names=('items',), item_handlers={'items': <orbax.checkpoint._src.handlers.pytree_checkpoint_handler.PyTreeCheckpointHandler object at 0x7f67e047ad20>}, handler_registry=None
+I0813 19:51:44.084547 140166964481152 composite_checkpoint_handler.py:237] Deferred registration for item: "items". Adding handler `<orbax.checkpoint._src.handlers.pytree_checkpoint_handler.PyTreeCheckpointHandler object at 0x7f67e047ad20>` for item "items" and save args `<class 'orbax.checkpoint._src.handlers.pytree_checkpoint_handler.PyTreeSaveArgs'>` and restore args `<class 'orbax.checkpoint._src.handlers.pytree_checkpoint_handler.PyTreeRestoreArgs'>` to `_handler_registry`.
+I0813 19:51:44.084604 140166964481152 composite_checkpoint_handler.py:237] Deferred registration for item: "metrics". Adding handler `<orbax.checkpoint._src.handlers.json_checkpoint_handler.JsonCheckpointHandler object at 0x7f67d3f95d90>` for item "metrics" and save args `<class 'orbax.checkpoint._src.handlers.json_checkpoint_handler.JsonSaveArgs'>` and restore args `<class 'orbax.checkpoint._src.handlers.json_checkpoint_handler.JsonRestoreArgs'>` to `_handler_registry`.
+I0813 19:51:44.084653 140166964481152 composite_checkpoint_handler.py:505] Initialized registry DefaultCheckpointHandlerRegistry({('items', <class 'orbax.checkpoint._src.handlers.pytree_checkpoint_handler.PyTreeSaveArgs'>): <orbax.checkpoint._src.handlers.pytree_checkpoint_handler.PyTreeCheckpointHandler object at 0x7f67e047ad20>, ('items', <class 'orbax.checkpoint._src.handlers.pytree_checkpoint_handler.PyTreeRestoreArgs'>): <orbax.checkpoint._src.handlers.pytree_checkpoint_handler.PyTreeCheckpointHandler object at 0x7f67e047ad20>, ('metrics', <class 'orbax.checkpoint._src.handlers.json_checkpoint_handler.JsonSaveArgs'>): <orbax.checkpoint._src.handlers.json_checkpoint_handler.JsonCheckpointHandler object at 0x7f67d3f95d90>, ('metrics', <class 'orbax.checkpoint._src.handlers.json_checkpoint_handler.JsonRestoreArgs'>): <orbax.checkpoint._src.handlers.json_checkpoint_handler.JsonCheckpointHandler object at 0x7f67d3f95d90>}).
+I0813 19:51:44.085046 140166964481152 abstract_checkpointer.py:35] orbax-checkpoint version: 0.12.1
+I0813 19:51:44.245645 140166964481152 checkpoint_manager.py:1820] Found 0 checkpoint steps in gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-c4/checkpoints
+I0813 19:51:44.245843 140166964481152 checkpoint_manager.py:931] [process=0][thread=MainThread] CheckpointManager created,  primary_host=0, CheckpointManagerOptions=CheckpointManagerOptions(save_interval_steps=1, max_to_keep=None, keep_time_interval=None, keep_period=None, should_keep_fn=None, best_fn=None, best_mode='max', keep_checkpoints_without_metrics=True, step_prefix=None, step_format_fixed_length=None, step_name_format=None, create=True, cleanup_tmp_directories=False, save_on_steps=frozenset(), single_host_load_and_broadcast=False, todelete_subdir=None, todelete_full_path=None, enable_background_delete=False, num_deletion_threads=None, read_only=False, enable_async_checkpointing=False, async_options=None, multiprocessing_options=MultiprocessingOptions(primary_host=0, active_processes=None, barrier_sync_key_prefix=None), should_save_fn=None, file_options=FileOptions(path_permission_mode=None), save_root_metadata=True, temporary_path_class=None, save_decision_policy=FixedIntervalPolicy(interval=10000), preservation_policy=LatestN(n=1), prevent_write_metrics=False, enable_should_save_is_saving_in_progress_check=True, enable_per_process_directory_creation=False, lightweight_initialize=False), root_directory=gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-c4/checkpoints: <orbax.checkpoint.checkpoint_manager.CheckpointManager object at 0x7f67fddeb590>
+I0813 19:51:44.245934 140166964481152 checkpointing.py:418] Checkpoint manager created!
+I0813 19:51:44.391851 140166964481152 config.py:112] TensorFlow version 2.20.0 available.
+I0813 19:51:44.392468 140166964481152 config.py:125] JAX version 0.10.2 available.
+I0813 19:51:44.787846 140166964481152 _client.py:1025] HTTP Request: GET https://huggingface.co/api/agent-harnesses "HTTP/1.1 200 OK"
+I0813 19:51:44.871485 140166964481152 _client.py:1025] HTTP Request: HEAD https://huggingface.co/datasets/allenai/c4/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+W0813 19:51:44.871876 140166964481152 _http.py:951] Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+I0813 19:51:44.881728 140166964481152 _client.py:1025] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/datasets/allenai/c4/1588ec454efa1a09f29cd18ddd04fe05fc8653a2/README.md "HTTP/1.1 200 OK"
+I0813 19:51:44.893464 140166964481152 _client.py:1025] HTTP Request: GET https://huggingface.co/api/resolve-cache/datasets/allenai/c4/1588ec454efa1a09f29cd18ddd04fe05fc8653a2/README.md "HTTP/1.1 200 OK"
+I0813 19:51:44.977772 140166964481152 _client.py:1025] HTTP Request: HEAD https://huggingface.co/datasets/allenai/c4/resolve/1588ec454efa1a09f29cd18ddd04fe05fc8653a2/c4.py "HTTP/1.1 404 Not Found"
+I0813 19:51:45.192364 140166964481152 _client.py:1025] HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/allenai/c4/allenai/c4.py "HTTP/1.1 404 Not Found"
+I0813 19:51:45.390132 140166964481152 _client.py:1025] HTTP Request: GET https://huggingface.co/api/datasets/allenai/c4/revision/1588ec454efa1a09f29cd18ddd04fe05fc8653a2 "HTTP/1.1 200 OK"
+I0813 19:51:46.073256 140166964481152 _client.py:1025] HTTP Request: HEAD https://huggingface.co/datasets/allenai/c4/resolve/1588ec454efa1a09f29cd18ddd04fe05fc8653a2/.huggingface.yaml "HTTP/1.1 404 Not Found"
+I0813 19:51:46.168556 140166964481152 _client.py:1025] HTTP Request: GET https://huggingface.co/api/datasets/allenai/c4/tree/1588ec454efa1a09f29cd18ddd04fe05fc8653a2/en%2Fdata?recursive=true&expand=false "HTTP/1.1 404 Not Found"
+I0813 19:51:46.281811 140166964481152 _client.py:1025] HTTP Request: GET https://huggingface.co/api/datasets/allenai/c4/tree/1588ec454efa1a09f29cd18ddd04fe05fc8653a2/en?recursive=false&expand=false "HTTP/1.1 200 OK"
+I0813 19:51:46.446231 140166964481152 _client.py:1025] HTTP Request: GET https://huggingface.co/api/datasets/allenai/c4/tree/1588ec454efa1a09f29cd18ddd04fe05fc8653a2/en?expand=false&recursive=false&limit=1000&cursor=ZXlKbWFXeGxYMjVoYldVaU9pSmxiaTlqTkMxMGNtRnBiaTR3TURrNU9TMXZaaTB3TVRBeU5DNXFjMjl1TG1kNklpd2lkSEpsWlY5dmFXUWlPaUprWXprME0yTTBZelF3WmpVelpEQXlZak14WTJWa01XUmxabUUzWlRWbU5ETTRaRFU0TmpKbEluMD06MTAwMA%3D%3D "HTTP/1.1 200 OK"
+I0813 19:51:46.532282 140166964481152 _client.py:1025] HTTP Request: GET https://huggingface.co/api/datasets/allenai/c4/tree/1588ec454efa1a09f29cd18ddd04fe05fc8653a2?recursive=false&expand=false "HTTP/1.1 200 OK"
+I0813 19:51:46.842047 140166964481152 _client.py:1025] HTTP Request: HEAD https://huggingface.co/datasets/allenai/c4/resolve/1588ec454efa1a09f29cd18ddd04fe05fc8653a2/dataset_infos.json "HTTP/1.1 404 Not Found"
+I0813 19:51:47.037604 140166964481152 _client.py:1025] HTTP Request: GET https://huggingface.co/api/datasets/allenai/c4/revision/1588ec454efa1a09f29cd18ddd04fe05fc8653a2 "HTTP/1.1 200 OK"
+I0813 19:51:47.399713 140166964481152 _client.py:1025] HTTP Request: GET https://huggingface.co/api/datasets/allenai/c4/tree/1588ec454efa1a09f29cd18ddd04fe05fc8653a2/en?recursive=false&expand=false "HTTP/1.1 200 OK"
+I0813 19:51:47.525060 140166964481152 _client.py:1025] HTTP Request: GET https://huggingface.co/api/datasets/allenai/c4/tree/1588ec454efa1a09f29cd18ddd04fe05fc8653a2/en?expand=false&recursive=false&limit=1000&cursor=ZXlKbWFXeGxYMjVoYldVaU9pSmxiaTlqTkMxMGNtRnBiaTR3TURrNU9TMXZaaTB3TVRBeU5DNXFjMjl1TG1kNklpd2lkSEpsWlY5dmFXUWlPaUprWXprME0yTTBZelF3WmpVelpEQXlZak14WTJWa01XUmxabUUzWlRWbU5ETTRaRFU0TmpKbEluMD06MTAwMA%3D%3D "HTTP/1.1 200 OK"
+I0813 19:51:47.612549 140166964481152 _client.py:1025] HTTP Request: GET https://huggingface.co/datasets/allenai/c4/resolve/1588ec454efa1a09f29cd18ddd04fe05fc8653a2/en/c4-train.00000-of-01024.json.gz "HTTP/1.1 302 Found"
+I0813 19:51:47.697804 140166964481152 _client.py:1025] HTTP Request: GET https://us.gcp.cdn.hf.co/xet-bridge-us/621ffdd236468d709f182a80/6656aac078668b0d5feb1cfb7b04def05bff73e7e375d0a66e252827336ac1a8?response-content-disposition=inline%3B+filename*%3DUTF-8%27%27c4-train.00000-of-01024.json.gz%3B+filename%3D%22c4-train.00000-of-01024.json.gz%22%3B&user_id=public&response-content-type=application%2Fgzip&X-Xet-Cas-Uid=public&Expires=1786654307&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly91cy5nY3AuY2RuLmhmLmNvL3hldC1icmlkZ2UtdXMvNjIxZmZkZDIzNjQ2OGQ3MDlmMTgyYTgwLzY2NTZhYWMwNzg2NjhiMGQ1ZmViMWNmYjdiMDRkZWYwNWJmZjczZTdlMzc1ZDBhNjZlMjUyODI3MzM2YWMxYThcXD9yZXNwb25zZS1jb250ZW50LWRpc3Bvc2l0aW9uPSomdXNlcl9pZD1wdWJsaWMmcmVzcG9uc2UtY29udGVudC10eXBlPSomWC1YZXQtQ2FzLVVpZD1wdWJsaWMiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkVwb2NoVGltZSI6MTc4NjY1NDMwN30sIkJ5dGVSYW5nZSI6eyJFeHBlY3RlZEhlYWRlciI6ImJ5dGVzPTAtNTI0Mjg4MSJ9fX1dfQ__&Signature=MEUCIEF-Fgc7hn1e%7Ej-dlQWD2tVImgF7Uw-SfimOA8-RiU0fAiEA8RybE4oM%7EQ3gqrl1ApogvnaApYrWhZYeUYtbfwjf8So_&Key-Pair-Id=01KXEF4KZ1B6FV465MAWR4M21F "HTTP/1.1 206 Partial Content"
+I0813 19:51:48.149240 140166964481152 _client.py:1025] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-4B-Instruct-2507/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+I0813 19:51:48.159414 140166964481152 _client.py:1025] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-4B-Instruct-2507/cdbee75f17c01a7cc42f958dc650907174af0554/config.json "HTTP/1.1 200 OK"
+I0813 19:51:48.170008 140166964481152 _client.py:1025] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-4B-Instruct-2507/cdbee75f17c01a7cc42f958dc650907174af0554/config.json "HTTP/1.1 200 OK"
+I0813 19:51:48.255603 140166964481152 _client.py:1025] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-4B-Instruct-2507/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+I0813 19:51:48.265812 140166964481152 _client.py:1025] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-4B-Instruct-2507/cdbee75f17c01a7cc42f958dc650907174af0554/tokenizer_config.json "HTTP/1.1 200 OK"
+I0813 19:51:48.276767 140166964481152 _client.py:1025] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-4B-Instruct-2507/cdbee75f17c01a7cc42f958dc650907174af0554/tokenizer_config.json "HTTP/1.1 200 OK"
+I0813 19:51:48.366066 140166964481152 _client.py:1025] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-4B-Instruct-2507/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+I0813 19:51:48.455249 140166964481152 _client.py:1025] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-4B-Instruct-2507/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+I0813 19:51:48.539158 140166964481152 _client.py:1025] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-4B-Instruct-2507/resolve/main/vocab.json "HTTP/1.1 307 Temporary Redirect"
+I0813 19:51:48.549069 140166964481152 _client.py:1025] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-4B-Instruct-2507/cdbee75f17c01a7cc42f958dc650907174af0554/vocab.json "HTTP/1.1 200 OK"
+I0813 19:51:48.560339 140166964481152 _client.py:1025] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-4B-Instruct-2507/cdbee75f17c01a7cc42f958dc650907174af0554/vocab.json "HTTP/1.1 200 OK"
+I0813 19:51:48.671564 140166964481152 _client.py:1025] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-4B-Instruct-2507/resolve/main/merges.txt "HTTP/1.1 307 Temporary Redirect"
+I0813 19:51:48.681725 140166964481152 _client.py:1025] HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-4B-Instruct-2507/cdbee75f17c01a7cc42f958dc650907174af0554/merges.txt "HTTP/1.1 200 OK"
+I0813 19:51:48.692992 140166964481152 _client.py:1025] HTTP Request: GET https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-4B-Instruct-2507/cdbee75f17c01a7cc42f958dc650907174af0554/merges.txt "HTTP/1.1 200 OK"
+I0813 19:51:48.798789 140166964481152 _client.py:1025] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-4B-Instruct-2507/resolve/main/tokenizer.json "HTTP/1.1 302 Found"
+I0813 19:51:49.491029 140166964481152 _client.py:1025] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-4B-Instruct-2507/resolve/main/added_tokens.json "HTTP/1.1 404 Not Found"
+I0813 19:51:49.576314 140166964481152 _client.py:1025] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-4B-Instruct-2507/resolve/main/special_tokens_map.json "HTTP/1.1 404 Not Found"
+I0813 19:51:49.664237 140166964481152 _client.py:1025] HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-4B-Instruct-2507/resolve/main/chat_template.jinja "HTTP/1.1 404 Not Found"
+I0813 19:51:50.507848 140166964481152 _client.py:1025] HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-4B-Instruct-2507 "HTTP/1.1 200 OK"
+E0813 19:51:50.511894 140166964481152 packing.py:209] PackAndBatchOperation is deprecated. Please use lazy_dataset.FirstFitPackIterDataset instead.
+I0813 19:51:50.622737 140166964481152 checkpointing.py:494] checkpoint manager exists so trying to load this run's existing checkpoint
+I0813 19:51:50.622814 140166964481152 checkpointing.py:628] No existing checkpoints found, not restoring checkpoint.
+/home/student49/me344_final_project/.venv-me344-pretrain/lib/python3.12/site-packages/maxtext/trainers/pre_train/train.py:832: DeprecationWarning: `with mesh:` context manager has been deprecated. Please use `with jax.set_mesh(mesh):` instead.
+  with jax.set_mesh(mesh), mesh, nn_partitioning.axis_rules(config.logical_axis_rules):
+I0813 19:51:59.302085 140166964481152 max_utils.py:818] Total estimated memory size: 8.2 GB, estimated output size: 5.6 GB, estimated temp size: 2.6 GB, estimated argument size: 5.6 GB, Estimated host temp size: 0.0 GB.
+I0813 19:51:59.302211 140166964481152 max_utils.py:824] Note that compiler could over-estimate the HBM usage.
+I0813 19:51:59.311047 140166964481152 metric_logger.py:365] number parameters: 4.022 billion
+Per train step:
+ Total TFLOPs: 3.15 
+ split as 98.16% learnable weight flops and 1.84% attention flops
+[transformers] PyTorch was not found. Models won't be available and only tokenizers, configuration and file/data utilities can be used.
+[transformers] DeepseekV32Config got `key=rope_scaling` in kwargs but hasn't set it as attribute. For RoPE standardization you need to set `self.rope_parameters` in model's config. 
+[transformers] DeepseekV4Config got `key=rope_scaling` in kwargs but hasn't set it as attribute. For RoPE standardization you need to set `self.rope_parameters` in model's config. 
+2026-08-13 19:52:03.843495: I external/local_xla/xla/tsl/cuda/cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-08-13 19:52:03.882274: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-08-13 19:52:05.209677: I external/local_xla/xla/tsl/cuda/cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+I0813 19:52:11.366916 140166964481152 checkpointing.py:910] Waiting for step 0 to finish before checkpoint...
+I0813 19:52:11.423721 140166964481152 checkpointing.py:914] Waited 0.05681037902832031 seconds for step 0 to finish before starting checkpointing.
+I0813 19:52:11.424230 140166964481152 checkpoint_manager.py:2017] [process=0][thread=MainThread][wait_until_finished] No Save Finalize thread to wait for. Returning.
+I0813 19:52:11.424418 140166964481152 checkpoint_manager.py:1514] [process=0] Saving checkpoint at step 0
+I0813 19:52:11.424543 140166964481152 event_tracking.py:76] [process=0] [sync] Started save checkpoint @ gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-c4/checkpoints/0.
+I0813 19:52:11.536930 140166964481152 atomicity.py:140] Creating tmp directory gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-c4/checkpoints/0
+I0813 19:52:11.994337 140166964481152 checkpoint.py:188] Wrote Metadata={'item_handlers': None, 'metrics': {}, 'performance_metrics': {}, 'init_timestamp_nsecs': 1786650731875054959, 'commit_timestamp_nsecs': None, 'custom_metadata': {}}, json={"item_handlers": null, "metrics": {}, "performance_metrics": {}, "init_timestamp_nsecs": 1786650731875054959, "commit_timestamp_nsecs": null, "custom_metadata": {}} to gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-c4/checkpoints/0/_CHECKPOINT_METADATA
+I0813 19:52:11.995297 140166964481152 signaling_client.py:370] Using JaxDistributedSignalingClient
+I0813 19:52:11.997057 140166964481152 future.py:372] [process=0][thread=MainThread][operation_id=1] _SignalingThread.join() waiting for signals ([]) blocking the main thread will slow down blocking save times. This is likely due to main thread calling result() on a CommitFuture.
+I0813 19:52:12.059677 140081939912256 atomicity.py:140] Creating tmp directory gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-c4/checkpoints/0/items
+I0813 19:52:12.318469 140166964481152 jax_array_handlers.py:521] Scheduling D2H of 66 prioritized jax.Array.
+I0813 19:52:12.318572 140166964481152 replica_slices.py:425] Transferring arrays to host memory with options: use_replica_parallel=True, min_slice_bytes_for_replica_parallel=None, max_replicas_for_replica_parallel=None, enable_pinned_host_transfer=False
+I0813 19:52:13.159619   35283 google_auth_provider.cc:181] Running on GCE, using service account 1045700421756-compute@developer.gserviceaccount.com
+I0813 19:52:26.718985 140166964481152 async_io_engine.py:150] [process=0][thread=MainThread] Initiated "orbax.checkpoint._src.serialization.jax_array_handlers.ArrayHandler".serialize. Time taken: 14.403081s
+I0813 19:52:26.719203 140166964481152 async_io_engine.py:221] MemoryRegulated: Peak usage: 0.000000 GiB
+I0813 19:52:26.733693 140166964481152 async_io_engine.py:122] [process=0] /jax/orbax/write/blocking_gbytes_per_sec: 3.117 GiB/s (total size: 45.0 GiB) (time elapsed: 14.421695947647095 s) (global)
+I0813 19:52:26.733798 140166964481152 base_pytree_checkpoint_handler.py:750] [process=0][thread=MainThread] Initiated Pytree async_save. Time taken: 14.421848s (batch_requests_ready=0.003909s, total_serialization_initiated=14.403840s, others=0.014099s)
+I0813 19:52:26.733917 140166964481152 composite_checkpoint_handler.py:715] [process=0][thread=MainThread] Initiated CompositeCheckpointHandler.async_save. Time taken: 14.738686s (all_items=0.000023s, per_item={'items': '0.00002313'}, temp_paths=14.738663)
+I0813 19:52:26.733981 140166964481152 future.py:372] [process=0][thread=MainThread][operation_id=1] _SignalingThread.join() waiting for signals ([]) blocking the main thread will slow down blocking save times. This is likely due to main thread calling result() on a CommitFuture.
+I0813 19:52:27.136289 140081939912256 array_metadata_store.py:203] [process=0][thread=array_type_handler] Wrote 66 array_metadata.ArrayMetadata to gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-c4/checkpoints/0/items/array_metadatas/process_0
+I0813 19:53:05.559372 140081939912256 jax_array_handlers.py:249] [process=0] /jax/orbax/write/worker/io/requested throughput: 1.157 GiB/s (total gbytes: 45.0 GiB) (time elapsed: 38.83903789520264 s) (per-host)
+I0813 19:53:05.559801 140081939912256 jax_array_handlers.py:308] [process=0] Raw /jax/orbax/write/worker/io/raw throughput: 1.004 GiB/s (total gbytes: 39.0 GiB) (time elapsed: 38.83903789520264 s) (per-host)
+I0813 19:53:05.559859 140081939912256 jax_array_handlers.py:330] [process=0] Write ratio (raw/logical): 0.868 (39.0 GiB / 45.0 GiB)
+I0813 19:53:05.837029 140081872770624 base_pytree_checkpoint_handler.py:1250] [process=0][thread=write_metadata_after_commits] Commit + Array metadata written. Time taken: 39.102777s (commit=38.827758s, array_metadata_write=0.275019s)
+I0813 19:53:05.838245 140166964481152 async_io_engine.py:122] [process=0] /jax/orbax/write/gbytes_per_sec: 860.018 MiB/s (total size: 45.0 GiB) (time elapsed: 53.52622199058533 s) (global)
+I0813 19:53:05.989153 140166964481152 checkpoint.py:228] Read Metadata={'item_handlers': None, 'metrics': {}, 'performance_metrics': {}, 'init_timestamp_nsecs': 1786650731875054959, 'commit_timestamp_nsecs': None, 'custom_metadata': {}} from gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-c4/checkpoints/0/_CHECKPOINT_METADATA
+I0813 19:53:06.180718 140166964481152 checkpoint.py:247] Updated Metadata={'item_handlers': {'items': 'orbax.checkpoint._src.handlers.pytree_checkpoint_handler.PyTreeCheckpointHandler'}, 'metrics': {}, 'performance_metrics': {}, 'init_timestamp_nsecs': 1786650731875054959, 'commit_timestamp_nsecs': None, 'custom_metadata': {'scan_layers': True}} to gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-c4/checkpoints/0/_CHECKPOINT_METADATA
+I0813 19:53:06.180863 140166964481152 event_tracking.py:172] [process=0] [sync] Finished blocking save in 54.76 seconds. Continuing save @ gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-c4/checkpoints/0.
+I0813 19:53:06.275542 140166964481152 array_metadata_store.py:367] [process=0][thread=MainThread] Skipped cross-host ArrayMetadata validation because only one process is found: process_index=0.
+I0813 19:53:06.307222 140166964481152 ocdbt_utils.py:51] Param validation support for Zarr3 will be added later (b/362328389).
+I0813 19:53:06.468829 140166964481152 base_pytree_checkpoint_handler.py:1374] [process=0][thread=MainThread] Pytree save finalize (merge_ocdbt + ArrayMetadata validation) completed. Time taken: 0.287713s. use_zarr3=True, enable_post_merge_validation=True, directory=gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-c4/checkpoints/0/items
+I0813 19:53:06.469448 140166964481152 atomicity.py:664] Finalizing gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-c4/checkpoints/0/items
+I0813 19:53:06.612869 140166964481152 atomicity.py:664] Finalizing gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-c4/checkpoints/0
+I0813 19:53:06.949165 140166964481152 atomicity.py:847] [process=0][thread=MainThread] Finished saving checkpoint (finalized tmp dir) to `gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-c4/checkpoints/0`.
+I0813 19:53:06.949678 140166964481152 event_tracking.py:185] [process=0] [sync] Finished save in 55.53 seconds @ gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-c4/checkpoints/0
+I0813 19:53:06.949874 140166964481152 deleter.py:374] Queuing deletion of steps: [].
+I0813 19:53:06.949922 140166964481152 checkpoint_manager.py:2145] [process=0][thread=MainThread][step=0] CheckpointManager Save Finalize is syncing with other hosts...
+I0813 19:53:06.949975 140166964481152 checkpoint_manager.py:2154] [process=0][thread=MainThread][step=0] CheckpointManager Save Finalize is done on all hosts.
+I0813 19:53:06.950009 140166964481152 checkpoint_manager.py:1583] [process=0][thread=MainThread][step=0] Finished synchronous save.
+I0813 19:53:06.950056 140166964481152 standard_logger.py:34] {'step': 0, 'event_type': 'save', 'directory': 'gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-c4/checkpoints', 'reached_preemption': False, 'preemption_received_at': None, 'synchronous': True, 'wait_for_prev_start_time': 1786650731.4242134, 'wait_for_prev_duration_secs': 5.5789947509765625e-05, 'time_between_consecutive_saves_sec': None, 'checkpointer_blocking_start_time': 1786650731.4244504, 'checkpointer_blocking_duration_secs': 55.525288105010986, 'get_old_steps_start_time': 1786650786.9497695, 'get_old_steps_duration_secs': 2.5987625122070312e-05, 'checkpoint_manager_blocking_start_time': 1786650731.424102, 'checkpoint_manager_blocking_duration_secs': 55.52592945098877}
+I0813 19:53:06.950322 140166964481152 elastic_utils.py:238] maybe_elastic_scale_up: Elastic training is not enabled.
+I0813 19:53:06.950370 140166964481152 checkpointing.py:426] Saved a checkpoint at step 0.
+I0813 19:53:06.950414 140166964481152 max_utils.py:777] 
+Memstats: After params initialized:
+I0813 19:53:06.950480 140166964481152 max_utils.py:783] 	Using (GB) 5.64 / 15.75 (35.809524%) on TPU_0(process=0,(0,0,0,0))
+I0813 19:53:06.950518 140166964481152 max_utils.py:783] 	Using (GB) 5.64 / 15.75 (35.809524%) on TPU_1(process=0,(1,0,0,0))
+I0813 19:53:06.950552 140166964481152 max_utils.py:783] 	Using (GB) 5.64 / 15.75 (35.809524%) on TPU_2(process=0,(0,1,0,0))
+I0813 19:53:06.950585 140166964481152 max_utils.py:783] 	Using (GB) 5.64 / 15.75 (35.809524%) on TPU_3(process=0,(1,1,0,0))
+I0813 19:53:06.950616 140166964481152 max_utils.py:783] 	Using (GB) 5.64 / 15.75 (35.809524%) on TPU_4(process=0,(0,2,0,0))
+I0813 19:53:06.950647 140166964481152 max_utils.py:783] 	Using (GB) 5.64 / 15.75 (35.809524%) on TPU_5(process=0,(1,2,0,0))
+I0813 19:53:06.950680 140166964481152 max_utils.py:783] 	Using (GB) 5.64 / 15.75 (35.809524%) on TPU_6(process=0,(0,3,0,0))
+I0813 19:53:06.950713 140166964481152 max_utils.py:783] 	Using (GB) 5.64 / 15.75 (35.809524%) on TPU_7(process=0,(1,3,0,0))
+I0813 19:53:07.128485 140166964481152 metric_logger.py:226] completed step: 0, seconds: 11.937, TFLOP/s/device: 0.264, Tokens/s/device: 10.723, total_weights: 926, loss: 482.974, lm_loss: 482.974, perplexity: inf
+W0813 19:53:07.129770 140166964481152 x2num.py:13] NaN or Inf found in input tensor.
+I0813 19:53:07.130594 140166964481152 metric_logger.py:333] To see full metrics 'tensorboard --logdir=gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-c4/tensorboard/'
+I0813 19:53:07.236546 140166964481152 metric_logger.py:226] completed step: 1, seconds: 55.815, TFLOP/s/device: 0.056, Tokens/s/device: 2.293, total_weights: 919, loss: 394.484, lm_loss: 394.484, perplexity: inf
+W0813 19:53:07.237813 140166964481152 x2num.py:13] NaN or Inf found in input tensor.
+I0813 19:53:07.333096 140166964481152 metric_logger.py:226] completed step: 2, seconds: 0.108, TFLOP/s/device: 29.099, Tokens/s/device: 1183.541, total_weights: 935, loss: 337.557, lm_loss: 337.557, perplexity: inf
+W0813 19:53:07.334329 140166964481152 x2num.py:13] NaN or Inf found in input tensor.
+I0813 19:53:07.431546 140166964481152 metric_logger.py:226] completed step: 3, seconds: 0.015, TFLOP/s/device: 214.452, Tokens/s/device: 8722.317, total_weights: 940, loss: 336.303, lm_loss: 336.303, perplexity: inf
+W0813 19:53:07.432624 140166964481152 x2num.py:13] NaN or Inf found in input tensor.
+I0813 19:53:07.531770 140166964481152 checkpointing.py:910] Waiting for step 4 to finish before checkpoint...
+I0813 19:53:07.532973 140166964481152 checkpointing.py:914] Waited 0.001203775405883789 seconds for step 4 to finish before starting checkpointing.
+I0813 19:53:07.533329 140166964481152 checkpoint_manager.py:2017] [process=0][thread=MainThread][wait_until_finished] No Save Finalize thread to wait for. Returning.
+I0813 19:53:07.533529 140166964481152 checkpoint_manager.py:1514] [process=0] Saving checkpoint at step 4
+I0813 19:53:07.533657 140166964481152 event_tracking.py:76] [process=0] [sync] Started save checkpoint @ gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-c4/checkpoints/4.
+I0813 19:53:07.638402 140166964481152 atomicity.py:140] Creating tmp directory gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-c4/checkpoints/4
+I0813 19:53:08.075946 140166964481152 future.py:372] [process=0][thread=MainThread][operation_id=2] _SignalingThread.join() waiting for signals ([]) blocking the main thread will slow down blocking save times. This is likely due to main thread calling result() on a CommitFuture.
+I0813 19:53:08.136984 140084096108096 atomicity.py:140] Creating tmp directory gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-c4/checkpoints/4/items
+I0813 19:53:08.368494 140166964481152 jax_array_handlers.py:521] Scheduling D2H of 66 prioritized jax.Array.
+I0813 19:53:08.368609 140166964481152 replica_slices.py:425] Transferring arrays to host memory with options: use_replica_parallel=True, min_slice_bytes_for_replica_parallel=None, max_replicas_for_replica_parallel=None, enable_pinned_host_transfer=False
+I0813 19:53:40.436450 140166964481152 async_io_engine.py:150] [process=0][thread=MainThread] Initiated "orbax.checkpoint._src.serialization.jax_array_handlers.ArrayHandler".serialize. Time taken: 32.070422s
+I0813 19:53:40.436669 140166964481152 async_io_engine.py:221] MemoryRegulated: Peak usage: 0.000000 GiB
+I0813 19:53:40.450357 140166964481152 async_io_engine.py:122] [process=0] /jax/orbax/write/blocking_gbytes_per_sec: 1.401 GiB/s (total size: 45.0 GiB) (time elapsed: 32.0879340171814 s) (global)
+I0813 19:53:40.450436 140166964481152 base_pytree_checkpoint_handler.py:750] [process=0][thread=MainThread] Initiated Pytree async_save. Time taken: 32.088045s (batch_requests_ready=0.003594s, total_serialization_initiated=32.070755s, others=0.013696s)
+I0813 19:53:40.450544 140166964481152 composite_checkpoint_handler.py:715] [process=0][thread=MainThread] Initiated CompositeCheckpointHandler.async_save. Time taken: 32.375954s (all_items=0.000020s, per_item={'items': '0.00002003'}, temp_paths=32.375934)
+I0813 19:53:40.450595 140166964481152 future.py:372] [process=0][thread=MainThread][operation_id=2] _SignalingThread.join() waiting for signals ([]) blocking the main thread will slow down blocking save times. This is likely due to main thread calling result() on a CommitFuture.
+I0813 19:53:40.878434 140082347312704 array_metadata_store.py:203] [process=0][thread=array_type_handler] Wrote 66 array_metadata.ArrayMetadata to gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-c4/checkpoints/4/items/array_metadatas/process_0
+I0813 19:54:33.998609 140082347312704 jax_array_handlers.py:249] [process=0] /jax/orbax/write/worker/io/requested throughput: 859.458 MiB/s (total gbytes: 45.0 GiB) (time elapsed: 53.561097860336304 s) (per-host)
+I0813 19:54:33.999163 140082347312704 jax_array_handlers.py:308] [process=0] Raw /jax/orbax/write/worker/io/raw throughput: 746.127 MiB/s (total gbytes: 39.0 GiB) (time elapsed: 53.561097860336304 s) (per-host)
+I0813 19:54:33.999223 140082347312704 jax_array_handlers.py:330] [process=0] Write ratio (raw/logical): 0.868 (39.0 GiB / 45.0 GiB)
+I0813 19:54:34.262970 140082495276608 base_pytree_checkpoint_handler.py:1250] [process=0][thread=write_metadata_after_commits] Commit + Array metadata written. Time taken: 53.812119s (commit=53.550986s, array_metadata_write=0.261133s)
+I0813 19:54:34.264211 140166964481152 async_io_engine.py:122] [process=0] /jax/orbax/write/gbytes_per_sec: 535.885 MiB/s (total size: 45.0 GiB) (time elapsed: 85.90174555778503 s) (global)
+I0813 19:54:34.600594 140166964481152 event_tracking.py:172] [process=0] [sync] Finished blocking save in 87.07 seconds. Continuing save @ gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-c4/checkpoints/4.
+I0813 19:54:34.697153 140166964481152 array_metadata_store.py:367] [process=0][thread=MainThread] Skipped cross-host ArrayMetadata validation because only one process is found: process_index=0.
+I0813 19:54:34.744451 140166964481152 ocdbt_utils.py:51] Param validation support for Zarr3 will be added later (b/362328389).
+I0813 19:54:34.872027 140166964481152 base_pytree_checkpoint_handler.py:1374] [process=0][thread=MainThread] Pytree save finalize (merge_ocdbt + ArrayMetadata validation) completed. Time taken: 0.271122s. use_zarr3=True, enable_post_merge_validation=True, directory=gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-c4/checkpoints/4/items
+I0813 19:54:34.872650 140166964481152 atomicity.py:664] Finalizing gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-c4/checkpoints/4/items
+I0813 19:54:35.017511 140166964481152 atomicity.py:664] Finalizing gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-c4/checkpoints/4
+I0813 19:54:35.364050 140166964481152 atomicity.py:847] [process=0][thread=MainThread] Finished saving checkpoint (finalized tmp dir) to `gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-c4/checkpoints/4`.
+I0813 19:54:35.364566 140166964481152 event_tracking.py:185] [process=0] [sync] Finished save in 87.83 seconds @ gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-c4/checkpoints/4
+I0813 19:54:35.364911 140166964481152 deleter.py:374] Queuing deletion of steps: [0].
+I0813 19:54:35.364963 140166964481152 deleter.py:248] Primary host(0), attempting deletion of step 0.
+I0813 19:54:37.271399 140166964481152 deleter.py:371] Deleted step 0.
+I0813 19:54:37.271510 140166964481152 checkpoint_manager.py:2145] [process=0][thread=MainThread][step=4] CheckpointManager Save Finalize is syncing with other hosts...
+I0813 19:54:37.271588 140166964481152 checkpoint_manager.py:2154] [process=0][thread=MainThread][step=4] CheckpointManager Save Finalize is done on all hosts.
+I0813 19:54:37.271635 140166964481152 checkpoint_manager.py:1583] [process=0][thread=MainThread][step=4] Finished synchronous save.
+I0813 19:54:37.271705 140166964481152 standard_logger.py:34] {'step': 4, 'event_type': 'save', 'directory': 'gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-c4/checkpoints', 'reached_preemption': False, 'preemption_received_at': None, 'synchronous': True, 'wait_for_prev_start_time': 1786650787.53331, 'wait_for_prev_duration_secs': 4.8160552978515625e-05, 'time_between_consecutive_saves_sec': 0.5833115577697754, 'checkpointer_blocking_start_time': 1786650787.5335605, 'checkpointer_blocking_duration_secs': 87.83108067512512, 'get_old_steps_start_time': 1786650875.3647056, 'get_old_steps_duration_secs': 6.222724914550781e-05, 'checkpoint_manager_blocking_start_time': 1786650787.5332649, 'checkpoint_manager_blocking_duration_secs': 89.73839807510376}
+I0813 19:54:37.272220 140166964481152 elastic_utils.py:238] maybe_elastic_scale_up: Elastic training is not enabled.
+I0813 19:54:37.272295 140166964481152 checkpointing.py:426] Saved a checkpoint at step 4.
+I0813 19:54:37.272352 140166964481152 checkpoint_manager.py:2017] [process=0][thread=MainThread][wait_until_finished] No Save Finalize thread to wait for. Returning.
+I0813 19:54:37.272403 140166964481152 checkpoint_manager.py:2017] [process=0][thread=MainThread][wait_until_finished] No Save Finalize thread to wait for. Returning.
+I0813 19:54:37.274206 140166964481152 metric_logger.py:226] completed step: 4, seconds: 0.095, TFLOP/s/device: 32.966, Tokens/s/device: 1340.806, total_weights: 986, loss: 329.982, lm_loss: 329.982, perplexity: inf
+W0813 19:54:37.275935 140166964481152 x2num.py:13] NaN or Inf found in input tensor.

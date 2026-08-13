@@ -1,0 +1,1502 @@
+[2026-08-10 00:51:39] === PHASE 1: cells 0-33 (single-TPU) ===
+[2026-08-10 00:51:40] cell 0 (markdown): # Train, Tune, And Scale Qwen3
+[2026-08-10 00:51:40] cell 1 START: import os
+[2026-08-10 00:51:40] cell 1 DONE in 0.0 min
+[2026-08-10 00:51:40] cell 2 START: from scripts.final_project import FinalProject
+[2026-08-10 00:51:40]   output: SUNet ID: qanh
+  | Notebook results: /home/student49/me344-artifacts/qanh-20260810t005140z
+  | Cloud output: gs://me344-tpu-labs-west4/final_projects/qanh/runs
+  | Starting checkpoint: gs://me344-tpu-labs-west4/data/qwen3-4b-instruct-2507/0/items
+  | Pinned MaxText commit: 17c7172720ca813b05e5ea248dedd78a0c64612e
+  | 
+[2026-08-10 00:51:40] cell 2 DONE in 0.0 min
+[2026-08-10 00:51:40] cell 3 (markdown): ## Did JAX Find Our TPU?
+[2026-08-10 00:51:40] cell 4 START: device_reports = project.probe()
+[2026-08-10 00:52:40]   output: storage preflight: checkpoint read and output write/delete passed
+  | 
+[2026-08-10 00:52:40]   output: pretrain {'python': '3.12.13', 'jax': '0.10.2', 'maxtext_commit': '17c7172720ca813b05e5ea248dedd78a0c64612e', 'backend': 'tpu', 'process_index': 0, 'process_count': 1, 'device_count': 8, 'local_device_count': 8, 'host_ram_bytes': 405698183168, 'devices': ['TPU_0(process=0,(0,0,0,0))', 'TPU_1(process=0,(1,0,0,0))', 'TPU_2(process=0,(0,1,0,0))', 'TPU_3(process=0,(1,1,0,0))', 'TPU_4(process=0,(0,2,0,0))', 'TPU_5(process=0,(1,2,0,0))', 'TPU_6(process=0,(0,3,0,0))', 'TPU_7(process=0,(1,3,0,0))']}
+  | 
+[2026-08-10 00:52:40]   output: posttrain {'python': '3.12.13', 'jax': '0.11.0', 'maxtext_commit': '17c7172720ca813b05e5ea248dedd78a0c64612e', 'backend': 'tpu', 'process_index': 0, 'process_count': 1, 'device_count': 8, 'local_device_count': 8, 'host_ram_bytes': 405698183168, 'devices': ['TPU_0(process=0,(0,0,0,0))', 'TPU_1(process=0,(1,0,0,0))', 'TPU_2(process=0,(0,1,0,0))', 'TPU_3(process=0,(1,1,0,0))', 'TPU_4(process=0,(0,2,0,0))', 'TPU_5(process=0,(1,2,0,0))', 'TPU_6(process=0,(0,3,0,0))', 'TPU_7(process=0,(1,3,0,0))']}
+  | 
+[2026-08-10 00:52:40]   output: resolved model: {'emb_dim': 2560, 'num_decoder_layers': 36, 'num_query_heads': 32, 'num_kv_heads': 8, 'head_dim': 128, 'mlp_dim': 9728, 'vocab_size': 151936, 'ici_parallelism': [1, 1, 1, -1, 1, 1, 1, 1, 1, 1, 1], 'dcn_parallelism': [1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1]}
+  | 
+[2026-08-10 00:52:40] cell 4 DONE in 1.0 min
+[2026-08-10 00:52:40] cell 5 (markdown): ## Will Our First Training Step Fit?
+[2026-08-10 00:52:40] cell 6 START: AOT_GLOBAL_BATCH = 2
+[2026-08-10 00:53:40]   output: /home/student49/me344_final_project/.venv-me344-posttrain/lib/python3.12/site-packages/torch/cuda/__init__.py:65: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  |   import pynvml  # type: ignore[import]
+  | 
+[2026-08-10 00:53:40]   output: [transformers] DeepseekV32Config got `key=rope_scaling` in kwargs but hasn't set it as attribute. For RoPE standardization you need to set `self.rope_parameters` in model's config. 
+  | 
+[2026-08-10 00:53:40]   output: [transformers] DeepseekV4Config got `key=rope_scaling` in kwargs but hasn't set it as attribute. For RoPE standardization you need to set `self.rope_parameters` in model's config. 
+  | 
+[2026-08-10 00:53:40]   output: 2026-08-10 00:52:48.127817: I external/local_xla/xla/tsl/cuda/cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+  | 2026-08-10 00:52:48.193518: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+  | To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+  | 
+[2026-08-10 00:53:40]   output: 2026-08-10 00:52:49.397704: I external/local_xla/xla/tsl/cuda/cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+  | 
+[2026-08-10 00:53:40]   output: EXPECTED RESULT: TP8 should compile, while the deliberately replicated DP8 layout should run out of HBM. That OOM confirms the capacity check works.
+  | 
+[2026-08-10 00:53:40]   output: I0810 00:53:05.789856 140358528920704 max_utils.py:830] System Information: Jax Version: 0.10.2
+  | I0810 00:53:05.789909 140358528920704 max_utils.py:831] System Information: Jaxlib Version: 0.10.2
+  | I0810 00:53:05.789957 140358528920704 max_utils.py:832] System Information: Jax Backend: PJRT C API
+  | 
+[2026-08-10 00:53:40]   output: Memory analysis: CompiledMemoryStats(generated_code_size_in_bytes=21794816, argument_size_in_bytes=6033936896, output_size_in_bytes=6033861120, alias_size_in_bytes=6033854976, temp_size_in_bytes=2798684160, host_generated_code_size_in_bytes=0, host_argument_size_in_bytes=0, host_output_size_in_bytes=0, host_alias_size_in_bytes=0, host_temp_size_in_bytes=0)
+  | 
+[2026-08-10 00:53:40]   output: capacity-tp8-aot finished in 0.4 minutes (exit 0).
+  | 
+[2026-08-10 00:53:40]   output: I0810 00:53:32.774866 139975798774912 max_utils.py:830] System Information: Jax Version: 0.10.2
+  | I0810 00:53:32.774924 139975798774912 max_utils.py:831] System Information: Jaxlib Version: 0.10.2
+  | I0810 00:53:32.774974 139975798774912 max_utils.py:832] System Information: Jax Backend: PJRT C API
+  | 
+[2026-08-10 00:53:40]   output: jax.errors.JaxRuntimeError: RESOURCE_EXHAUSTED: Ran out of memory on HBM, the total memory required for HLO temporaries (65.47G) exceeds available HBM (15.75G).
+  | 
+[2026-08-10 00:53:40]   output: capacity-dp8-aot finished in 0.4 minutes (exit 1).
+  | 
+  | Handled trial failure:
+  | jax.errors.JaxRuntimeError: RESOURCE_EXHAUSTED: Ran out of memory on HBM, the total memory required for HLO temporaries (65.47G) exceeds available HBM (15.75G).
+  | EXPECTED OOM CONFIRMED: the replicated DP8 state exceeded HBM. This is a successful result.
+  | parameters~4.022B, BF16 checkpoint~7.49 GiB, persistent training state~44.95 GiB, rough peak before activations~59.94 GiB
+  | TP8 AOT: mesh=8, working~7.49 GiB/chip, predict=fit_candidate, observed=fit, AOT=8.23 GiB/chip
+  | DP8 AOT: mesh=8, working~59.94 GiB/chip, predict=oom, observed=oom
+  | 
+[2026-08-10 00:53:40]   output: <Figure size 1000x450 with 2 Axes>
+[2026-08-10 00:53:40] cell 6 DONE in 1.0 min
+[2026-08-10 00:53:40] cell 7 (markdown): ## What Happens When We Run The Compiled Shape?
+[2026-08-10 00:53:40] cell 8 START: pretrain_checkpoint = project.run_baselines(
+[2026-08-10 00:57:29]   output: I0810 00:53:55.483710 140130740411520 max_utils.py:830] System Information: Jax Version: 0.10.2
+  | I0810 00:53:55.483926 140130740411520 max_utils.py:831] System Information: Jaxlib Version: 0.10.2
+  | I0810 00:53:55.483980 140130740411520 max_utils.py:832] System Information: Jax Backend: PJRT C API
+  | 
+[2026-08-10 00:57:29]   output: Memstats: After params initialized:
+  | I0810 00:53:58.832655 140130740411520 metric_logger.py:226] completed step: 0, seconds: 0.683, TFLOP/s/device: 0.340, Tokens/s/device: 2999.506, total_weights: 16384, loss: 10.872, lm_loss: 10.872, perplexity: 52703.133
+  | 
+[2026-08-10 00:57:29]   output: I0810 00:53:58.936414 140130740411520 metric_logger.py:226] completed step: 1, seconds: 0.150, TFLOP/s/device: 1.550, Tokens/s/device: 13686.272, total_weights: 16384, loss: 10.866, lm_loss: 10.866, perplexity: 52362.266
+  | I0810 00:53:58.943388 140130740411520 metric_logger.py:226] completed step: 2, seconds: 0.104, TFLOP/s/device: 2.235, Tokens/s/device: 19736.715, total_weights: 16384, loss: 10.860, lm_loss: 10.860, perplexity: 52070.148
+  | I0810 00:53:58.953063 140130740411520 metric_logger.py:226] completed step: 3, seconds: 0.007, TFLOP/s/device: 33.545, Tokens/s/device: 296210.587, total_weights: 16384, loss: 10.857, lm_loss: 10.857, perplexity: 51892.797
+  | I0810 00:53:58.962469 140130740411520 metric_logger.py:226] completed step: 4, seconds: 0.007, TFLOP/s/device: 35.425, Tokens/s/device: 312815.030, total_weights: 16384, loss: 10.855, lm_loss: 10.855, perplexity: 51807.371
+  | 
+[2026-08-10 00:57:29]   output: smoke finished in 0.5 minutes (exit 0).
+  | 
+[2026-08-10 00:57:29]   output: I0810 00:54:22.844990 139823119686784 max_utils.py:830] System Information: Jax Version: 0.10.2
+  | I0810 00:54:22.845314 139823119686784 max_utils.py:831] System Information: Jaxlib Version: 0.10.2
+  | I0810 00:54:22.845385 139823119686784 max_utils.py:832] System Information: Jax Backend: PJRT C API
+  | 
+[2026-08-10 00:57:29]   output: I0810 00:55:40.100054 139823119686784 checkpointing.py:426] Saved a checkpoint at step 0.
+  | Memstats: After params initialized:
+  | I0810 00:55:40.272747 139823119686784 metric_logger.py:226] completed step: 0, seconds: 11.903, TFLOP/s/device: 0.264, Tokens/s/device: 10.754, total_weights: 926, loss: 482.974, lm_loss: 482.974, perplexity: inf
+  | 
+[2026-08-10 00:57:29]   output: I0810 00:55:40.372132 139823119686784 metric_logger.py:226] completed step: 1, seconds: 58.453, TFLOP/s/device: 0.054, Tokens/s/device: 2.190, total_weights: 919, loss: 394.484, lm_loss: 394.484, perplexity: inf
+  | I0810 00:55:40.468858 139823119686784 metric_logger.py:226] completed step: 2, seconds: 0.099, TFLOP/s/device: 31.634, Tokens/s/device: 1286.652, total_weights: 935, loss: 337.557, lm_loss: 337.557, perplexity: inf
+  | I0810 00:55:40.567315 139823119686784 metric_logger.py:226] completed step: 3, seconds: 0.014, TFLOP/s/device: 223.372, Tokens/s/device: 9085.102, total_weights: 940, loss: 336.303, lm_loss: 336.303, perplexity: inf
+  | 
+[2026-08-10 00:57:29]   output: I0810 00:57:12.859542 139823119686784 checkpointing.py:426] Saved a checkpoint at step 4.
+  | I0810 00:57:12.860819 139823119686784 metric_logger.py:226] completed step: 4, seconds: 0.096, TFLOP/s/device: 32.840, Tokens/s/device: 1335.699, total_weights: 986, loss: 329.982, lm_loss: 329.982, perplexity: inf
+  | 
+[2026-08-10 00:57:29]   output: continued-pretrain finished in 3.3 minutes (exit 0).
+  | 
+[2026-08-10 00:57:29]   output: Scale-out checkpoint: gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260810t005140z-c4/checkpoints/4/items
+  | 
+[2026-08-10 00:57:29] cell 8 DONE in 3.8 min
+[2026-08-10 00:57:29] cell 9 (markdown): ## How Much Work Should One Step Hold?
+[2026-08-10 00:57:29] cell 10 START: SWEEP_BATCHES = (4, 8, 16, 32, 64, 128, 256, 512)
+[2026-08-10 01:05:32]   output: I0810 00:57:44.707058 140386544909440 max_utils.py:830] System Information: Jax Version: 0.10.2
+  | I0810 00:57:44.707104 140386544909440 max_utils.py:831] System Information: Jaxlib Version: 0.10.2
+  | I0810 00:57:44.707148 140386544909440 max_utils.py:832] System Information: Jax Backend: PJRT C API
+  | 
+[2026-08-10 01:05:32]   output: Memory analysis: CompiledMemoryStats(generated_code_size_in_bytes=21217280, argument_size_in_bytes=6033895936, output_size_in_bytes=6033861120, alias_size_in_bytes=6033854976, temp_size_in_bytes=2799007744, host_generated_code_size_in_bytes=0, host_argument_size_in_bytes=0, host_output_size_in_bytes=0, host_alias_size_in_bytes=0, host_temp_size_in_bytes=0)
+  | 
+[2026-08-10 01:05:32]   output: sweep-aot-gb4 finished in 0.5 minutes (exit 0).
+  | 
+[2026-08-10 01:05:32]   output: I0810 00:58:14.521525 140463231069312 max_utils.py:830] System Information: Jax Version: 0.10.2
+  | I0810 00:58:14.521734 140463231069312 max_utils.py:831] System Information: Jaxlib Version: 0.10.2
+  | I0810 00:58:14.521787 140463231069312 max_utils.py:832] System Information: Jax Backend: PJRT C API
+  | 
+[2026-08-10 01:05:32]   output: Memstats: After params initialized:
+  | I0810 00:58:17.634308 140463231069312 metric_logger.py:226] completed step: 0, seconds: 0.654, TFLOP/s/device: 4.765, Tokens/s/device: 195.601, total_weights: 1024, loss: 490.857, lm_loss: 490.857, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 00:58:17.731640 140463231069312 metric_logger.py:226] completed step: 1, seconds: 0.150, TFLOP/s/device: 20.724, Tokens/s/device: 850.753, total_weights: 1024, loss: 490.857, lm_loss: 490.857, perplexity: inf
+  | I0810 00:58:17.829668 140463231069312 metric_logger.py:226] completed step: 2, seconds: 0.095, TFLOP/s/device: 32.851, Tokens/s/device: 1348.547, total_weights: 1024, loss: 490.857, lm_loss: 490.857, perplexity: inf
+  | I0810 00:58:17.927741 140463231069312 metric_logger.py:226] completed step: 3, seconds: 0.009, TFLOP/s/device: 364.136, Tokens/s/device: 14948.032, total_weights: 1024, loss: 490.857, lm_loss: 490.857, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 00:58:18.025944 140463231069312 metric_logger.py:226] completed step: 4, seconds: 0.097, TFLOP/s/device: 31.996, Tokens/s/device: 1313.454, total_weights: 1024, loss: 490.857, lm_loss: 490.857, perplexity: inf
+  | I0810 00:58:18.123926 140463231069312 metric_logger.py:226] completed step: 5, seconds: 0.098, TFLOP/s/device: 31.814, Tokens/s/device: 1305.976, total_weights: 1024, loss: 490.857, lm_loss: 490.857, perplexity: inf
+  | I0810 00:58:18.222000 140463231069312 metric_logger.py:226] completed step: 6, seconds: 0.099, TFLOP/s/device: 31.469, Tokens/s/device: 1291.807, total_weights: 1024, loss: 490.857, lm_loss: 490.857, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 00:58:18.320068 140463231069312 metric_logger.py:226] completed step: 7, seconds: 0.098, TFLOP/s/device: 31.830, Tokens/s/device: 1306.629, total_weights: 1024, loss: 490.857, lm_loss: 490.857, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: sweep-gb4 finished in 0.5 minutes (exit 0).
+  | 
+[2026-08-10 01:05:32]   output: I0810 00:58:42.697063 139806053239936 max_utils.py:830] System Information: Jax Version: 0.10.2
+  | I0810 00:58:42.697111 139806053239936 max_utils.py:831] System Information: Jaxlib Version: 0.10.2
+  | I0810 00:58:42.697156 139806053239936 max_utils.py:832] System Information: Jax Backend: PJRT C API
+  | 
+[2026-08-10 01:05:32]   output: Memory analysis: CompiledMemoryStats(generated_code_size_in_bytes=26202624, argument_size_in_bytes=6033895936, output_size_in_bytes=6033861120, alias_size_in_bytes=6033854976, temp_size_in_bytes=2941943808, host_generated_code_size_in_bytes=0, host_argument_size_in_bytes=0, host_output_size_in_bytes=0, host_alias_size_in_bytes=0, host_temp_size_in_bytes=0)
+  | 
+[2026-08-10 01:05:32]   output: sweep-aot-gb8 finished in 0.5 minutes (exit 0).
+  | 
+[2026-08-10 01:05:32]   output: I0810 00:59:10.898478 140182534368384 max_utils.py:830] System Information: Jax Version: 0.10.2
+  | I0810 00:59:10.898686 140182534368384 max_utils.py:831] System Information: Jaxlib Version: 0.10.2
+  | I0810 00:59:10.898736 140182534368384 max_utils.py:832] System Information: Jax Backend: PJRT C API
+  | 
+[2026-08-10 01:05:32]   output: Memstats: After params initialized:
+  | I0810 00:59:14.077951 140182534368384 metric_logger.py:226] completed step: 0, seconds: 0.669, TFLOP/s/device: 9.327, Tokens/s/device: 382.898, total_weights: 2048, loss: 493.074, lm_loss: 493.074, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 00:59:14.232128 140182534368384 metric_logger.py:226] completed step: 1, seconds: 0.149, TFLOP/s/device: 41.840, Tokens/s/device: 1717.556, total_weights: 2048, loss: 493.074, lm_loss: 493.074, perplexity: inf
+  | I0810 00:59:14.386190 140182534368384 metric_logger.py:226] completed step: 2, seconds: 0.099, TFLOP/s/device: 63.089, Tokens/s/device: 2589.835, total_weights: 2048, loss: 493.074, lm_loss: 493.074, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 00:59:14.540229 140182534368384 metric_logger.py:226] completed step: 3, seconds: 0.065, TFLOP/s/device: 95.257, Tokens/s/device: 3910.367, total_weights: 2048, loss: 493.074, lm_loss: 493.074, perplexity: inf
+  | I0810 00:59:14.694304 140182534368384 metric_logger.py:226] completed step: 4, seconds: 0.153, TFLOP/s/device: 40.858, Tokens/s/device: 1677.270, total_weights: 2048, loss: 493.074, lm_loss: 493.074, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 00:59:14.848426 140182534368384 metric_logger.py:226] completed step: 5, seconds: 0.153, TFLOP/s/device: 40.644, Tokens/s/device: 1668.481, total_weights: 2048, loss: 493.074, lm_loss: 493.074, perplexity: inf
+  | I0810 00:59:15.002560 140182534368384 metric_logger.py:226] completed step: 6, seconds: 0.154, TFLOP/s/device: 40.490, Tokens/s/device: 1662.143, total_weights: 2048, loss: 493.074, lm_loss: 493.074, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 00:59:15.156631 140182534368384 metric_logger.py:226] completed step: 7, seconds: 0.154, TFLOP/s/device: 40.464, Tokens/s/device: 1661.076, total_weights: 2048, loss: 493.074, lm_loss: 493.074, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: sweep-gb8 finished in 0.4 minutes (exit 0).
+  | 
+[2026-08-10 01:05:32]   output: I0810 00:59:37.013218 139636861508736 max_utils.py:830] System Information: Jax Version: 0.10.2
+  | I0810 00:59:37.013268 139636861508736 max_utils.py:831] System Information: Jaxlib Version: 0.10.2
+  | I0810 00:59:37.013319 139636861508736 max_utils.py:832] System Information: Jax Backend: PJRT C API
+  | 
+[2026-08-10 01:05:32]   output: Memory analysis: CompiledMemoryStats(generated_code_size_in_bytes=32220672, argument_size_in_bytes=6033936896, output_size_in_bytes=6033861120, alias_size_in_bytes=6033854976, temp_size_in_bytes=3633154560, host_generated_code_size_in_bytes=0, host_argument_size_in_bytes=0, host_output_size_in_bytes=0, host_alias_size_in_bytes=0, host_temp_size_in_bytes=0)
+  | 
+[2026-08-10 01:05:32]   output: sweep-aot-gb16 finished in 0.5 minutes (exit 0).
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:00:05.055923 140091869637760 max_utils.py:830] System Information: Jax Version: 0.10.2
+  | I0810 01:00:05.056137 140091869637760 max_utils.py:831] System Information: Jaxlib Version: 0.10.2
+  | I0810 01:00:05.056188 140091869637760 max_utils.py:832] System Information: Jax Backend: PJRT C API
+  | 
+[2026-08-10 01:05:32]   output: Memstats: After params initialized:
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:00:08.394577 140091869637760 metric_logger.py:226] completed step: 0, seconds: 0.664, TFLOP/s/device: 18.793, Tokens/s/device: 771.456, total_weights: 4096, loss: 492.325, lm_loss: 492.325, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:00:08.661850 140091869637760 metric_logger.py:226] completed step: 1, seconds: 0.150, TFLOP/s/device: 83.183, Tokens/s/device: 3414.722, total_weights: 4096, loss: 492.325, lm_loss: 492.325, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:00:08.929018 140091869637760 metric_logger.py:226] completed step: 2, seconds: 0.215, TFLOP/s/device: 57.980, Tokens/s/device: 2380.122, total_weights: 4096, loss: 492.325, lm_loss: 492.325, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:00:09.196271 140091869637760 metric_logger.py:226] completed step: 3, seconds: 0.174, TFLOP/s/device: 71.543, Tokens/s/device: 2936.874, total_weights: 4096, loss: 492.325, lm_loss: 492.325, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:00:09.463442 140091869637760 metric_logger.py:226] completed step: 4, seconds: 0.266, TFLOP/s/device: 46.839, Tokens/s/device: 1922.759, total_weights: 4096, loss: 492.325, lm_loss: 492.325, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:00:09.730715 140091869637760 metric_logger.py:226] completed step: 5, seconds: 0.267, TFLOP/s/device: 46.690, Tokens/s/device: 1916.655, total_weights: 4096, loss: 492.325, lm_loss: 492.325, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:00:09.997980 140091869637760 metric_logger.py:226] completed step: 6, seconds: 0.267, TFLOP/s/device: 46.694, Tokens/s/device: 1916.813, total_weights: 4096, loss: 492.325, lm_loss: 492.325, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:00:10.265170 140091869637760 metric_logger.py:226] completed step: 7, seconds: 0.267, TFLOP/s/device: 46.668, Tokens/s/device: 1915.773, total_weights: 4096, loss: 492.325, lm_loss: 492.325, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: sweep-gb16 finished in 0.4 minutes (exit 0).
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:00:30.232933 140589507026048 max_utils.py:830] System Information: Jax Version: 0.10.2
+  | I0810 01:00:30.232986 140589507026048 max_utils.py:831] System Information: Jaxlib Version: 0.10.2
+  | I0810 01:00:30.233038 140589507026048 max_utils.py:832] System Information: Jax Backend: PJRT C API
+  | 
+[2026-08-10 01:05:32]   output: Memory analysis: CompiledMemoryStats(generated_code_size_in_bytes=32838656, argument_size_in_bytes=6034018816, output_size_in_bytes=6033861120, alias_size_in_bytes=6033854976, temp_size_in_bytes=4003774976, host_generated_code_size_in_bytes=0, host_argument_size_in_bytes=0, host_output_size_in_bytes=0, host_alias_size_in_bytes=0, host_temp_size_in_bytes=0)
+  | 
+[2026-08-10 01:05:32]   output: sweep-aot-gb32 finished in 0.5 minutes (exit 0).
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:01:00.913573 139810684132480 max_utils.py:830] System Information: Jax Version: 0.10.2
+  | I0810 01:01:00.913777 139810684132480 max_utils.py:831] System Information: Jaxlib Version: 0.10.2
+  | I0810 01:01:00.913830 139810684132480 max_utils.py:832] System Information: Jax Backend: PJRT C API
+  | 
+[2026-08-10 01:05:32]   output: Memstats: After params initialized:
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:01:04.550473 139810684132480 metric_logger.py:226] completed step: 0, seconds: 0.674, TFLOP/s/device: 37.009, Tokens/s/device: 1519.225, total_weights: 8192, loss: 494.061, lm_loss: 494.061, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:01:05.045859 139810684132480 metric_logger.py:226] completed step: 1, seconds: 0.154, TFLOP/s/device: 162.160, Tokens/s/device: 6656.786, total_weights: 8192, loss: 494.061, lm_loss: 494.061, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:01:05.541067 139810684132480 metric_logger.py:226] completed step: 2, seconds: 0.443, TFLOP/s/device: 56.335, Tokens/s/device: 2312.572, total_weights: 8192, loss: 494.061, lm_loss: 494.061, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:01:06.036351 139810684132480 metric_logger.py:226] completed step: 3, seconds: 0.399, TFLOP/s/device: 62.510, Tokens/s/device: 2566.082, total_weights: 8192, loss: 494.061, lm_loss: 494.061, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:01:06.531692 139810684132480 metric_logger.py:226] completed step: 4, seconds: 0.494, TFLOP/s/device: 50.524, Tokens/s/device: 2074.025, total_weights: 8192, loss: 494.061, lm_loss: 494.061, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:01:07.027051 139810684132480 metric_logger.py:226] completed step: 5, seconds: 0.495, TFLOP/s/device: 50.421, Tokens/s/device: 2069.824, total_weights: 8192, loss: 494.061, lm_loss: 494.061, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:01:07.522353 139810684132480 metric_logger.py:226] completed step: 6, seconds: 0.495, TFLOP/s/device: 50.367, Tokens/s/device: 2067.588, total_weights: 8192, loss: 494.061, lm_loss: 494.061, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:01:08.017648 139810684132480 metric_logger.py:226] completed step: 7, seconds: 0.495, TFLOP/s/device: 50.353, Tokens/s/device: 2067.037, total_weights: 8192, loss: 494.061, lm_loss: 494.061, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: sweep-gb32 finished in 0.5 minutes (exit 0).
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:01:32.709741 140634084453504 max_utils.py:830] System Information: Jax Version: 0.10.2
+  | I0810 01:01:32.709791 140634084453504 max_utils.py:831] System Information: Jaxlib Version: 0.10.2
+  | I0810 01:01:32.709836 140634084453504 max_utils.py:832] System Information: Jax Backend: PJRT C API
+  | 
+[2026-08-10 01:05:32]   output: Memory analysis: CompiledMemoryStats(generated_code_size_in_bytes=33763328, argument_size_in_bytes=6034182656, output_size_in_bytes=6033861120, alias_size_in_bytes=6033854976, temp_size_in_bytes=5349507584, host_generated_code_size_in_bytes=0, host_argument_size_in_bytes=0, host_output_size_in_bytes=0, host_alias_size_in_bytes=0, host_temp_size_in_bytes=0)
+  | 
+[2026-08-10 01:05:32]   output: sweep-aot-gb64 finished in 0.6 minutes (exit 0).
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:02:05.668536 140359332043904 max_utils.py:830] System Information: Jax Version: 0.10.2
+  | I0810 01:02:05.668692 140359332043904 max_utils.py:831] System Information: Jaxlib Version: 0.10.2
+  | I0810 01:02:05.668752 140359332043904 max_utils.py:832] System Information: Jax Backend: PJRT C API
+  | 
+[2026-08-10 01:05:32]   output: Memstats: After params initialized:
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:02:09.947253 140359332043904 metric_logger.py:226] completed step: 0, seconds: 0.669, TFLOP/s/device: 74.606, Tokens/s/device: 3062.609, total_weights: 16384, loss: 493.430, lm_loss: 493.430, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:02:10.932699 140359332043904 metric_logger.py:226] completed step: 1, seconds: 0.146, TFLOP/s/device: 341.499, Tokens/s/device: 14018.756, total_weights: 16384, loss: 493.430, lm_loss: 493.430, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:02:11.918343 140359332043904 metric_logger.py:226] completed step: 2, seconds: 0.930, TFLOP/s/device: 53.616, Tokens/s/device: 2200.970, total_weights: 16384, loss: 493.430, lm_loss: 493.430, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:02:12.903916 140359332043904 metric_logger.py:226] completed step: 3, seconds: 0.898, TFLOP/s/device: 55.550, Tokens/s/device: 2280.372, total_weights: 16384, loss: 493.430, lm_loss: 493.430, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:02:13.889472 140359332043904 metric_logger.py:226] completed step: 4, seconds: 0.985, TFLOP/s/device: 50.630, Tokens/s/device: 2078.411, total_weights: 16384, loss: 493.430, lm_loss: 493.430, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:02:14.874952 140359332043904 metric_logger.py:226] completed step: 5, seconds: 0.986, TFLOP/s/device: 50.620, Tokens/s/device: 2078.006, total_weights: 16384, loss: 493.430, lm_loss: 493.430, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:02:15.860477 140359332043904 metric_logger.py:226] completed step: 6, seconds: 0.985, TFLOP/s/device: 50.625, Tokens/s/device: 2078.190, total_weights: 16384, loss: 493.430, lm_loss: 493.430, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:02:16.845995 140359332043904 metric_logger.py:226] completed step: 7, seconds: 0.985, TFLOP/s/device: 50.624, Tokens/s/device: 2078.150, total_weights: 16384, loss: 493.430, lm_loss: 493.430, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: sweep-gb64 finished in 0.6 minutes (exit 0).
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:02:41.147796 140065841986688 max_utils.py:830] System Information: Jax Version: 0.10.2
+  | I0810 01:02:41.147847 140065841986688 max_utils.py:831] System Information: Jaxlib Version: 0.10.2
+  | I0810 01:02:41.147902 140065841986688 max_utils.py:832] System Information: Jax Backend: PJRT C API
+  | 
+[2026-08-10 01:05:32]   output: Memory analysis: CompiledMemoryStats(generated_code_size_in_bytes=32586752, argument_size_in_bytes=6034510336, output_size_in_bytes=6033861120, alias_size_in_bytes=6033854976, temp_size_in_bytes=7910301696, host_generated_code_size_in_bytes=0, host_argument_size_in_bytes=0, host_output_size_in_bytes=0, host_alias_size_in_bytes=0, host_temp_size_in_bytes=0)
+  | 
+[2026-08-10 01:05:32]   output: sweep-aot-gb128 finished in 0.5 minutes (exit 0).
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:03:11.713617 140026080083072 max_utils.py:830] System Information: Jax Version: 0.10.2
+  | I0810 01:03:11.713782 140026080083072 max_utils.py:831] System Information: Jaxlib Version: 0.10.2
+  | I0810 01:03:11.713835 140026080083072 max_utils.py:832] System Information: Jax Backend: PJRT C API
+  | 
+[2026-08-10 01:05:32]   output: Memstats: After params initialized:
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:03:17.168821 140026080083072 metric_logger.py:226] completed step: 0, seconds: 0.677, TFLOP/s/device: 147.356, Tokens/s/device: 6049.060, total_weights: 32768, loss: 494.183, lm_loss: 494.183, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:03:19.140045 140026080083072 metric_logger.py:226] completed step: 1, seconds: 0.149, TFLOP/s/device: 669.330, Tokens/s/device: 27476.471, total_weights: 32768, loss: 494.183, lm_loss: 494.183, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:03:21.110799 140026080083072 metric_logger.py:226] completed step: 2, seconds: 1.926, TFLOP/s/device: 51.795, Tokens/s/device: 2126.224, total_weights: 32768, loss: 494.183, lm_loss: 494.183, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:03:23.081684 140026080083072 metric_logger.py:226] completed step: 3, seconds: 1.872, TFLOP/s/device: 53.310, Tokens/s/device: 2188.425, total_weights: 32768, loss: 494.183, lm_loss: 494.183, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:03:25.052722 140026080083072 metric_logger.py:226] completed step: 4, seconds: 1.970, TFLOP/s/device: 50.637, Tokens/s/device: 2078.683, total_weights: 32768, loss: 494.183, lm_loss: 494.183, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:03:27.023730 140026080083072 metric_logger.py:226] completed step: 5, seconds: 1.970, TFLOP/s/device: 50.661, Tokens/s/device: 2079.658, total_weights: 32768, loss: 494.183, lm_loss: 494.183, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:03:28.994734 140026080083072 metric_logger.py:226] completed step: 6, seconds: 1.971, TFLOP/s/device: 50.623, Tokens/s/device: 2078.092, total_weights: 32768, loss: 494.183, lm_loss: 494.183, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:03:30.965700 140026080083072 metric_logger.py:226] completed step: 7, seconds: 1.971, TFLOP/s/device: 50.622, Tokens/s/device: 2078.064, total_weights: 32768, loss: 494.183, lm_loss: 494.183, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: sweep-gb128 finished in 0.7 minutes (exit 0).
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:03:52.916540 139622401268864 max_utils.py:830] System Information: Jax Version: 0.10.2
+  | I0810 01:03:52.916596 139622401268864 max_utils.py:831] System Information: Jaxlib Version: 0.10.2
+  | I0810 01:03:52.916643 139622401268864 max_utils.py:832] System Information: Jax Backend: PJRT C API
+  | 
+[2026-08-10 01:05:32]   output: Memory analysis: CompiledMemoryStats(generated_code_size_in_bytes=28702208, argument_size_in_bytes=6035165696, output_size_in_bytes=6033861120, alias_size_in_bytes=6033854976, temp_size_in_bytes=12616153088, host_generated_code_size_in_bytes=0, host_argument_size_in_bytes=0, host_output_size_in_bytes=0, host_alias_size_in_bytes=0, host_temp_size_in_bytes=0)
+  | 
+[2026-08-10 01:05:32]   output: sweep-aot-gb256 finished in 0.5 minutes (exit 0).
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:04:23.684370 140168835177600 max_utils.py:830] System Information: Jax Version: 0.10.2
+  | I0810 01:04:23.684577 140168835177600 max_utils.py:831] System Information: Jaxlib Version: 0.10.2
+  | I0810 01:04:23.684637 140168835177600 max_utils.py:832] System Information: Jax Backend: PJRT C API
+  | 
+[2026-08-10 01:05:32]   output: Memstats: After params initialized:
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:04:30.623942 140168835177600 metric_logger.py:226] completed step: 0, seconds: 0.688, TFLOP/s/device: 290.120, Tokens/s/device: 11909.608, total_weights: 65536, loss: 493.260, lm_loss: 493.260, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:04:34.663058 140168835177600 metric_logger.py:226] completed step: 1, seconds: 0.150, TFLOP/s/device: 1332.422, Tokens/s/device: 54696.837, total_weights: 65536, loss: 493.260, lm_loss: 493.260, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:04:38.702072 140168835177600 metric_logger.py:226] completed step: 2, seconds: 3.998, TFLOP/s/device: 49.915, Tokens/s/device: 2049.058, total_weights: 65536, loss: 493.260, lm_loss: 493.260, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:04:42.741103 140168835177600 metric_logger.py:226] completed step: 3, seconds: 3.935, TFLOP/s/device: 50.709, Tokens/s/device: 2081.629, total_weights: 65536, loss: 493.260, lm_loss: 493.260, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:04:46.780210 140168835177600 metric_logger.py:226] completed step: 4, seconds: 4.038, TFLOP/s/device: 49.418, Tokens/s/device: 2028.637, total_weights: 65536, loss: 493.260, lm_loss: 493.260, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:04:50.819347 140168835177600 metric_logger.py:226] completed step: 5, seconds: 4.039, TFLOP/s/device: 49.408, Tokens/s/device: 2028.246, total_weights: 65536, loss: 493.260, lm_loss: 493.260, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:04:54.858374 140168835177600 metric_logger.py:226] completed step: 6, seconds: 4.039, TFLOP/s/device: 49.405, Tokens/s/device: 2028.114, total_weights: 65536, loss: 493.260, lm_loss: 493.260, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:04:58.897453 140168835177600 metric_logger.py:226] completed step: 7, seconds: 4.039, TFLOP/s/device: 49.406, Tokens/s/device: 2028.168, total_weights: 65536, loss: 493.260, lm_loss: 493.260, perplexity: inf
+  | 
+[2026-08-10 01:05:32]   output: sweep-gb256 finished in 0.9 minutes (exit 0).
+  | 
+[2026-08-10 01:05:32]   output: I0810 01:05:19.433087 140060485794944 max_utils.py:830] System Information: Jax Version: 0.10.2
+  | I0810 01:05:19.433133 140060485794944 max_utils.py:831] System Information: Jaxlib Version: 0.10.2
+  | I0810 01:05:19.433176 140060485794944 max_utils.py:832] System Information: Jax Backend: PJRT C API
+  | 
+[2026-08-10 01:05:32]   output: jax.errors.JaxRuntimeError: RESOURCE_EXHAUSTED: Ran out of memory on HBM, the total memory required for HLO temporaries (18.43G) exceeds available HBM (15.75G).
+  | 
+[2026-08-10 01:05:32]   output: sweep-aot-gb512 finished in 0.4 minutes (exit 1).
+  | 
+  | Handled trial failure:
+  | jax.errors.JaxRuntimeError: RESOURCE_EXHAUSTED: Ran out of memory on HBM, the total memory required for HLO temporaries (18.43G) exceeds available HBM (15.75G).
+  | EXPECTED OOM CONFIRMED: global batch 512 is the first shape past the AOT memory boundary: 18.43 GiB of temporaries; the observed per-chip limit is 15.75 GiB. Finding this boundary is the goal.
+  | global_batch,per_device_batch,sequence_length,aot_status,benchmark_status,aot_wall_sec,aot_cost_usd,aot_reported_argument_gib_per_chip,aot_reported_output_gib_per_chip,aot_reported_temporary_gib_per_chip,aot_reported_alias_gib_per_chip,aot_reported_net_output_gib_per_chip,aot_reported_total_gib_per_chip,aot_reported_total_percent_of_limit,aot_reported_host_temporary_gib,oom_required_temporary_gib_per_chip,oom_available_hbm_gib_per_chip,runtime_hbm_snapshot_gib_per_chip,runtime_hbm_limit_gib_per_chip,runtime_hbm_snapshot_percent_of_limit,command_wall_sec,runtime_startup_compile_overhead_sec,first_step_sec,steady_step_sec,total_tokens_per_sec,tflops_per_sec_per_device,run_cost_usd,total_shape_cost_usd,short_run_cost_per_million_tokens_usd,steady_cost_per_million_tokens_usd
+  | 4,0.5,256,fit,measured,30.320547378010815,0.08085479300802884,5.619503498077393,5.619471073150635,2.606779098510742,5.619465351104736,5.7220458984375e-06,8.226288318634033,52.230402023073225,0.0,,,5.64,15.75,35.80952380952381,27.79196202600724,26.49112002600724,0.654395,0.09812799999999999
+  | ...[truncated]...
+  | 587301587,31.256591987010324,27.607774987010323,0.674028,0.494778,16556.94967416701,50.416169251519875,0.08335091196536087,0.16609118354933647,2.5343503349202954,0.16106026285912647
+  | 64,8.0,256,fit,measured,33.649625480989926,0.08973233461597313,5.619770526885986,5.619471073150635,4.982117176055908,5.619465351104736,5.7220458984375e-06,10.601893424987793,67.31360904754155,0.0,,,5.65,15.75,35.87301587301587,34.98395217300276,28.398660173002764,0.668711,0.9854732500000001,16625.514776729473,50.62495105514706,0.09329053912800736,0.1830228737439805,1.396353712035984,0.16039603600119298
+  | 128,16.0,256,fit,measured,30.92881712000235,0.0824768456533396,5.620075702667236,5.619471073150635,7.367042541503906,5.619465351104736,5.7220458984375e-06,12.987123966217041,82.45792994423518,0.0,,,5.65,15.75,35.87301587301587,40.76272569000139,28.25629969000139,0.67713,1.97053425,16628.994478139834,50.63554680005791,0.1087006018400037,0.1911774474933433,0.7292840862020238,0.16036247231738618
+  | 256,32.0,256,fit,measured,31.04404757899465,0.08278412687731906,5.620686054229736,5.619471073150635,11.74970817565918,5.619465351104736,5.7220458984375e-06,17.370399951934814,110.28825366307818,0.0,,,5.65,15.75,35.87301587301587,55.320441768009914,30.394038768009914,0.687848,4.0388675,16226.330938132563,49.4094300585124,0.14752117804802642,0.23030530492534548,0.43927250847882365,0.16434193760956073
+  | 512,64.0,256,oom,,26.77633748401422,0.07140356662403792,,,,,,,,,18.43,15.75,,15.75,,,,,,,,,0.07140356662403792,,
+  | 
+  | 
+[2026-08-10 01:05:32]   output: <Figure size 1300x750 with 6 Axes>
+[2026-08-10 01:05:32] cell 10 DONE in 8.0 min
+[2026-08-10 01:05:32] cell 11 (markdown): ### How Much Hardware Headroom Remains?
+[2026-08-10 01:05:32] cell 12 START: compute_bound = project.analyze_compute_bound()
+[2026-08-10 01:05:32]   output: <Figure size 900x400 with 2 Axes>
+[2026-08-10 01:05:32]   output: {
+  |   "reason": "A lower bound shows whether more tuning can matter; no real step can beat peak hardware.",
+  |   "assumptions": [
+  |     "Dense-transformer training is approximated as 6 * parameters * tokens FLOPs.",
+  |     "All eight chips sustain the published 197 BF16 TFLOP/s peak with no communication or stalls.",
+  |     "The bound is optimistic; measured/peak TFLOPs is a utilization proxy, not model FLOPs utilization."
+  |   ],
+  |   "cases": [
+  |     {
+  |       "global_batch": 4,
+  |       "tokens_per_step": 1024,
+  |       "approximate_training_flops": 24714043981824,
+  |       "peak_compute_lower_bound_seconds": 0.015681499988467004,
+  |       "measured_steady_step_seconds": 0.09812799999999999,
+  |       "time_efficiency_percent": 15.980657904438086,
+  |       "measured_peak_tflops_percent": 16.130438918936882
+  |     },
+  |     {
+  |       "global_batch": 8,
+  |       "tokens_per_step": 2048,
+  |       "approximate_training_flops": 49428087963648,
+  |       "peak_compute_lower_bound_seconds": 0.03136299997693401,
+  |       "measured_steady_step_seconds": 0.15354925,
+  |       "time_efficiency_percent": 20.425368392834226,
+  |       "measured_peak_tflops_percent": 20.616361220290937
+  |     },
+  |     {
+  |       "global_batch": 16,
+  |       "tokens_per_step": 4096,
+  |       "approximate_training_flops": 98856175927296,
+  |       "peak_compute_lower_bound_seconds": 0.06272599995386802,
+  |       "measured_steady_step_seconds": 0.26694525,
+  |       "time_efficiency_percent": 23.497702226905336,
+  |       "measured_peak_tflops_percent": 23.717119823102387
+  |     },
+  |     {
+  |       "global_batch": 32,
+  |       "tokens_per_step": 8192,
+  |       "approximate_training_flops": 197712351854592,
+  |       "peak_compute_lower_bound_seconds": 0.12545199990773603,
+  |       "measured_steady_step_seconds": 0.494778,
+  |       "time_efficiency_percent": 25.355209792621345,
+  |       "measured_peak_tflops_percent": 25.59196408706593
+  |     },
+  |     {
+  |       "global_batch": 64,
+  |       "tokens_per_step": 16384,
+  |       "approximate_training_flops": 395424703709184,
+  |       "peak_compute_lower_bound_seconds": 0.25090399981547207,
+  |       "measured_steady_step_seconds": 0.9854732500000001,
+  |       "time_efficiency_percent": 25.460254737048626,
+  |       "measured_peak_tflops_percent": 25.697944698044193
+  |     },
+  |     {
+  |       "global_batch": 128,
+  |       "tokens_per_step": 32768,
+  |       "approximate_training_flops": 790849407418368,
+  |       "peak_compute_lower_bound_seconds": 0.5018079996309441,
+  |       "measured_steady_step_seconds": 1.97053425,
+  |       "time_efficiency_percent": 25.465581206261405,
+  |       "measured_peak_tflops_percent": 25.70332324876036
+  |     },
+  |     {
+  |       "global_batch": 256,
+  |       "tokens_per_step": 65536,
+  |       "approximate_training_flops": 1581698814836736,
+  |       "peak_compute_lower_bound_seconds": 1.0036159992618883,
+  |       "measured_steady_step_seconds": 4.0388675,
+  |       "time_efficiency_percent": 24.848945880544193,
+  |       "measured_peak_tflops_percent": 25.080928963711877
+  |     }
+  |   ]
+  | }
+  | 
+[2026-08-10 01:05:32] cell 12 DONE in 0.0 min
+[2026-08-10 01:05:32] cell 13 (markdown): ## Where Does A Training Step Spend Its Time?
+[2026-08-10 01:05:32] cell 14 START: project.capture_profile(
+[2026-08-10 01:06:26]   output: Profiling global batch 32: the smallest shape within 1% of peak with a compiler-reported total below 90% of the HBM limit (59.4%).
+  | 
+[2026-08-10 01:06:26]   output: I0810 01:05:47.461271 140693999979648 max_utils.py:830] System Information: Jax Version: 0.10.2
+  | I0810 01:05:47.461435 140693999979648 max_utils.py:831] System Information: Jaxlib Version: 0.10.2
+  | I0810 01:05:47.461485 140693999979648 max_utils.py:832] System Information: Jax Backend: PJRT C API
+  | 
+[2026-08-10 01:06:26]   output: Memstats: After params initialized:
+  | 
+[2026-08-10 01:06:26]   output: I0810 01:05:51.066118 140693999979648 metric_logger.py:226] completed step: 0, seconds: 0.678, TFLOP/s/device: 36.768, Tokens/s/device: 1509.338, total_weights: 8192, loss: 494.061, lm_loss: 494.061, perplexity: inf
+  | 
+[2026-08-10 01:06:26]   output: I0810 01:05:51.561645 140693999979648 metric_logger.py:226] completed step: 1, seconds: 0.264, TFLOP/s/device: 94.566, Tokens/s/device: 3881.993, total_weights: 8192, loss: 494.061, lm_loss: 494.061, perplexity: inf
+  | 
+[2026-08-10 01:06:26]   output: I0810 01:05:52.102983 140693999979648 metric_logger.py:226] completed step: 2, seconds: 0.331, TFLOP/s/device: 75.464, Tokens/s/device: 3097.867, total_weights: 8192, loss: 494.061, lm_loss: 494.061, perplexity: inf
+  | 
+[2026-08-10 01:06:26]   output: I0810 01:05:52.597171 140693999979648 metric_logger.py:226] completed step: 3, seconds: 0.936, TFLOP/s/device: 26.646, Tokens/s/device: 1093.844, total_weights: 8192, loss: 494.061, lm_loss: 494.061, perplexity: inf
+  | 
+[2026-08-10 01:06:26]   output: I0810 01:06:12.513143 140693999979648 metric_logger.py:226] completed step: 4, seconds: 0.010, TFLOP/s/device: 2588.706, Tokens/s/device: 106268.161, total_weights: 8192, loss: 494.061, lm_loss: 494.061, perplexity: inf
+  | I0810 01:06:12.522673 140693999979648 metric_logger.py:226] completed step: 5, seconds: 0.493, TFLOP/s/device: 50.598, Tokens/s/device: 2077.092, total_weights: 8192, loss: 494.061, lm_loss: 494.061, perplexity: inf
+  | 
+[2026-08-10 01:06:26]   output: I0810 01:06:13.017228 140693999979648 metric_logger.py:226] completed step: 6, seconds: 19.917, TFLOP/s/device: 1.252, Tokens/s/device: 51.413, total_weights: 8192, loss: 494.061, lm_loss: 494.061, perplexity: inf
+  | 
+[2026-08-10 01:06:26]   output: I0810 01:06:13.512617 140693999979648 metric_logger.py:226] completed step: 7, seconds: 0.006, TFLOP/s/device: 3951.959, Tokens/s/device: 162230.672, total_weights: 8192, loss: 494.061, lm_loss: 494.061, perplexity: inf
+  | 
+[2026-08-10 01:06:26]   output: I0810 01:06:14.007944 140693999979648 metric_logger.py:226] completed step: 8, seconds: 0.494, TFLOP/s/device: 50.497, Tokens/s/device: 2072.954, total_weights: 8192, loss: 494.061, lm_loss: 494.061, perplexity: inf
+  | 
+[2026-08-10 01:06:26]   output: I0810 01:06:14.503310 140693999979648 metric_logger.py:226] completed step: 9, seconds: 0.495, TFLOP/s/device: 50.377, Tokens/s/device: 2068.031, total_weights: 8192, loss: 494.061, lm_loss: 494.061, perplexity: inf
+  | 
+[2026-08-10 01:06:26]   output: xprof finished in 0.9 minutes (exit 0).
+  | 
+[2026-08-10 01:06:26]   output: 
+  | COPY AND RUN THESE LINES IN A NEW JUPYTER TERMINAL:
+  | 
+  | source /home/student49/me344_final_project/.venv-me344-pretrain/bin/activate
+  | xprof --logdir=/home/student49/me344-artifacts/qanh-20260810t005140z/xprof_profile/tensorboard --port=6006
+  | # Laptop: open http://127.0.0.1:6006 through the existing SSH tunnels.
+  | # In XProf, inspect Overview Page, Trace Viewer, and Roofline Analysis.
+  | 
+  | A traced step can be slower because profiling records extra events. Checkpoint saves and evaluation can also make individual steps longer, so compare ordinary steady steps.
+  | 
+[2026-08-10 01:06:26] cell 14 DONE in 0.9 min
+[2026-08-10 01:06:26] cell 15 (markdown): ### Explore The Profile In XProf
+[2026-08-10 01:06:26] cell 16 (markdown): ## What Should Our Fine-Tuning Data Teach?
+[2026-08-10 01:06:26] cell 17 START: dataset_report = project.prepare_data()
+[2026-08-10 01:06:28]   output: Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+  | 
+[2026-08-10 01:06:28]   output: WARNING:huggingface_hub.utils._http:Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+  | 
+[2026-08-10 01:06:28]   output: Wrote 400 examples to /home/student49/.cache/me344/qanh/messages.jsonl
+  | Wrote /home/student49/me344-artifacts/qanh-20260810t005140z/dataset_report.json
+  | Wrote 80 examples to /home/student49/.cache/me344/qanh/eval_messages.jsonl
+  | Wrote /home/student49/me344-artifacts/qanh-20260810t005140z/eval_dataset_report.json
+  | 
+  | Data review (not copied into the submission):
+  | 01. Transfers can take up to one day to process before departing for the beneficiary accounts. Please confirm that you've entered your account details correctly. SE -> pending_transfer
+  | 02. Why are the things I bought earlier today still showing as pending? -> pending_card_payment
+  | 03. Why does my transfer say it is pending? -> pending_transfer
+  | 04. When did you send me my new card? -> card_arrival
+  | 05. Transfer unable to be completed, states 'declined' -> declined_transfer
+  | 06. I tried to make a transfer but it failed. will you tell me why? -> failed_transfer
+  | 07. I got less cash because of the exchange rate. -> wrong_exchange_rate_for_cash_withdrawal
+  | 08. Every ATM I visit is rejecting my card and I don't know why. There should be money on it. Can you check it to see if something is wrong or if I'm doing somethin -> declined_cash_withdrawal
+  | 09. Explain to me why a transfer would be declined. -> declined_transfer
+  | 10. Hi I am trying to transfer money to another country but it is showing pending and it has been a long time.  I have checked numbers and they are correct.  Could  -> pending_transfer
+  | 11. Why is a transfer I have still p
+  | ...[truncated]...
+  | h_withdrawal_not_recognised
+  | {
+  |   "created_at_utc": "2026-08-10T01:06:28.489367+00:00",
+  |   "input_path": "/home/student49/.cache/me344/qanh/source-train.jsonl",
+  |   "output_path": "/home/student49/.cache/me344/qanh/messages.jsonl",
+  |   "output_sha256": "6aa70ce93844e8298fdbbaea99442f2995272a5e4e03993873a4e66f11886224",
+  |   "output_schema": "messages",
+  |   "examples_written": 400,
+  |   "max_examples": 500,
+  |   "message_role_counts": {
+  |     "assistant": 400,
+  |     "user": 400
+  |   },
+  |   "duplicate_prompt_count": 0,
+  |   "prompt_characters": {
+  |     "min": 655,
+  |     "p25": 679,
+  |     "median": 692,
+  |     "p75": 718,
+  |     "max": 980,
+  |     "mean": 710.265
+  |   },
+  |   "completion_characters": {
+  |     "min": 12,
+  |     "p25": 20,
+  |     "median": 22,
+  |     "p75": 27,
+  |     "max": 39,
+  |     "mean": 23.45
+  |   },
+  |   "review_reminder": "Before training, inspect at least 20 examples and check the dataset source, license, filtering, privacy, and possible test-set overlap.",
+  |   "dataset_id": "PolyAI/banking77",
+  |   "dataset_revision": "8eed2b348ec07d40ffbe91dcc4718e2f0f977714",
+  |   "dataset_license": "CC BY 4.0",
+  |   "manual_review_required": 20,
+  |   "held_out_examples": 20,
+  |   "held_out_repetitions": 4,
+  |   "held_out_source": "one unused PolyAI/banking77 train row per selected intent",
+  |   "release_suite": "PolyAI/banking77 test (40 untouched rows)",
+  |   "retention_suite": "openai/gsm8k test[0:16]",
+  |   "primary_release_examples": 40,
+  |   "retention_release_examples": 16,
+  |   "raw_data_in_submission": false
+  | }
+  | held-out SFT rows=20 x 4 evaluations; release prompts=56
+  | 
+[2026-08-10 01:06:28] cell 17 DONE in 0.0 min
+[2026-08-10 01:06:28] cell 18 (markdown): ### Will A Sequence Length Of 256 Cut Off Examples?
+[2026-08-10 01:06:28] cell 19 START: token_budget = project.analyze_token_budget(sequence_length=256)
+[2026-08-10 01:06:30]   output: <Figure size 700x400 with 1 Axes>
+[2026-08-10 01:06:30]   output: {
+  |   "reason": "Sequence length buys coverage but increases activation memory and padded compute.",
+  |   "examples": 400,
+  |   "sequence_length": 256,
+  |   "mean_total_tokens": 162.0525,
+  |   "p95_total_tokens": 187.04999999999995,
+  |   "max_total_tokens": 217,
+  |   "mean_completion_tokens": 6.65,
+  |   "truncated_examples": 0,
+  |   "truncated_percent": 0.0,
+  |   "padded_token_utilization_percent": 63.3017578125,
+  |   "padding_tokens_if_unpacked": 37579,
+  |   "decision": "Shorten only if saved memory/compute is worth the measured truncation; packing changes this math."
+  | }
+  | 
+[2026-08-10 01:06:30] cell 19 DONE in 0.0 min
+[2026-08-10 01:06:30] cell 20 (markdown): ## Fine-Tune The Model
+[2026-08-10 01:06:30] cell 21 START: sft_checkpoint = project.run_sft(
+[2026-08-10 01:14:01]   output: I0810 01:06:48.912766 139711167421568 max_utils.py:830] System Information: Jax Version: 0.11.0
+  | I0810 01:06:48.913012 139711167421568 max_utils.py:831] System Information: Jaxlib Version: 0.11.0
+  | I0810 01:06:48.913071 139711167421568 max_utils.py:832] System Information: Jax Backend: PJRT C API
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:07:26.592513 139711167421568 peft_trainer.py:840] Train step 0 eval loss: 0.805836 - eval perplexity: 2.238567
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:09:05.202891 139711167421568 peft_trainer.py:488] Train step 1 training loss: 0.696695  - training perplexity: 2.007108
+  | Memstats: After params initialized:
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:09:24.163845 139711167421568 metric_logger.py:226] completed step: 1, seconds: 94.772, TFLOP/s/device: 0.033, Tokens/s/device: 1.351, total_weights: 53, loss: 0.697, lm_loss: 0.000, perplexity: 2.007
+  | I0810 01:09:24.180538 139711167421568 peft_trainer.py:488] Train step 2 training loss: 1.450176  - training perplexity: 4.263864
+  | I0810 01:09:24.187114 139711167421568 metric_logger.py:226] completed step: 2, seconds: 18.976, TFLOP/s/device: 0.164, Tokens/s/device: 6.745, total_weights: 61, loss: 1.450, lm_loss: 0.000, perplexity: 2.925
+  | I0810 01:09:24.286051 139711167421568 peft_trainer.py:488] Train step 3 training loss: 1.673082  - training perplexity: 5.328567
+  | I0810 01:09:24.292371 139711167421568 metric_logger.py:226] completed step: 3, seconds: 0.105, TFLOP/s/device: 29.592, Tokens/s/device: 1214.790, total_weights: 48, loss: 1.673, lm_loss: 0.000, perplexity: 3.573
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:09:24.391139 139711167421568 peft_trainer.py:488] Train step 4 training loss: 0.000508  - training perplexity: 1.000508
+  | I0810 01:09:24.397386 139711167421568 metric_logger.py:226] completed step: 4, seconds: 0.105, TFLOP/s/device: 29.662, Tokens/s/device: 1217.636, total_weights: 59, loss: 0.001, lm_loss: 0.000, perplexity: 2.599
+  | I0810 01:09:24.496138 139711167421568 peft_trainer.py:488] Train step 5 training loss: 0.298752  - training perplexity: 1.348175
+  | I0810 01:09:24.502307 139711167421568 metric_logger.py:226] completed step: 5, seconds: 0.105, TFLOP/s/device: 29.741, Tokens/s/device: 1220.896, total_weights: 57, loss: 0.299, lm_loss: 0.000, perplexity: 2.279
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:09:24.601152 139711167421568 peft_trainer.py:488] Train step 6 training loss: 0.013238  - training perplexity: 1.013326
+  | I0810 01:09:24.607211 139711167421568 metric_logger.py:226] completed step: 6, seconds: 0.105, TFLOP/s/device: 29.668, Tokens/s/device: 1217.877, total_weights: 50, loss: 0.013, lm_loss: 0.000, perplexity: 1.991
+  | I0810 01:09:24.706025 139711167421568 peft_trainer.py:488] Train step 7 training loss: 0.095702  - training perplexity: 1.100431
+  | I0810 01:09:24.712179 139711167421568 metric_logger.py:226] completed step: 7, seconds: 0.105, TFLOP/s/device: 29.737, Tokens/s/device: 1220.721, total_weights: 46, loss: 0.096, lm_loss: 0.000, perplexity: 1.829
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:09:24.810853 139711167421568 peft_trainer.py:488] Train step 8 training loss: 0.809157  - training perplexity: 2.246014
+  | I0810 01:09:24.816991 139711167421568 metric_logger.py:226] completed step: 8, seconds: 0.105, TFLOP/s/device: 29.724, Tokens/s/device: 1220.179, total_weights: 49, loss: 0.809, lm_loss: 0.000, perplexity: 1.877
+  | I0810 01:09:24.915616 139711167421568 peft_trainer.py:488] Train step 9 training loss: 0.153479  - training perplexity: 1.165883
+  | I0810 01:09:24.921934 139711167421568 metric_logger.py:226] completed step: 9, seconds: 0.105, TFLOP/s/device: 29.736, Tokens/s/device: 1220.670, total_weights: 53, loss: 0.153, lm_loss: 0.000, perplexity: 1.780
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:09:25.020873 139711167421568 peft_trainer.py:488] Train step 10 training loss: 1.040111  - training perplexity: 2.829531
+  | I0810 01:09:25.027103 139711167421568 metric_logger.py:226] completed step: 10, seconds: 0.105, TFLOP/s/device: 29.656, Tokens/s/device: 1217.397, total_weights: 52, loss: 1.040, lm_loss: 0.000, perplexity: 1.865
+  | I0810 01:09:25.125782 139711167421568 peft_trainer.py:488] Train step 11 training loss: 1.059530  - training perplexity: 2.885014
+  | I0810 01:09:25.131888 139711167421568 metric_logger.py:226] completed step: 11, seconds: 0.105, TFLOP/s/device: 29.735, Tokens/s/device: 1220.631, total_weights: 48, loss: 1.060, lm_loss: 0.000, perplexity: 1.940
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:09:25.230581 139711167421568 peft_trainer.py:488] Train step 12 training loss: 1.396621  - training perplexity: 4.041519
+  | I0810 01:09:25.236877 139711167421568 metric_logger.py:226] completed step: 12, seconds: 0.105, TFLOP/s/device: 29.717, Tokens/s/device: 1219.904, total_weights: 62, loss: 1.397, lm_loss: 0.000, perplexity: 2.063
+  | I0810 01:09:25.335659 139711167421568 peft_trainer.py:488] Train step 13 training loss: 0.000002  - training perplexity: 1.000002
+  | I0810 01:09:25.341866 139711167421568 metric_logger.py:226] completed step: 13, seconds: 0.105, TFLOP/s/device: 29.702, Tokens/s/device: 1219.305, total_weights: 58, loss: 0.000, lm_loss: 0.000, perplexity: 1.951
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:09:25.440619 139711167421568 peft_trainer.py:488] Train step 14 training loss: 1.805652  - training perplexity: 6.083940
+  | I0810 01:09:25.446855 139711167421568 metric_logger.py:226] completed step: 14, seconds: 0.105, TFLOP/s/device: 29.713, Tokens/s/device: 1219.752, total_weights: 53, loss: 1.806, lm_loss: 0.000, perplexity: 2.116
+  | I0810 01:09:25.545438 139711167421568 peft_trainer.py:488] Train step 15 training loss: 0.127177  - training perplexity: 1.135618
+  | I0810 01:09:25.551730 139711167421568 metric_logger.py:226] completed step: 15, seconds: 0.105, TFLOP/s/device: 29.741, Tokens/s/device: 1220.879, total_weights: 50, loss: 0.127, lm_loss: 0.000, perplexity: 2.030
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:09:25.650124 139711167421568 peft_trainer.py:488] Train step 16 training loss: 0.439660  - training perplexity: 1.552179
+  | I0810 01:09:25.656219 139711167421568 metric_logger.py:226] completed step: 16, seconds: 0.105, TFLOP/s/device: 29.823, Tokens/s/device: 1224.272, total_weights: 57, loss: 0.440, lm_loss: 0.000, perplexity: 1.996
+  | I0810 01:09:25.754978 139711167421568 peft_trainer.py:488] Train step 17 training loss: 0.102274  - training perplexity: 1.107687
+  | I0810 01:09:25.761197 139711167421568 metric_logger.py:226] completed step: 17, seconds: 0.105, TFLOP/s/device: 29.688, Tokens/s/device: 1218.713, total_weights: 54, loss: 0.102, lm_loss: 0.000, perplexity: 1.928
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:09:25.859838 139711167421568 peft_trainer.py:488] Train step 18 training loss: 0.807204  - training perplexity: 2.241632
+  | I0810 01:09:25.866177 139711167421568 metric_logger.py:226] completed step: 18, seconds: 0.105, TFLOP/s/device: 29.707, Tokens/s/device: 1219.510, total_weights: 63, loss: 0.807, lm_loss: 0.000, perplexity: 1.944
+  | I0810 01:09:25.966990 139711167421568 peft_trainer.py:488] Train step 19 training loss: 0.260986  - training perplexity: 1.298209
+  | I0810 01:09:25.973211 139711167421568 metric_logger.py:226] completed step: 19, seconds: 0.107, TFLOP/s/device: 29.134, Tokens/s/device: 1195.952, total_weights: 48, loss: 0.261, lm_loss: 0.000, perplexity: 1.903
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:09:26.071877 139711167421568 peft_trainer.py:488] Train step 20 training loss: 0.002817  - training perplexity: 1.002821
+  | I0810 01:09:26.078018 139711167421568 metric_logger.py:226] completed step: 20, seconds: 0.105, TFLOP/s/device: 29.720, Tokens/s/device: 1220.017, total_weights: 59, loss: 0.003, lm_loss: 0.000, perplexity: 1.843
+  | I0810 01:09:26.176750 139711167421568 peft_trainer.py:488] Train step 21 training loss: 0.092145  - training perplexity: 1.096524
+  | I0810 01:09:26.182938 139711167421568 metric_logger.py:226] completed step: 21, seconds: 0.105, TFLOP/s/device: 29.744, Tokens/s/device: 1221.007, total_weights: 54, loss: 0.092, lm_loss: 0.000, perplexity: 1.798
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:09:26.281526 139711167421568 peft_trainer.py:488] Train step 22 training loss: 0.114121  - training perplexity: 1.120888
+  | I0810 01:09:26.287736 139711167421568 metric_logger.py:226] completed step: 22, seconds: 0.105, TFLOP/s/device: 29.757, Tokens/s/device: 1221.555, total_weights: 64, loss: 0.114, lm_loss: 0.000, perplexity: 1.760
+  | I0810 01:09:26.386495 139711167421568 peft_trainer.py:488] Train step 23 training loss: 0.073632  - training perplexity: 1.076411
+  | I0810 01:09:26.392686 139711167421568 metric_logger.py:226] completed step: 23, seconds: 0.105, TFLOP/s/device: 29.708, Tokens/s/device: 1219.539, total_weights: 55, loss: 0.074, lm_loss: 0.000, perplexity: 1.723
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:09:26.491320 139711167421568 peft_trainer.py:488] Train step 24 training loss: 0.294084  - training perplexity: 1.341896
+  | I0810 01:09:26.497467 139711167421568 metric_logger.py:226] completed step: 24, seconds: 0.105, TFLOP/s/device: 29.751, Tokens/s/device: 1221.280, total_weights: 50, loss: 0.294, lm_loss: 0.000, perplexity: 1.705
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:09:42.046100 139711167421568 peft_trainer.py:840] Train step 25 eval loss: 0.458716 - eval perplexity: 1.582042
+  | I0810 01:09:42.063476 139711167421568 peft_trainer.py:488] Train step 25 training loss: 0.018692  - training perplexity: 1.018868
+  | I0810 01:09:42.069854 139711167421568 metric_logger.py:226] completed step: 25, seconds: 15.572, TFLOP/s/device: 0.200, Tokens/s/device: 8.220, total_weights: 54, loss: 0.019, lm_loss: 0.000, perplexity: 1.670
+  | I0810 01:09:42.168428 139711167421568 peft_trainer.py:488] Train step 26 training loss: 0.000097  - training perplexity: 1.000097
+  | I0810 01:09:42.174695 139711167421568 metric_logger.py:226] completed step: 26, seconds: 0.105, TFLOP/s/device: 29.699, Tokens/s/device: 1219.179, total_weights: 45, loss: 0.000, lm_loss: 0.000, perplexity: 1.638
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:09:42.273381 139711167421568 peft_trainer.py:488] Train step 27 training loss: 0.001355  - training perplexity: 1.001356
+  | I0810 01:09:42.279676 139711167421568 metric_logger.py:226] completed step: 27, seconds: 0.105, TFLOP/s/device: 29.718, Tokens/s/device: 1219.936, total_weights: 43, loss: 0.001, lm_loss: 0.000, perplexity: 1.608
+  | I0810 01:09:42.378431 139711167421568 peft_trainer.py:488] Train step 28 training loss: 0.403289  - training perplexity: 1.496740
+  | I0810 01:09:42.384678 139711167421568 metric_logger.py:226] completed step: 28, seconds: 0.105, TFLOP/s/device: 29.683, Tokens/s/device: 1218.495, total_weights: 51, loss: 0.403, lm_loss: 0.000, perplexity: 1.604
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:09:42.483012 139711167421568 peft_trainer.py:488] Train step 29 training loss: 0.006397  - training perplexity: 1.006417
+  | I0810 01:09:42.489466 139711167421568 metric_logger.py:226] completed step: 29, seconds: 0.105, TFLOP/s/device: 29.818, Tokens/s/device: 1224.052, total_weights: 51, loss: 0.006, lm_loss: 0.000, perplexity: 1.578
+  | I0810 01:09:42.588179 139711167421568 peft_trainer.py:488] Train step 30 training loss: 0.004524  - training perplexity: 1.004534
+  | I0810 01:09:42.594755 139711167421568 metric_logger.py:226] completed step: 30, seconds: 0.105, TFLOP/s/device: 29.622, Tokens/s/device: 1216.006, total_weights: 53, loss: 0.005, lm_loss: 0.000, perplexity: 1.555
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:09:42.693179 139711167421568 peft_trainer.py:488] Train step 31 training loss: 0.005229  - training perplexity: 1.005243
+  | I0810 01:09:42.699766 139711167421568 metric_logger.py:226] completed step: 31, seconds: 0.105, TFLOP/s/device: 29.677, Tokens/s/device: 1218.277, total_weights: 51, loss: 0.005, lm_loss: 0.000, perplexity: 1.533
+  | I0810 01:09:42.798491 139711167421568 peft_trainer.py:488] Train step 32 training loss: 0.700996  - training perplexity: 2.015760
+  | I0810 01:09:42.804952 139711167421568 metric_logger.py:226] completed step: 32, seconds: 0.105, TFLOP/s/device: 29.661, Tokens/s/device: 1217.591, total_weights: 46, loss: 0.701, lm_loss: 0.000, perplexity: 1.546
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:09:42.903495 139711167421568 peft_trainer.py:488] Train step 33 training loss: 0.776797  - training perplexity: 2.174496
+  | I0810 01:09:42.909929 139711167421568 metric_logger.py:226] completed step: 33, seconds: 0.105, TFLOP/s/device: 29.713, Tokens/s/device: 1219.727, total_weights: 47, loss: 0.777, lm_loss: 0.000, perplexity: 1.562
+  | I0810 01:09:43.008450 139711167421568 peft_trainer.py:488] Train step 34 training loss: 0.086054  - training perplexity: 1.089865
+  | I0810 01:09:43.014748 139711167421568 metric_logger.py:226] completed step: 34, seconds: 0.105, TFLOP/s/device: 29.679, Tokens/s/device: 1218.364, total_weights: 58, loss: 0.086, lm_loss: 0.000, perplexity: 1.546
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:09:43.113430 139711167421568 peft_trainer.py:488] Train step 35 training loss: 0.039285  - training perplexity: 1.040067
+  | I0810 01:09:43.119943 139711167421568 metric_logger.py:226] completed step: 35, seconds: 0.105, TFLOP/s/device: 29.673, Tokens/s/device: 1218.081, total_weights: 52, loss: 0.039, lm_loss: 0.000, perplexity: 1.528
+  | I0810 01:09:43.218538 139711167421568 peft_trainer.py:488] Train step 36 training loss: 0.053806  - training perplexity: 1.055280
+  | I0810 01:09:43.224895 139711167421568 metric_logger.py:226] completed step: 36, seconds: 0.105, TFLOP/s/device: 29.685, Tokens/s/device: 1218.608, total_weights: 52, loss: 0.054, lm_loss: 0.000, perplexity: 1.513
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:09:43.323360 139711167421568 peft_trainer.py:488] Train step 37 training loss: 0.044571  - training perplexity: 1.045580
+  | I0810 01:09:43.329790 139711167421568 metric_logger.py:226] completed step: 37, seconds: 0.105, TFLOP/s/device: 29.744, Tokens/s/device: 1221.003, total_weights: 50, loss: 0.045, lm_loss: 0.000, perplexity: 1.498
+  | I0810 01:09:43.428218 139711167421568 peft_trainer.py:488] Train step 38 training loss: 0.218761  - training perplexity: 1.244534
+  | I0810 01:09:43.434541 139711167421568 metric_logger.py:226] completed step: 38, seconds: 0.105, TFLOP/s/device: 29.720, Tokens/s/device: 1220.045, total_weights: 61, loss: 0.219, lm_loss: 0.000, perplexity: 1.491
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:09:43.533368 139711167421568 peft_trainer.py:488] Train step 39 training loss: 0.031141  - training perplexity: 1.031631
+  | I0810 01:09:43.539687 139711167421568 metric_logger.py:226] completed step: 39, seconds: 0.105, TFLOP/s/device: 29.691, Tokens/s/device: 1218.835, total_weights: 53, loss: 0.031, lm_loss: 0.000, perplexity: 1.477
+  | I0810 01:09:43.638361 139711167421568 peft_trainer.py:488] Train step 40 training loss: 0.272925  - training perplexity: 1.313802
+  | I0810 01:09:43.644737 139711167421568 metric_logger.py:226] completed step: 40, seconds: 0.105, TFLOP/s/device: 29.680, Tokens/s/device: 1218.378, total_weights: 57, loss: 0.273, lm_loss: 0.000, perplexity: 1.472
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:09:43.743242 139711167421568 peft_trainer.py:488] Train step 41 training loss: 0.319550  - training perplexity: 1.376508
+  | I0810 01:09:43.749652 139711167421568 metric_logger.py:226] completed step: 41, seconds: 0.105, TFLOP/s/device: 29.716, Tokens/s/device: 1219.860, total_weights: 53, loss: 0.320, lm_loss: 0.000, perplexity: 1.470
+  | I0810 01:09:43.848241 139711167421568 peft_trainer.py:488] Train step 42 training loss: 0.483688  - training perplexity: 1.622046
+  | I0810 01:09:43.854602 139711167421568 metric_logger.py:226] completed step: 42, seconds: 0.105, TFLOP/s/device: 29.715, Tokens/s/device: 1219.802, total_weights: 55, loss: 0.484, lm_loss: 0.000, perplexity: 1.473
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:09:43.953105 139711167421568 peft_trainer.py:488] Train step 43 training loss: 0.011103  - training perplexity: 1.011164
+  | I0810 01:09:43.959470 139711167421568 metric_logger.py:226] completed step: 43, seconds: 0.105, TFLOP/s/device: 29.733, Tokens/s/device: 1220.576, total_weights: 47, loss: 0.011, lm_loss: 0.000, perplexity: 1.460
+  | I0810 01:09:44.058059 139711167421568 peft_trainer.py:488] Train step 44 training loss: 0.246979  - training perplexity: 1.280151
+  | I0810 01:09:44.064484 139711167421568 metric_logger.py:226] completed step: 44, seconds: 0.105, TFLOP/s/device: 29.697, Tokens/s/device: 1219.089, total_weights: 54, loss: 0.247, lm_loss: 0.000, perplexity: 1.456
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:09:44.163069 139711167421568 peft_trainer.py:488] Train step 45 training loss: 0.296650  - training perplexity: 1.345344
+  | I0810 01:09:44.169521 139711167421568 metric_logger.py:226] completed step: 45, seconds: 0.105, TFLOP/s/device: 29.691, Tokens/s/device: 1218.821, total_weights: 56, loss: 0.297, lm_loss: 0.000, perplexity: 1.453
+  | I0810 01:09:44.267998 139711167421568 peft_trainer.py:488] Train step 46 training loss: 0.426715  - training perplexity: 1.532215
+  | I0810 01:09:44.274486 139711167421568 metric_logger.py:226] completed step: 46, seconds: 0.105, TFLOP/s/device: 29.728, Tokens/s/device: 1220.374, total_weights: 58, loss: 0.427, lm_loss: 0.000, perplexity: 1.455
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:09:44.372873 139711167421568 peft_trainer.py:488] Train step 47 training loss: 0.437187  - training perplexity: 1.548346
+  | I0810 01:09:44.379289 139711167421568 metric_logger.py:226] completed step: 47, seconds: 0.105, TFLOP/s/device: 29.729, Tokens/s/device: 1220.408, total_weights: 52, loss: 0.437, lm_loss: 0.000, perplexity: 1.457
+  | I0810 01:09:44.477658 139711167421568 peft_trainer.py:488] Train step 48 training loss: 0.016577  - training perplexity: 1.016715
+  | I0810 01:09:44.484137 139711167421568 metric_logger.py:226] completed step: 48, seconds: 0.105, TFLOP/s/device: 29.758, Tokens/s/device: 1221.593, total_weights: 57, loss: 0.017, lm_loss: 0.000, perplexity: 1.446
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:09:44.582931 139711167421568 peft_trainer.py:488] Train step 49 training loss: 0.032245  - training perplexity: 1.032770
+  | I0810 01:09:44.589490 139711167421568 metric_logger.py:226] completed step: 49, seconds: 0.105, TFLOP/s/device: 29.601, Tokens/s/device: 1215.137, total_weights: 51, loss: 0.032, lm_loss: 0.000, perplexity: 1.436
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:00.093050 139711167421568 peft_trainer.py:840] Train step 50 eval loss: 0.320352 - eval perplexity: 1.377612
+  | I0810 01:10:00.110357 139711167421568 peft_trainer.py:488] Train step 50 training loss: 0.005556  - training perplexity: 1.005572
+  | I0810 01:10:00.117121 139711167421568 metric_logger.py:226] completed step: 50, seconds: 15.527, TFLOP/s/device: 0.201, Tokens/s/device: 8.243, total_weights: 50, loss: 0.006, lm_loss: 0.000, perplexity: 1.426
+  | I0810 01:10:00.215318 139711167421568 peft_trainer.py:488] Train step 51 training loss: 0.005059  - training perplexity: 1.005072
+  | I0810 01:10:00.221826 139711167421568 metric_logger.py:226] completed step: 51, seconds: 0.105, TFLOP/s/device: 29.731, Tokens/s/device: 1220.479, total_weights: 55, loss: 0.005, lm_loss: 0.000, perplexity: 1.416
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:00.320285 139711167421568 peft_trainer.py:488] Train step 52 training loss: 0.006569  - training perplexity: 1.006590
+  | I0810 01:10:00.326791 139711167421568 metric_logger.py:226] completed step: 52, seconds: 0.105, TFLOP/s/device: 29.695, Tokens/s/device: 1219.005, total_weights: 67, loss: 0.007, lm_loss: 0.000, perplexity: 1.407
+  | I0810 01:10:00.425256 139711167421568 peft_trainer.py:488] Train step 53 training loss: 0.122633  - training perplexity: 1.130470
+  | I0810 01:10:00.431782 139711167421568 metric_logger.py:226] completed step: 53, seconds: 0.105, TFLOP/s/device: 29.707, Tokens/s/device: 1219.477, total_weights: 57, loss: 0.123, lm_loss: 0.000, perplexity: 1.401
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:00.529914 139711167421568 peft_trainer.py:488] Train step 54 training loss: 0.069746  - training perplexity: 1.072236
+  | I0810 01:10:00.536356 139711167421568 metric_logger.py:226] completed step: 54, seconds: 0.105, TFLOP/s/device: 29.823, Tokens/s/device: 1224.268, total_weights: 54, loss: 0.070, lm_loss: 0.000, perplexity: 1.394
+  | I0810 01:10:00.634730 139711167421568 peft_trainer.py:488] Train step 55 training loss: 0.377329  - training perplexity: 1.458384
+  | I0810 01:10:00.641237 139711167421568 metric_logger.py:226] completed step: 55, seconds: 0.105, TFLOP/s/device: 29.712, Tokens/s/device: 1219.703, total_weights: 51, loss: 0.377, lm_loss: 0.000, perplexity: 1.395
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:00.739485 139711167421568 peft_trainer.py:488] Train step 56 training loss: 0.000545  - training perplexity: 1.000545
+  | I0810 01:10:00.745908 139711167421568 metric_logger.py:226] completed step: 56, seconds: 0.105, TFLOP/s/device: 29.776, Tokens/s/device: 1222.321, total_weights: 43, loss: 0.001, lm_loss: 0.000, perplexity: 1.387
+  | I0810 01:10:00.844398 139711167421568 peft_trainer.py:488] Train step 57 training loss: 0.020195  - training perplexity: 1.020400
+  | I0810 01:10:00.850855 139711167421568 metric_logger.py:226] completed step: 57, seconds: 0.105, TFLOP/s/device: 29.708, Tokens/s/device: 1219.535, total_weights: 55, loss: 0.020, lm_loss: 0.000, perplexity: 1.380
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:00.949783 139711167421568 peft_trainer.py:488] Train step 58 training loss: 0.011483  - training perplexity: 1.011549
+  | I0810 01:10:00.956500 139711167421568 metric_logger.py:226] completed step: 58, seconds: 0.105, TFLOP/s/device: 29.590, Tokens/s/device: 1214.705, total_weights: 49, loss: 0.011, lm_loss: 0.000, perplexity: 1.372
+  | I0810 01:10:01.054770 139711167421568 peft_trainer.py:488] Train step 59 training loss: 0.288868  - training perplexity: 1.334915
+  | I0810 01:10:01.061332 139711167421568 metric_logger.py:226] completed step: 59, seconds: 0.105, TFLOP/s/device: 29.705, Tokens/s/device: 1219.405, total_weights: 55, loss: 0.289, lm_loss: 0.000, perplexity: 1.372
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:01.159663 139711167421568 peft_trainer.py:488] Train step 60 training loss: 0.546734  - training perplexity: 1.727601
+  | I0810 01:10:01.166144 139711167421568 metric_logger.py:226] completed step: 60, seconds: 0.105, TFLOP/s/device: 29.726, Tokens/s/device: 1220.290, total_weights: 51, loss: 0.547, lm_loss: 0.000, perplexity: 1.377
+  | I0810 01:10:01.264613 139711167421568 peft_trainer.py:488] Train step 61 training loss: 0.216452  - training perplexity: 1.241663
+  | I0810 01:10:01.271227 139711167421568 metric_logger.py:226] completed step: 61, seconds: 0.105, TFLOP/s/device: 29.702, Tokens/s/device: 1219.288, total_weights: 64, loss: 0.216, lm_loss: 0.000, perplexity: 1.375
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:01.369671 139711167421568 peft_trainer.py:488] Train step 62 training loss: 0.402003  - training perplexity: 1.494816
+  | I0810 01:10:01.376433 139711167421568 metric_logger.py:226] completed step: 62, seconds: 0.105, TFLOP/s/device: 29.682, Tokens/s/device: 1218.451, total_weights: 53, loss: 0.402, lm_loss: 0.000, perplexity: 1.377
+  | I0810 01:10:01.474390 139711167421568 peft_trainer.py:488] Train step 63 training loss: 0.494635  - training perplexity: 1.639899
+  | I0810 01:10:01.480811 139711167421568 metric_logger.py:226] completed step: 63, seconds: 0.105, TFLOP/s/device: 29.823, Tokens/s/device: 1224.257, total_weights: 60, loss: 0.495, lm_loss: 0.000, perplexity: 1.380
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:01.579371 139711167421568 peft_trainer.py:488] Train step 64 training loss: 0.161450  - training perplexity: 1.175213
+  | I0810 01:10:01.585968 139711167421568 metric_logger.py:226] completed step: 64, seconds: 0.105, TFLOP/s/device: 29.665, Tokens/s/device: 1217.768, total_weights: 49, loss: 0.161, lm_loss: 0.000, perplexity: 1.377
+  | I0810 01:10:01.684291 139711167421568 peft_trainer.py:488] Train step 65 training loss: 0.000329  - training perplexity: 1.000329
+  | I0810 01:10:01.690699 139711167421568 metric_logger.py:226] completed step: 65, seconds: 0.105, TFLOP/s/device: 29.756, Tokens/s/device: 1221.486, total_weights: 58, loss: 0.000, lm_loss: 0.000, perplexity: 1.370
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:01.789087 139711167421568 peft_trainer.py:488] Train step 66 training loss: 0.069690  - training perplexity: 1.072176
+  | I0810 01:10:01.795625 139711167421568 metric_logger.py:226] completed step: 66, seconds: 0.105, TFLOP/s/device: 29.718, Tokens/s/device: 1219.941, total_weights: 54, loss: 0.070, lm_loss: 0.000, perplexity: 1.365
+  | I0810 01:10:01.893932 139711167421568 peft_trainer.py:488] Train step 67 training loss: 0.006984  - training perplexity: 1.007008
+  | I0810 01:10:01.900664 139711167421568 metric_logger.py:226] completed step: 67, seconds: 0.105, TFLOP/s/device: 29.758, Tokens/s/device: 1221.604, total_weights: 59, loss: 0.007, lm_loss: 0.000, perplexity: 1.359
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:01.999052 139711167421568 peft_trainer.py:488] Train step 68 training loss: 0.087087  - training perplexity: 1.090992
+  | I0810 01:10:02.005621 139711167421568 metric_logger.py:226] completed step: 68, seconds: 0.105, TFLOP/s/device: 29.634, Tokens/s/device: 1216.496, total_weights: 49, loss: 0.087, lm_loss: 0.000, perplexity: 1.355
+  | I0810 01:10:02.103776 139711167421568 peft_trainer.py:488] Train step 69 training loss: 0.189230  - training perplexity: 1.208319
+  | I0810 01:10:02.110263 139711167421568 metric_logger.py:226] completed step: 69, seconds: 0.105, TFLOP/s/device: 29.778, Tokens/s/device: 1222.395, total_weights: 50, loss: 0.189, lm_loss: 0.000, perplexity: 1.352
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:02.208790 139711167421568 peft_trainer.py:488] Train step 70 training loss: 0.197215  - training perplexity: 1.218006
+  | I0810 01:10:02.215324 139711167421568 metric_logger.py:226] completed step: 70, seconds: 0.105, TFLOP/s/device: 29.693, Tokens/s/device: 1218.913, total_weights: 46, loss: 0.197, lm_loss: 0.000, perplexity: 1.350
+  | I0810 01:10:02.313660 139711167421568 peft_trainer.py:488] Train step 71 training loss: 0.148446  - training perplexity: 1.160030
+  | I0810 01:10:02.320272 139711167421568 metric_logger.py:226] completed step: 71, seconds: 0.105, TFLOP/s/device: 29.738, Tokens/s/device: 1220.767, total_weights: 56, loss: 0.148, lm_loss: 0.000, perplexity: 1.347
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:02.418540 139711167421568 peft_trainer.py:488] Train step 72 training loss: 0.040648  - training perplexity: 1.041486
+  | I0810 01:10:02.425260 139711167421568 metric_logger.py:226] completed step: 72, seconds: 0.105, TFLOP/s/device: 29.710, Tokens/s/device: 1219.615, total_weights: 49, loss: 0.041, lm_loss: 0.000, perplexity: 1.343
+  | I0810 01:10:02.523454 139711167421568 peft_trainer.py:488] Train step 73 training loss: 0.032935  - training perplexity: 1.033484
+  | I0810 01:10:02.530038 139711167421568 metric_logger.py:226] completed step: 73, seconds: 0.105, TFLOP/s/device: 29.729, Tokens/s/device: 1220.386, total_weights: 47, loss: 0.033, lm_loss: 0.000, perplexity: 1.338
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:02.628374 139711167421568 peft_trainer.py:488] Train step 74 training loss: 0.000234  - training perplexity: 1.000234
+  | I0810 01:10:02.634994 139711167421568 metric_logger.py:226] completed step: 74, seconds: 0.105, TFLOP/s/device: 29.700, Tokens/s/device: 1219.207, total_weights: 53, loss: 0.000, lm_loss: 0.000, perplexity: 1.333
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:18.320479 139711167421568 peft_trainer.py:840] Train step 75 eval loss: 0.259639 - eval perplexity: 1.296462
+  | I0810 01:10:18.337974 139711167421568 peft_trainer.py:488] Train step 75 training loss: 0.035678  - training perplexity: 1.036322
+  | I0810 01:10:18.344920 139711167421568 metric_logger.py:226] completed step: 75, seconds: 15.710, TFLOP/s/device: 0.198, Tokens/s/device: 8.148, total_weights: 40, loss: 0.036, lm_loss: 0.000, perplexity: 1.328
+  | I0810 01:10:18.443214 139711167421568 peft_trainer.py:488] Train step 76 training loss: 0.107499  - training perplexity: 1.113489
+  | I0810 01:10:18.449778 139711167421568 metric_logger.py:226] completed step: 76, seconds: 0.105, TFLOP/s/device: 29.690, Tokens/s/device: 1218.794, total_weights: 57, loss: 0.107, lm_loss: 0.000, perplexity: 1.325
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:18.548234 139711167421568 peft_trainer.py:488] Train step 77 training loss: 0.146815  - training perplexity: 1.158139
+  | I0810 01:10:18.554798 139711167421568 metric_logger.py:226] completed step: 77, seconds: 0.105, TFLOP/s/device: 29.705, Tokens/s/device: 1219.401, total_weights: 54, loss: 0.147, lm_loss: 0.000, perplexity: 1.323
+  | I0810 01:10:18.653392 139711167421568 peft_trainer.py:488] Train step 78 training loss: 0.009907  - training perplexity: 1.009956
+  | I0810 01:10:18.660064 139711167421568 metric_logger.py:226] completed step: 78, seconds: 0.105, TFLOP/s/device: 29.585, Tokens/s/device: 1214.493, total_weights: 55, loss: 0.010, lm_loss: 0.000, perplexity: 1.318
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:18.758458 139711167421568 peft_trainer.py:488] Train step 79 training loss: 0.004949  - training perplexity: 1.004961
+  | I0810 01:10:18.765238 139711167421568 metric_logger.py:226] completed step: 79, seconds: 0.105, TFLOP/s/device: 29.681, Tokens/s/device: 1218.442, total_weights: 46, loss: 0.005, lm_loss: 0.000, perplexity: 1.314
+  | I0810 01:10:18.863537 139711167421568 peft_trainer.py:488] Train step 80 training loss: 0.000470  - training perplexity: 1.000470
+  | I0810 01:10:18.870376 139711167421568 metric_logger.py:226] completed step: 80, seconds: 0.105, TFLOP/s/device: 29.658, Tokens/s/device: 1217.480, total_weights: 44, loss: 0.000, lm_loss: 0.000, perplexity: 1.309
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:18.968628 139711167421568 peft_trainer.py:488] Train step 81 training loss: 0.012489  - training perplexity: 1.012567
+  | I0810 01:10:18.975323 139711167421568 metric_logger.py:226] completed step: 81, seconds: 0.105, TFLOP/s/device: 29.699, Tokens/s/device: 1219.162, total_weights: 59, loss: 0.012, lm_loss: 0.000, perplexity: 1.305
+  | I0810 01:10:19.073686 139711167421568 peft_trainer.py:488] Train step 82 training loss: 0.000943  - training perplexity: 1.000944
+  | I0810 01:10:19.080359 139711167421568 metric_logger.py:226] completed step: 82, seconds: 0.105, TFLOP/s/device: 29.685, Tokens/s/device: 1218.602, total_weights: 58, loss: 0.001, lm_loss: 0.000, perplexity: 1.301
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:19.178574 139711167421568 peft_trainer.py:488] Train step 83 training loss: 0.043946  - training perplexity: 1.044926
+  | I0810 01:10:19.185120 139711167421568 metric_logger.py:226] completed step: 83, seconds: 0.105, TFLOP/s/device: 29.745, Tokens/s/device: 1221.047, total_weights: 62, loss: 0.044, lm_loss: 0.000, perplexity: 1.297
+  | I0810 01:10:19.283509 139711167421568 peft_trainer.py:488] Train step 84 training loss: 0.364295  - training perplexity: 1.439499
+  | I0810 01:10:19.290094 139711167421568 metric_logger.py:226] completed step: 84, seconds: 0.105, TFLOP/s/device: 29.699, Tokens/s/device: 1219.168, total_weights: 53, loss: 0.364, lm_loss: 0.000, perplexity: 1.299
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:19.388350 139711167421568 peft_trainer.py:488] Train step 85 training loss: 0.000557  - training perplexity: 1.000557
+  | I0810 01:10:19.394914 139711167421568 metric_logger.py:226] completed step: 85, seconds: 0.105, TFLOP/s/device: 29.739, Tokens/s/device: 1220.797, total_weights: 51, loss: 0.001, lm_loss: 0.000, perplexity: 1.295
+  | I0810 01:10:19.493126 139711167421568 peft_trainer.py:488] Train step 86 training loss: 0.000651  - training perplexity: 1.000651
+  | I0810 01:10:19.499732 139711167421568 metric_logger.py:226] completed step: 86, seconds: 0.105, TFLOP/s/device: 29.757, Tokens/s/device: 1221.560, total_weights: 44, loss: 0.001, lm_loss: 0.000, perplexity: 1.291
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:19.598218 139711167421568 peft_trainer.py:488] Train step 87 training loss: 0.000222  - training perplexity: 1.000222
+  | I0810 01:10:19.604851 139711167421568 metric_logger.py:226] completed step: 87, seconds: 0.105, TFLOP/s/device: 29.680, Tokens/s/device: 1218.379, total_weights: 56, loss: 0.000, lm_loss: 0.000, perplexity: 1.287
+  | I0810 01:10:19.702932 139711167421568 peft_trainer.py:488] Train step 88 training loss: 0.058222  - training perplexity: 1.059950
+  | I0810 01:10:19.709614 139711167421568 metric_logger.py:226] completed step: 88, seconds: 0.105, TFLOP/s/device: 29.746, Tokens/s/device: 1221.106, total_weights: 64, loss: 0.058, lm_loss: 0.000, perplexity: 1.284
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:19.808004 139711167421568 peft_trainer.py:488] Train step 89 training loss: 0.000230  - training perplexity: 1.000230
+  | I0810 01:10:19.814591 139711167421568 metric_logger.py:226] completed step: 89, seconds: 0.105, TFLOP/s/device: 29.690, Tokens/s/device: 1218.814, total_weights: 47, loss: 0.000, lm_loss: 0.000, perplexity: 1.281
+  | I0810 01:10:19.913000 139711167421568 peft_trainer.py:488] Train step 90 training loss: 0.000251  - training perplexity: 1.000252
+  | I0810 01:10:19.919744 139711167421568 metric_logger.py:226] completed step: 90, seconds: 0.105, TFLOP/s/device: 29.683, Tokens/s/device: 1218.493, total_weights: 55, loss: 0.000, lm_loss: 0.000, perplexity: 1.277
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:20.017933 139711167421568 peft_trainer.py:488] Train step 91 training loss: 0.000187  - training perplexity: 1.000187
+  | I0810 01:10:20.024548 139711167421568 metric_logger.py:226] completed step: 91, seconds: 0.105, TFLOP/s/device: 29.719, Tokens/s/device: 1219.979, total_weights: 51, loss: 0.000, lm_loss: 0.000, perplexity: 1.274
+  | I0810 01:10:20.122847 139711167421568 peft_trainer.py:488] Train step 92 training loss: 0.006726  - training perplexity: 1.006749
+  | I0810 01:10:20.129579 139711167421568 metric_logger.py:226] completed step: 92, seconds: 0.105, TFLOP/s/device: 29.727, Tokens/s/device: 1220.313, total_weights: 58, loss: 0.007, lm_loss: 0.000, perplexity: 1.271
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:20.227773 139711167421568 peft_trainer.py:488] Train step 93 training loss: 0.117534  - training perplexity: 1.124720
+  | I0810 01:10:20.234480 139711167421568 metric_logger.py:226] completed step: 93, seconds: 0.105, TFLOP/s/device: 29.729, Tokens/s/device: 1220.380, total_weights: 48, loss: 0.118, lm_loss: 0.000, perplexity: 1.269
+  | I0810 01:10:20.332945 139711167421568 peft_trainer.py:488] Train step 94 training loss: 0.000602  - training perplexity: 1.000602
+  | I0810 01:10:20.339673 139711167421568 metric_logger.py:226] completed step: 94, seconds: 0.105, TFLOP/s/device: 29.640, Tokens/s/device: 1216.753, total_weights: 52, loss: 0.001, lm_loss: 0.000, perplexity: 1.266
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:20.437802 139711167421568 peft_trainer.py:488] Train step 95 training loss: 0.393916  - training perplexity: 1.482776
+  | I0810 01:10:20.444505 139711167421568 metric_logger.py:226] completed step: 95, seconds: 0.105, TFLOP/s/device: 29.738, Tokens/s/device: 1220.785, total_weights: 57, loss: 0.394, lm_loss: 0.000, perplexity: 1.268
+  | I0810 01:10:20.542855 139711167421568 peft_trainer.py:488] Train step 96 training loss: 0.407911  - training perplexity: 1.503673
+  | I0810 01:10:20.549493 139711167421568 metric_logger.py:226] completed step: 96, seconds: 0.105, TFLOP/s/device: 29.674, Tokens/s/device: 1218.128, total_weights: 53, loss: 0.408, lm_loss: 0.000, perplexity: 1.270
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:20.647504 139711167421568 peft_trainer.py:488] Train step 97 training loss: 0.516219  - training perplexity: 1.675679
+  | I0810 01:10:20.654215 139711167421568 metric_logger.py:226] completed step: 97, seconds: 0.105, TFLOP/s/device: 29.779, Tokens/s/device: 1222.447, total_weights: 49, loss: 0.516, lm_loss: 0.000, perplexity: 1.274
+  | I0810 01:10:20.752384 139711167421568 peft_trainer.py:488] Train step 98 training loss: 0.000062  - training perplexity: 1.000062
+  | I0810 01:10:20.759006 139711167421568 metric_logger.py:226] completed step: 98, seconds: 0.105, TFLOP/s/device: 29.791, Tokens/s/device: 1222.952, total_weights: 58, loss: 0.000, lm_loss: 0.000, perplexity: 1.271
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:20.857266 139711167421568 peft_trainer.py:488] Train step 99 training loss: 0.000867  - training perplexity: 1.000867
+  | I0810 01:10:20.863768 139711167421568 metric_logger.py:226] completed step: 99, seconds: 0.105, TFLOP/s/device: 29.732, Tokens/s/device: 1220.503, total_weights: 48, loss: 0.001, lm_loss: 0.000, perplexity: 1.268
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:36.569181 139711167421568 peft_trainer.py:840] Train step 100 eval loss: 0.229811 - eval perplexity: 1.258363
+  | I0810 01:10:36.713497 139711167421568 peft_trainer.py:488] Train step 100 training loss: 0.229717  - training perplexity: 1.258244
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:36.778421 139711167421568 metric_logger.py:226] completed step: 100, seconds: 15.914, TFLOP/s/device: 0.196, Tokens/s/device: 8.043, total_weights: 57, loss: 0.230, lm_loss: 0.000, perplexity: 1.267
+  | I0810 01:10:36.857805 139711167421568 peft_trainer.py:488] Train step 101 training loss: 0.015853  - training perplexity: 1.015979
+  | I0810 01:10:36.864629 139711167421568 metric_logger.py:226] completed step: 101, seconds: 0.086, TFLOP/s/device: 36.127, Tokens/s/device: 1483.053, total_weights: 52, loss: 0.016, lm_loss: 0.000, perplexity: 1.265
+  | I0810 01:10:36.962772 139711167421568 peft_trainer.py:488] Train step 102 training loss: 0.345182  - training perplexity: 1.412247
+  | I0810 01:10:36.969512 139711167421568 metric_logger.py:226] completed step: 102, seconds: 0.105, TFLOP/s/device: 29.678, Tokens/s/device: 1218.295, total_weights: 51, loss: 0.345, lm_loss: 0.000, perplexity: 1.266
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:37.068017 139711167421568 peft_trainer.py:488] Train step 103 training loss: 0.000098  - training perplexity: 1.000098
+  | I0810 01:10:37.074786 139711167421568 metric_logger.py:226] completed step: 103, seconds: 0.105, TFLOP/s/device: 29.645, Tokens/s/device: 1216.965, total_weights: 55, loss: 0.000, lm_loss: 0.000, perplexity: 1.263
+  | I0810 01:10:37.172953 139711167421568 peft_trainer.py:488] Train step 104 training loss: 0.000384  - training perplexity: 1.000384
+  | I0810 01:10:37.179803 139711167421568 metric_logger.py:226] completed step: 104, seconds: 0.105, TFLOP/s/device: 29.709, Tokens/s/device: 1219.581, total_weights: 46, loss: 0.000, lm_loss: 0.000, perplexity: 1.260
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:37.277838 139711167421568 peft_trainer.py:488] Train step 105 training loss: 0.000012  - training perplexity: 1.000012
+  | I0810 01:10:37.284543 139711167421568 metric_logger.py:226] completed step: 105, seconds: 0.105, TFLOP/s/device: 29.728, Tokens/s/device: 1220.360, total_weights: 55, loss: 0.000, lm_loss: 0.000, perplexity: 1.258
+  | I0810 01:10:37.383213 139711167421568 peft_trainer.py:488] Train step 106 training loss: 0.163110  - training perplexity: 1.177166
+  | I0810 01:10:37.390010 139711167421568 metric_logger.py:226] completed step: 106, seconds: 0.105, TFLOP/s/device: 29.585, Tokens/s/device: 1214.485, total_weights: 60, loss: 0.163, lm_loss: 0.000, perplexity: 1.257
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:37.488085 139711167421568 peft_trainer.py:488] Train step 107 training loss: 0.402809  - training perplexity: 1.496021
+  | I0810 01:10:37.494781 139711167421568 metric_logger.py:226] completed step: 107, seconds: 0.105, TFLOP/s/device: 29.744, Tokens/s/device: 1221.001, total_weights: 52, loss: 0.403, lm_loss: 0.000, perplexity: 1.259
+  | I0810 01:10:37.593249 139711167421568 peft_trainer.py:488] Train step 108 training loss: 0.091018  - training perplexity: 1.095289
+  | I0810 01:10:37.599850 139711167421568 metric_logger.py:226] completed step: 108, seconds: 0.105, TFLOP/s/device: 29.683, Tokens/s/device: 1218.525, total_weights: 52, loss: 0.091, lm_loss: 0.000, perplexity: 1.257
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:37.698116 139711167421568 peft_trainer.py:488] Train step 109 training loss: 0.000600  - training perplexity: 1.000601
+  | I0810 01:10:37.704862 139711167421568 metric_logger.py:226] completed step: 109, seconds: 0.105, TFLOP/s/device: 29.698, Tokens/s/device: 1219.129, total_weights: 57, loss: 0.001, lm_loss: 0.000, perplexity: 1.255
+  | I0810 01:10:37.802750 139711167421568 peft_trainer.py:488] Train step 110 training loss: 0.000075  - training perplexity: 1.000075
+  | I0810 01:10:37.809465 139711167421568 metric_logger.py:226] completed step: 110, seconds: 0.105, TFLOP/s/device: 29.791, Tokens/s/device: 1222.947, total_weights: 54, loss: 0.000, lm_loss: 0.000, perplexity: 1.252
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:37.907647 139711167421568 peft_trainer.py:488] Train step 111 training loss: 0.000006  - training perplexity: 1.000006
+  | I0810 01:10:37.914281 139711167421568 metric_logger.py:226] completed step: 111, seconds: 0.105, TFLOP/s/device: 29.730, Tokens/s/device: 1220.447, total_weights: 56, loss: 0.000, lm_loss: 0.000, perplexity: 1.249
+  | I0810 01:10:38.012394 139711167421568 peft_trainer.py:488] Train step 112 training loss: 0.009422  - training perplexity: 1.009467
+  | I0810 01:10:38.019161 139711167421568 metric_logger.py:226] completed step: 112, seconds: 0.105, TFLOP/s/device: 29.748, Tokens/s/device: 1221.189, total_weights: 48, loss: 0.009, lm_loss: 0.000, perplexity: 1.247
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:38.117572 139711167421568 peft_trainer.py:488] Train step 113 training loss: 0.000050  - training perplexity: 1.000050
+  | I0810 01:10:38.124450 139711167421568 metric_logger.py:226] completed step: 113, seconds: 0.105, TFLOP/s/device: 29.658, Tokens/s/device: 1217.465, total_weights: 51, loss: 0.000, lm_loss: 0.000, perplexity: 1.245
+  | I0810 01:10:38.222435 139711167421568 peft_trainer.py:488] Train step 114 training loss: 0.000755  - training perplexity: 1.000756
+  | I0810 01:10:38.229287 139711167421568 metric_logger.py:226] completed step: 114, seconds: 0.105, TFLOP/s/device: 29.734, Tokens/s/device: 1220.608, total_weights: 56, loss: 0.001, lm_loss: 0.000, perplexity: 1.242
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:38.327603 139711167421568 peft_trainer.py:488] Train step 115 training loss: 0.355455  - training perplexity: 1.426830
+  | I0810 01:10:38.334505 139711167421568 metric_logger.py:226] completed step: 115, seconds: 0.105, TFLOP/s/device: 29.629, Tokens/s/device: 1216.298, total_weights: 53, loss: 0.355, lm_loss: 0.000, perplexity: 1.244
+  | I0810 01:10:38.432374 139711167421568 peft_trainer.py:488] Train step 116 training loss: 0.000118  - training perplexity: 1.000118
+  | I0810 01:10:38.439380 139711167421568 metric_logger.py:226] completed step: 116, seconds: 0.105, TFLOP/s/device: 29.751, Tokens/s/device: 1221.288, total_weights: 46, loss: 0.000, lm_loss: 0.000, perplexity: 1.241
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:38.537479 139711167421568 peft_trainer.py:488] Train step 117 training loss: 0.002092  - training perplexity: 1.002095
+  | I0810 01:10:38.544231 139711167421568 metric_logger.py:226] completed step: 117, seconds: 0.105, TFLOP/s/device: 29.701, Tokens/s/device: 1219.245, total_weights: 50, loss: 0.002, lm_loss: 0.000, perplexity: 1.239
+  | I0810 01:10:38.642419 139711167421568 peft_trainer.py:488] Train step 118 training loss: 0.001089  - training perplexity: 1.001090
+  | I0810 01:10:38.649138 139711167421568 metric_logger.py:226] completed step: 118, seconds: 0.105, TFLOP/s/device: 29.696, Tokens/s/device: 1219.054, total_weights: 52, loss: 0.001, lm_loss: 0.000, perplexity: 1.237
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:38.747072 139711167421568 peft_trainer.py:488] Train step 119 training loss: 0.021835  - training perplexity: 1.022075
+  | I0810 01:10:38.753819 139711167421568 metric_logger.py:226] completed step: 119, seconds: 0.105, TFLOP/s/device: 29.802, Tokens/s/device: 1223.400, total_weights: 55, loss: 0.022, lm_loss: 0.000, perplexity: 1.235
+  | I0810 01:10:38.851907 139711167421568 peft_trainer.py:488] Train step 120 training loss: 0.015940  - training perplexity: 1.016067
+  | I0810 01:10:38.858644 139711167421568 metric_logger.py:226] completed step: 120, seconds: 0.105, TFLOP/s/device: 29.752, Tokens/s/device: 1221.339, total_weights: 56, loss: 0.016, lm_loss: 0.000, perplexity: 1.233
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:38.956869 139711167421568 peft_trainer.py:488] Train step 121 training loss: 0.327233  - training perplexity: 1.387125
+  | I0810 01:10:38.963667 139711167421568 metric_logger.py:226] completed step: 121, seconds: 0.105, TFLOP/s/device: 29.709, Tokens/s/device: 1219.585, total_weights: 62, loss: 0.327, lm_loss: 0.000, perplexity: 1.234
+  | I0810 01:10:39.061855 139711167421568 peft_trainer.py:488] Train step 122 training loss: 0.000025  - training perplexity: 1.000025
+  | I0810 01:10:39.068701 139711167421568 metric_logger.py:226] completed step: 122, seconds: 0.105, TFLOP/s/device: 29.668, Tokens/s/device: 1217.905, total_weights: 58, loss: 0.000, lm_loss: 0.000, perplexity: 1.232
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:39.166908 139711167421568 peft_trainer.py:488] Train step 123 training loss: 0.000212  - training perplexity: 1.000212
+  | I0810 01:10:39.173754 139711167421568 metric_logger.py:226] completed step: 123, seconds: 0.105, TFLOP/s/device: 29.688, Tokens/s/device: 1218.726, total_weights: 49, loss: 0.000, lm_loss: 0.000, perplexity: 1.230
+  | I0810 01:10:39.272112 139711167421568 peft_trainer.py:488] Train step 124 training loss: 0.400910  - training perplexity: 1.493182
+  | I0810 01:10:39.278832 139711167421568 metric_logger.py:226] completed step: 124, seconds: 0.105, TFLOP/s/device: 29.647, Tokens/s/device: 1217.015, total_weights: 52, loss: 0.401, lm_loss: 0.000, perplexity: 1.232
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:54.923966 139711167421568 peft_trainer.py:840] Train step 125 eval loss: 0.212245 - eval perplexity: 1.236450
+  | I0810 01:10:54.941014 139711167421568 peft_trainer.py:488] Train step 125 training loss: 0.004350  - training perplexity: 1.004360
+  | I0810 01:10:54.948073 139711167421568 metric_logger.py:226] completed step: 125, seconds: 15.669, TFLOP/s/device: 0.199, Tokens/s/device: 8.169, total_weights: 53, loss: 0.004, lm_loss: 0.000, perplexity: 1.230
+  | I0810 01:10:55.046153 139711167421568 peft_trainer.py:488] Train step 126 training loss: 0.000861  - training perplexity: 1.000861
+  | I0810 01:10:55.053114 139711167421568 metric_logger.py:226] completed step: 126, seconds: 0.105, TFLOP/s/device: 29.667, Tokens/s/device: 1217.870, total_weights: 46, loss: 0.001, lm_loss: 0.000, perplexity: 1.228
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:55.151109 139711167421568 peft_trainer.py:488] Train step 127 training loss: 0.061034  - training perplexity: 1.062935
+  | I0810 01:10:55.157938 139711167421568 metric_logger.py:226] completed step: 127, seconds: 0.105, TFLOP/s/device: 29.703, Tokens/s/device: 1219.341, total_weights: 58, loss: 0.061, lm_loss: 0.000, perplexity: 1.226
+  | I0810 01:10:55.255882 139711167421568 peft_trainer.py:488] Train step 128 training loss: 0.038946  - training perplexity: 1.039714
+  | I0810 01:10:55.262755 139711167421568 metric_logger.py:226] completed step: 128, seconds: 0.105, TFLOP/s/device: 29.741, Tokens/s/device: 1220.872, total_weights: 45, loss: 0.039, lm_loss: 0.000, perplexity: 1.225
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:55.360829 139711167421568 peft_trainer.py:488] Train step 129 training loss: 0.000169  - training perplexity: 1.000169
+  | I0810 01:10:55.367604 139711167421568 metric_logger.py:226] completed step: 129, seconds: 0.105, TFLOP/s/device: 29.751, Tokens/s/device: 1221.304, total_weights: 55, loss: 0.000, lm_loss: 0.000, perplexity: 1.223
+  | I0810 01:10:55.466249 139711167421568 peft_trainer.py:488] Train step 130 training loss: 0.000420  - training perplexity: 1.000420
+  | I0810 01:10:55.473148 139711167421568 metric_logger.py:226] completed step: 130, seconds: 0.106, TFLOP/s/device: 29.551, Tokens/s/device: 1213.097, total_weights: 54, loss: 0.000, lm_loss: 0.000, perplexity: 1.221
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:55.571089 139711167421568 peft_trainer.py:488] Train step 131 training loss: 0.016468  - training perplexity: 1.016604
+  | I0810 01:10:55.577936 139711167421568 metric_logger.py:226] completed step: 131, seconds: 0.105, TFLOP/s/device: 29.749, Tokens/s/device: 1221.218, total_weights: 52, loss: 0.016, lm_loss: 0.000, perplexity: 1.219
+  | I0810 01:10:55.676019 139711167421568 peft_trainer.py:488] Train step 132 training loss: 0.138660  - training perplexity: 1.148733
+  | I0810 01:10:55.682837 139711167421568 metric_logger.py:226] completed step: 132, seconds: 0.105, TFLOP/s/device: 29.701, Tokens/s/device: 1219.231, total_weights: 51, loss: 0.139, lm_loss: 0.000, perplexity: 1.219
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:55.781208 139711167421568 peft_trainer.py:488] Train step 133 training loss: 0.098736  - training perplexity: 1.103775
+  | I0810 01:10:55.788093 139711167421568 metric_logger.py:226] completed step: 133, seconds: 0.105, TFLOP/s/device: 29.677, Tokens/s/device: 1218.252, total_weights: 61, loss: 0.099, lm_loss: 0.000, perplexity: 1.218
+  | I0810 01:10:55.886313 139711167421568 peft_trainer.py:488] Train step 134 training loss: 0.011809  - training perplexity: 1.011879
+  | I0810 01:10:55.893171 139711167421568 metric_logger.py:226] completed step: 134, seconds: 0.105, TFLOP/s/device: 29.644, Tokens/s/device: 1216.900, total_weights: 49, loss: 0.012, lm_loss: 0.000, perplexity: 1.216
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:55.991150 139711167421568 peft_trainer.py:488] Train step 135 training loss: 0.000437  - training perplexity: 1.000437
+  | I0810 01:10:55.998177 139711167421568 metric_logger.py:226] completed step: 135, seconds: 0.105, TFLOP/s/device: 29.712, Tokens/s/device: 1219.717, total_weights: 42, loss: 0.000, lm_loss: 0.000, perplexity: 1.214
+  | I0810 01:10:56.096206 139711167421568 peft_trainer.py:488] Train step 136 training loss: 0.000127  - training perplexity: 1.000127
+  | I0810 01:10:56.103013 139711167421568 metric_logger.py:226] completed step: 136, seconds: 0.105, TFLOP/s/device: 29.710, Tokens/s/device: 1219.636, total_weights: 55, loss: 0.000, lm_loss: 0.000, perplexity: 1.213
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:56.200849 139711167421568 peft_trainer.py:488] Train step 137 training loss: 0.000530  - training perplexity: 1.000530
+  | I0810 01:10:56.207783 139711167421568 metric_logger.py:226] completed step: 137, seconds: 0.105, TFLOP/s/device: 29.797, Tokens/s/device: 1223.180, total_weights: 55, loss: 0.001, lm_loss: 0.000, perplexity: 1.211
+  | I0810 01:10:56.305865 139711167421568 peft_trainer.py:488] Train step 138 training loss: 0.000464  - training perplexity: 1.000464
+  | I0810 01:10:56.312726 139711167421568 metric_logger.py:226] completed step: 138, seconds: 0.105, TFLOP/s/device: 29.702, Tokens/s/device: 1219.287, total_weights: 52, loss: 0.000, lm_loss: 0.000, perplexity: 1.209
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:56.410598 139711167421568 peft_trainer.py:488] Train step 139 training loss: 0.000304  - training perplexity: 1.000304
+  | I0810 01:10:56.417402 139711167421568 metric_logger.py:226] completed step: 139, seconds: 0.105, TFLOP/s/device: 29.776, Tokens/s/device: 1222.317, total_weights: 57, loss: 0.000, lm_loss: 0.000, perplexity: 1.208
+  | I0810 01:10:56.515575 139711167421568 peft_trainer.py:488] Train step 140 training loss: 0.031249  - training perplexity: 1.031742
+  | I0810 01:10:56.522492 139711167421568 metric_logger.py:226] completed step: 140, seconds: 0.105, TFLOP/s/device: 29.682, Tokens/s/device: 1218.482, total_weights: 53, loss: 0.031, lm_loss: 0.000, perplexity: 1.206
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:56.620346 139711167421568 peft_trainer.py:488] Train step 141 training loss: 0.148852  - training perplexity: 1.160502
+  | I0810 01:10:56.627299 139711167421568 metric_logger.py:226] completed step: 141, seconds: 0.105, TFLOP/s/device: 29.796, Tokens/s/device: 1223.149, total_weights: 53, loss: 0.149, lm_loss: 0.000, perplexity: 1.206
+  | I0810 01:10:56.725353 139711167421568 peft_trainer.py:488] Train step 142 training loss: 0.516682  - training perplexity: 1.676456
+  | I0810 01:10:56.732248 139711167421568 metric_logger.py:226] completed step: 142, seconds: 0.105, TFLOP/s/device: 29.676, Tokens/s/device: 1218.205, total_weights: 56, loss: 0.517, lm_loss: 0.000, perplexity: 1.209
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:56.830170 139711167421568 peft_trainer.py:488] Train step 143 training loss: 0.021124  - training perplexity: 1.021349
+  | I0810 01:10:56.837185 139711167421568 metric_logger.py:226] completed step: 143, seconds: 0.105, TFLOP/s/device: 29.714, Tokens/s/device: 1219.790, total_weights: 51, loss: 0.021, lm_loss: 0.000, perplexity: 1.207
+  | I0810 01:10:56.935335 139711167421568 peft_trainer.py:488] Train step 144 training loss: 0.000044  - training perplexity: 1.000044
+  | I0810 01:10:56.942267 139711167421568 metric_logger.py:226] completed step: 144, seconds: 0.105, TFLOP/s/device: 29.657, Tokens/s/device: 1217.437, total_weights: 44, loss: 0.000, lm_loss: 0.000, perplexity: 1.206
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:57.040474 139711167421568 peft_trainer.py:488] Train step 145 training loss: 0.000340  - training perplexity: 1.000340
+  | I0810 01:10:57.047392 139711167421568 metric_logger.py:226] completed step: 145, seconds: 0.105, TFLOP/s/device: 29.678, Tokens/s/device: 1218.321, total_weights: 47, loss: 0.000, lm_loss: 0.000, perplexity: 1.204
+  | I0810 01:10:57.145312 139711167421568 peft_trainer.py:488] Train step 146 training loss: 0.095738  - training perplexity: 1.100471
+  | I0810 01:10:57.152305 139711167421568 metric_logger.py:226] completed step: 146, seconds: 0.105, TFLOP/s/device: 29.716, Tokens/s/device: 1219.851, total_weights: 56, loss: 0.096, lm_loss: 0.000, perplexity: 1.204
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:57.250245 139711167421568 peft_trainer.py:488] Train step 147 training loss: 0.003397  - training perplexity: 1.003402
+  | I0810 01:10:57.257213 139711167421568 metric_logger.py:226] completed step: 147, seconds: 0.105, TFLOP/s/device: 29.755, Tokens/s/device: 1221.472, total_weights: 53, loss: 0.003, lm_loss: 0.000, perplexity: 1.202
+  | I0810 01:10:57.355098 139711167421568 peft_trainer.py:488] Train step 148 training loss: 0.071658  - training perplexity: 1.074288
+  | I0810 01:10:57.362112 139711167421568 metric_logger.py:226] completed step: 148, seconds: 0.105, TFLOP/s/device: 29.693, Tokens/s/device: 1218.912, total_weights: 72, loss: 0.072, lm_loss: 0.000, perplexity: 1.201
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:10:57.460114 139711167421568 peft_trainer.py:488] Train step 149 training loss: 0.000007  - training perplexity: 1.000007
+  | I0810 01:10:57.466997 139711167421568 metric_logger.py:226] completed step: 149, seconds: 0.105, TFLOP/s/device: 29.715, Tokens/s/device: 1219.831, total_weights: 59, loss: 0.000, lm_loss: 0.000, perplexity: 1.200
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:11:13.172629 139711167421568 peft_trainer.py:840] Train step 150 eval loss: 0.192950 - eval perplexity: 1.212822
+  | I0810 01:11:13.189458 139711167421568 peft_trainer.py:488] Train step 150 training loss: 0.000044  - training perplexity: 1.000044
+  | I0810 01:11:13.196805 139711167421568 metric_logger.py:226] completed step: 150, seconds: 15.730, TFLOP/s/device: 0.198, Tokens/s/device: 8.138, total_weights: 53, loss: 0.000, lm_loss: 0.000, perplexity: 1.198
+  | I0810 01:11:13.294362 139711167421568 peft_trainer.py:488] Train step 151 training loss: 0.001672  - training perplexity: 1.001674
+  | I0810 01:11:13.301548 139711167421568 metric_logger.py:226] completed step: 151, seconds: 0.105, TFLOP/s/device: 29.724, Tokens/s/device: 1220.203, total_weights: 65, loss: 0.002, lm_loss: 0.000, perplexity: 1.197
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:11:13.399635 139711167421568 peft_trainer.py:488] Train step 152 training loss: 0.000018  - training perplexity: 1.000018
+  | I0810 01:11:13.406580 139711167421568 metric_logger.py:226] completed step: 152, seconds: 0.105, TFLOP/s/device: 29.654, Tokens/s/device: 1217.322, total_weights: 49, loss: 0.000, lm_loss: 0.000, perplexity: 1.195
+  | I0810 01:11:13.504470 139711167421568 peft_trainer.py:488] Train step 153 training loss: 0.000030  - training perplexity: 1.000030
+  | I0810 01:11:13.511383 139711167421568 metric_logger.py:226] completed step: 153, seconds: 0.105, TFLOP/s/device: 29.752, Tokens/s/device: 1221.324, total_weights: 50, loss: 0.000, lm_loss: 0.000, perplexity: 1.194
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:11:13.609445 139711167421568 peft_trainer.py:488] Train step 154 training loss: 0.000047  - training perplexity: 1.000047
+  | I0810 01:11:13.616448 139711167421568 metric_logger.py:226] completed step: 154, seconds: 0.105, TFLOP/s/device: 29.711, Tokens/s/device: 1219.639, total_weights: 58, loss: 0.000, lm_loss: 0.000, perplexity: 1.193
+  | I0810 01:11:13.714282 139711167421568 peft_trainer.py:488] Train step 155 training loss: 0.013478  - training perplexity: 1.013569
+  | I0810 01:11:13.721402 139711167421568 metric_logger.py:226] completed step: 155, seconds: 0.105, TFLOP/s/device: 29.696, Tokens/s/device: 1219.022, total_weights: 56, loss: 0.013, lm_loss: 0.000, perplexity: 1.191
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:11:13.819342 139711167421568 peft_trainer.py:488] Train step 156 training loss: 0.000144  - training perplexity: 1.000144
+  | I0810 01:11:13.826539 139711167421568 metric_logger.py:226] completed step: 156, seconds: 0.105, TFLOP/s/device: 29.655, Tokens/s/device: 1217.366, total_weights: 61, loss: 0.000, lm_loss: 0.000, perplexity: 1.190
+  | I0810 01:11:13.924243 139711167421568 peft_trainer.py:488] Train step 157 training loss: 0.000026  - training perplexity: 1.000026
+  | I0810 01:11:13.931155 139711167421568 metric_logger.py:226] completed step: 157, seconds: 0.105, TFLOP/s/device: 29.785, Tokens/s/device: 1222.685, total_weights: 56, loss: 0.000, lm_loss: 0.000, perplexity: 1.189
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:11:14.029017 139711167421568 peft_trainer.py:488] Train step 158 training loss: 0.000013  - training perplexity: 1.000013
+  | I0810 01:11:14.036114 139711167421568 metric_logger.py:226] completed step: 158, seconds: 0.105, TFLOP/s/device: 29.743, Tokens/s/device: 1220.960, total_weights: 55, loss: 0.000, lm_loss: 0.000, perplexity: 1.187
+  | I0810 01:11:14.133892 139711167421568 peft_trainer.py:488] Train step 159 training loss: 0.000035  - training perplexity: 1.000035
+  | I0810 01:11:14.140841 139711167421568 metric_logger.py:226] completed step: 159, seconds: 0.105, TFLOP/s/device: 29.755, Tokens/s/device: 1221.463, total_weights: 48, loss: 0.000, lm_loss: 0.000, perplexity: 1.186
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:11:14.238909 139711167421568 peft_trainer.py:488] Train step 160 training loss: 0.022826  - training perplexity: 1.023089
+  | I0810 01:11:14.245925 139711167421568 metric_logger.py:226] completed step: 160, seconds: 0.105, TFLOP/s/device: 29.671, Tokens/s/device: 1218.031, total_weights: 58, loss: 0.023, lm_loss: 0.000, perplexity: 1.185
+  | I0810 01:11:14.344082 139711167421568 peft_trainer.py:488] Train step 161 training loss: 0.057644  - training perplexity: 1.059338
+  | I0810 01:11:14.350945 139711167421568 metric_logger.py:226] completed step: 161, seconds: 0.105, TFLOP/s/device: 29.659, Tokens/s/device: 1217.532, total_weights: 58, loss: 0.058, lm_loss: 0.000, perplexity: 1.184
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:11:14.448667 139711167421568 peft_trainer.py:488] Train step 162 training loss: 0.000123  - training perplexity: 1.000123
+  | I0810 01:11:14.455738 139711167421568 metric_logger.py:226] completed step: 162, seconds: 0.105, TFLOP/s/device: 29.807, Tokens/s/device: 1223.590, total_weights: 54, loss: 0.000, lm_loss: 0.000, perplexity: 1.183
+  | I0810 01:11:14.553544 139711167421568 peft_trainer.py:488] Train step 163 training loss: 0.000018  - training perplexity: 1.000018
+  | I0810 01:11:14.560604 139711167421568 metric_logger.py:226] completed step: 163, seconds: 0.105, TFLOP/s/device: 29.745, Tokens/s/device: 1221.047, total_weights: 54, loss: 0.000, lm_loss: 0.000, perplexity: 1.182
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:11:14.658335 139711167421568 peft_trainer.py:488] Train step 164 training loss: 0.000013  - training perplexity: 1.000013
+  | I0810 01:11:14.665327 139711167421568 metric_logger.py:226] completed step: 164, seconds: 0.105, TFLOP/s/device: 29.743, Tokens/s/device: 1220.981, total_weights: 57, loss: 0.000, lm_loss: 0.000, perplexity: 1.181
+  | I0810 01:11:14.762934 139711167421568 peft_trainer.py:488] Train step 165 training loss: 0.000135  - training perplexity: 1.000135
+  | I0810 01:11:14.769900 139711167421568 metric_logger.py:226] completed step: 165, seconds: 0.105, TFLOP/s/device: 29.819, Tokens/s/device: 1224.097, total_weights: 52, loss: 0.000, lm_loss: 0.000, perplexity: 1.179
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:11:14.867694 139711167421568 peft_trainer.py:488] Train step 166 training loss: 0.020585  - training perplexity: 1.020798
+  | I0810 01:11:14.874805 139711167421568 metric_logger.py:226] completed step: 166, seconds: 0.105, TFLOP/s/device: 29.742, Tokens/s/device: 1220.926, total_weights: 55, loss: 0.021, lm_loss: 0.000, perplexity: 1.178
+  | I0810 01:11:14.972512 139711167421568 peft_trainer.py:488] Train step 167 training loss: 0.000043  - training perplexity: 1.000043
+  | I0810 01:11:14.979578 139711167421568 metric_logger.py:226] completed step: 167, seconds: 0.105, TFLOP/s/device: 29.774, Tokens/s/device: 1222.223, total_weights: 47, loss: 0.000, lm_loss: 0.000, perplexity: 1.177
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:11:15.077721 139711167421568 peft_trainer.py:488] Train step 168 training loss: 0.000033  - training perplexity: 1.000033
+  | I0810 01:11:15.084899 139711167421568 metric_logger.py:226] completed step: 168, seconds: 0.105, TFLOP/s/device: 29.615, Tokens/s/device: 1215.725, total_weights: 54, loss: 0.000, lm_loss: 0.000, perplexity: 1.176
+  | I0810 01:11:15.182760 139711167421568 peft_trainer.py:488] Train step 169 training loss: 0.000012  - training perplexity: 1.000012
+  | I0810 01:11:15.189720 139711167421568 metric_logger.py:226] completed step: 169, seconds: 0.105, TFLOP/s/device: 29.695, Tokens/s/device: 1218.980, total_weights: 57, loss: 0.000, lm_loss: 0.000, perplexity: 1.175
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:11:15.287607 139711167421568 peft_trainer.py:488] Train step 170 training loss: 0.120620  - training perplexity: 1.128196
+  | I0810 01:11:15.294556 139711167421568 metric_logger.py:226] completed step: 170, seconds: 0.105, TFLOP/s/device: 29.757, Tokens/s/device: 1221.529, total_weights: 45, loss: 0.121, lm_loss: 0.000, perplexity: 1.175
+  | I0810 01:11:15.392476 139711167421568 peft_trainer.py:488] Train step 171 training loss: 0.000005  - training perplexity: 1.000005
+  | I0810 01:11:15.399557 139711167421568 metric_logger.py:226] completed step: 171, seconds: 0.105, TFLOP/s/device: 29.730, Tokens/s/device: 1220.453, total_weights: 59, loss: 0.000, lm_loss: 0.000, perplexity: 1.174
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:11:15.497720 139711167421568 peft_trainer.py:488] Train step 172 training loss: 0.311098  - training perplexity: 1.364923
+  | I0810 01:11:15.504956 139711167421568 metric_logger.py:226] completed step: 172, seconds: 0.105, TFLOP/s/device: 29.600, Tokens/s/device: 1215.096, total_weights: 52, loss: 0.311, lm_loss: 0.000, perplexity: 1.175
+  | I0810 01:11:15.602627 139711167421568 peft_trainer.py:488] Train step 173 training loss: 0.000013  - training perplexity: 1.000013
+  | I0810 01:11:15.609587 139711167421568 metric_logger.py:226] completed step: 173, seconds: 0.105, TFLOP/s/device: 29.733, Tokens/s/device: 1220.578, total_weights: 62, loss: 0.000, lm_loss: 0.000, perplexity: 1.173
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:11:15.707392 139711167421568 peft_trainer.py:488] Train step 174 training loss: 0.000024  - training perplexity: 1.000024
+  | I0810 01:11:15.714498 139711167421568 metric_logger.py:226] completed step: 174, seconds: 0.105, TFLOP/s/device: 29.759, Tokens/s/device: 1221.608, total_weights: 54, loss: 0.000, lm_loss: 0.000, perplexity: 1.172
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:11:31.263709 139711167421568 peft_trainer.py:840] Train step 175 eval loss: 0.179124 - eval perplexity: 1.196169
+  | I0810 01:11:31.280641 139711167421568 peft_trainer.py:488] Train step 175 training loss: 0.000010  - training perplexity: 1.000010
+  | I0810 01:11:31.287925 139711167421568 metric_logger.py:226] completed step: 175, seconds: 15.573, TFLOP/s/device: 0.200, Tokens/s/device: 8.219, total_weights: 50, loss: 0.000, lm_loss: 0.000, perplexity: 1.171
+  | I0810 01:11:31.385581 139711167421568 peft_trainer.py:488] Train step 176 training loss: 0.349166  - training perplexity: 1.417884
+  | I0810 01:11:31.392821 139711167421568 metric_logger.py:226] completed step: 176, seconds: 0.105, TFLOP/s/device: 29.723, Tokens/s/device: 1220.135, total_weights: 60, loss: 0.349, lm_loss: 0.000, perplexity: 1.173
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:11:31.490401 139711167421568 peft_trainer.py:488] Train step 177 training loss: 0.000071  - training perplexity: 1.000071
+  | I0810 01:11:31.497520 139711167421568 metric_logger.py:226] completed step: 177, seconds: 0.105, TFLOP/s/device: 29.737, Tokens/s/device: 1220.738, total_weights: 53, loss: 0.000, lm_loss: 0.000, perplexity: 1.172
+  | I0810 01:11:31.595223 139711167421568 peft_trainer.py:488] Train step 178 training loss: 0.422529  - training perplexity: 1.525815
+  | I0810 01:11:31.602287 139711167421568 metric_logger.py:226] completed step: 178, seconds: 0.105, TFLOP/s/device: 29.763, Tokens/s/device: 1221.782, total_weights: 47, loss: 0.423, lm_loss: 0.000, perplexity: 1.173
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:11:31.700105 139711167421568 peft_trainer.py:488] Train step 179 training loss: 0.004094  - training perplexity: 1.004103
+  | I0810 01:11:31.707226 139711167421568 metric_logger.py:226] completed step: 179, seconds: 0.105, TFLOP/s/device: 29.722, Tokens/s/device: 1220.109, total_weights: 46, loss: 0.004, lm_loss: 0.000, perplexity: 1.172
+  | I0810 01:11:31.805273 139711167421568 peft_trainer.py:488] Train step 180 training loss: 0.000376  - training perplexity: 1.000376
+  | I0810 01:11:31.812330 139711167421568 metric_logger.py:226] completed step: 180, seconds: 0.105, TFLOP/s/device: 29.664, Tokens/s/device: 1217.726, total_weights: 57, loss: 0.000, lm_loss: 0.000, perplexity: 1.171
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:11:31.910128 139711167421568 peft_trainer.py:488] Train step 181 training loss: 0.000046  - training perplexity: 1.000046
+  | I0810 01:11:31.917275 139711167421568 metric_logger.py:226] completed step: 181, seconds: 0.105, TFLOP/s/device: 29.718, Tokens/s/device: 1219.943, total_weights: 62, loss: 0.000, lm_loss: 0.000, perplexity: 1.170
+  | I0810 01:11:32.015311 139711167421568 peft_trainer.py:488] Train step 182 training loss: 0.000018  - training perplexity: 1.000019
+  | I0810 01:11:32.022357 139711167421568 metric_logger.py:226] completed step: 182, seconds: 0.105, TFLOP/s/device: 29.670, Tokens/s/device: 1217.986, total_weights: 45, loss: 0.000, lm_loss: 0.000, perplexity: 1.169
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:11:32.120108 139711167421568 peft_trainer.py:488] Train step 183 training loss: 0.000186  - training perplexity: 1.000186
+  | I0810 01:11:32.127229 139711167421568 metric_logger.py:226] completed step: 183, seconds: 0.105, TFLOP/s/device: 29.751, Tokens/s/device: 1221.313, total_weights: 41, loss: 0.000, lm_loss: 0.000, perplexity: 1.168
+  | I0810 01:11:32.225052 139711167421568 peft_trainer.py:488] Train step 184 training loss: 0.000011  - training perplexity: 1.000011
+  | I0810 01:11:32.232132 139711167421568 metric_logger.py:226] completed step: 184, seconds: 0.105, TFLOP/s/device: 29.700, Tokens/s/device: 1219.205, total_weights: 50, loss: 0.000, lm_loss: 0.000, perplexity: 1.167
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:11:32.329907 139711167421568 peft_trainer.py:488] Train step 185 training loss: 0.050682  - training perplexity: 1.051988
+  | I0810 01:11:32.337054 139711167421568 metric_logger.py:226] completed step: 185, seconds: 0.105, TFLOP/s/device: 29.730, Tokens/s/device: 1220.449, total_weights: 53, loss: 0.051, lm_loss: 0.000, perplexity: 1.167
+  | I0810 01:11:32.434922 139711167421568 peft_trainer.py:488] Train step 186 training loss: 0.032121  - training perplexity: 1.032642
+  | I0810 01:11:32.442160 139711167421568 metric_logger.py:226] completed step: 186, seconds: 0.105, TFLOP/s/device: 29.655, Tokens/s/device: 1217.357, total_weights: 48, loss: 0.032, lm_loss: 0.000, perplexity: 1.166
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:11:32.539727 139711167421568 peft_trainer.py:488] Train step 187 training loss: 0.544166  - training perplexity: 1.723170
+  | I0810 01:11:32.546720 139711167421568 metric_logger.py:226] completed step: 187, seconds: 0.105, TFLOP/s/device: 29.811, Tokens/s/device: 1223.774, total_weights: 43, loss: 0.544, lm_loss: 0.000, perplexity: 1.168
+  | I0810 01:11:32.644775 139711167421568 peft_trainer.py:488] Train step 188 training loss: 0.057146  - training perplexity: 1.058810
+  | I0810 01:11:32.651868 139711167421568 metric_logger.py:226] completed step: 188, seconds: 0.105, TFLOP/s/device: 29.662, Tokens/s/device: 1217.643, total_weights: 52, loss: 0.057, lm_loss: 0.000, perplexity: 1.168
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:11:32.749496 139711167421568 peft_trainer.py:488] Train step 189 training loss: 0.081733  - training perplexity: 1.085166
+  | I0810 01:11:32.756508 139711167421568 metric_logger.py:226] completed step: 189, seconds: 0.105, TFLOP/s/device: 29.774, Tokens/s/device: 1222.228, total_weights: 56, loss: 0.082, lm_loss: 0.000, perplexity: 1.167
+  | I0810 01:11:32.854632 139711167421568 peft_trainer.py:488] Train step 190 training loss: 0.000053  - training perplexity: 1.000053
+  | I0810 01:11:32.861762 139711167421568 metric_logger.py:226] completed step: 190, seconds: 0.105, TFLOP/s/device: 29.652, Tokens/s/device: 1217.239, total_weights: 53, loss: 0.000, lm_loss: 0.000, perplexity: 1.166
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:11:32.959503 139711167421568 peft_trainer.py:488] Train step 191 training loss: 0.000021  - training perplexity: 1.000021
+  | I0810 01:11:32.966456 139711167421568 metric_logger.py:226] completed step: 191, seconds: 0.105, TFLOP/s/device: 29.750, Tokens/s/device: 1221.272, total_weights: 53, loss: 0.000, lm_loss: 0.000, perplexity: 1.165
+  | I0810 01:11:33.064443 139711167421568 peft_trainer.py:488] Train step 192 training loss: 0.000022  - training perplexity: 1.000022
+  | I0810 01:11:33.071610 139711167421568 metric_logger.py:226] completed step: 192, seconds: 0.105, TFLOP/s/device: 29.677, Tokens/s/device: 1218.265, total_weights: 50, loss: 0.000, lm_loss: 0.000, perplexity: 1.164
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:11:33.169523 139711167421568 peft_trainer.py:488] Train step 193 training loss: 0.000010  - training perplexity: 1.000010
+  | I0810 01:11:33.176643 139711167421568 metric_logger.py:226] completed step: 193, seconds: 0.105, TFLOP/s/device: 29.691, Tokens/s/device: 1218.834, total_weights: 55, loss: 0.000, lm_loss: 0.000, perplexity: 1.163
+  | I0810 01:11:33.274385 139711167421568 peft_trainer.py:488] Train step 194 training loss: 0.000037  - training perplexity: 1.000037
+  | I0810 01:11:33.281568 139711167421568 metric_logger.py:226] completed step: 194, seconds: 0.105, TFLOP/s/device: 29.707, Tokens/s/device: 1219.477, total_weights: 46, loss: 0.000, lm_loss: 0.000, perplexity: 1.163
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:11:33.379493 139711167421568 peft_trainer.py:488] Train step 195 training loss: 0.000320  - training perplexity: 1.000320
+  | I0810 01:11:33.386531 139711167421568 metric_logger.py:226] completed step: 195, seconds: 0.105, TFLOP/s/device: 29.703, Tokens/s/device: 1219.340, total_weights: 53, loss: 0.000, lm_loss: 0.000, perplexity: 1.162
+  | I0810 01:11:33.484142 139711167421568 peft_trainer.py:488] Train step 196 training loss: 0.000060  - training perplexity: 1.000060
+  | I0810 01:11:33.491257 139711167421568 metric_logger.py:226] completed step: 196, seconds: 0.105, TFLOP/s/device: 29.809, Tokens/s/device: 1223.676, total_weights: 56, loss: 0.000, lm_loss: 0.000, perplexity: 1.161
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:11:33.588857 139711167421568 peft_trainer.py:488] Train step 197 training loss: 0.053383  - training perplexity: 1.054834
+  | I0810 01:11:33.596103 139711167421568 metric_logger.py:226] completed step: 197, seconds: 0.105, TFLOP/s/device: 29.741, Tokens/s/device: 1220.891, total_weights: 53, loss: 0.053, lm_loss: 0.000, perplexity: 1.160
+  | I0810 01:11:33.693667 139711167421568 peft_trainer.py:488] Train step 198 training loss: 0.000662  - training perplexity: 1.000663
+  | I0810 01:11:33.700831 139711167421568 metric_logger.py:226] completed step: 198, seconds: 0.105, TFLOP/s/device: 29.781, Tokens/s/device: 1222.548, total_weights: 47, loss: 0.001, lm_loss: 0.000, perplexity: 1.159
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:11:33.798344 139711167421568 peft_trainer.py:488] Train step 199 training loss: 0.300118  - training perplexity: 1.350018
+  | I0810 01:11:33.805468 139711167421568 metric_logger.py:226] completed step: 199, seconds: 0.105, TFLOP/s/device: 29.773, Tokens/s/device: 1222.216, total_weights: 51, loss: 0.300, lm_loss: 0.000, perplexity: 1.160
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:13:35.254088 139711167421568 peft_trainer.py:840] Train step 200 eval loss: 0.166139 - eval perplexity: 1.180737
+  | I0810 01:13:35.258214 139711167421568 peft_trainer.py:748] Train loop finished in: 364.8250 seconds
+  | 
+[2026-08-10 01:14:01]   output: I0810 01:13:35.671483 139711167421568 peft_trainer.py:488] Train step 200 training loss: 0.007942  - training perplexity: 1.007974
+  | I0810 01:13:35.745755 139711167421568 metric_logger.py:226] completed step: 200, seconds: 121.939, TFLOP/s/device: 0.026, Tokens/s/device: 1.050, total_weights: 64, loss: 0.008, lm_loss: 0.000, perplexity: 1.159
+  | 
+[2026-08-10 01:14:01]   output: sft finished in 7.4 minutes (exit 0).
+  | 
+[2026-08-10 01:14:01]   output: Removed intermediate checkpoint: gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260810t005140z-sft/checkpoints/1/
+  | SFT checkpoint: gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260810t005140z-sft/checkpoints/200/model_params
+  | 
+[2026-08-10 01:14:01] cell 21 DONE in 7.5 min
+[2026-08-10 01:14:01] cell 22 (markdown): ## Can We Resume Without Starting Over?
+[2026-08-10 01:14:01] cell 23 START: sft_checkpoint = project.resume_sft(extra_steps=2)
+[2026-08-10 01:17:08]   output: I0810 01:14:21.818092 139906720529536 max_utils.py:830] System Information: Jax Version: 0.11.0
+  | I0810 01:14:21.818261 139906720529536 max_utils.py:831] System Information: Jaxlib Version: 0.11.0
+  | I0810 01:14:21.818336 139906720529536 max_utils.py:832] System Information: Jax Backend: PJRT C API
+  | 
+[2026-08-10 01:17:08]   output: I0810 01:15:09.072986 139906720529536 peft_trainer.py:488] Train step 201 training loss: 0.012250  - training perplexity: 1.012325
+  | Memstats: After params initialized:
+  | 
+[2026-08-10 01:17:08]   output: I0810 01:15:21.645323 139906720529536 metric_logger.py:226] completed step: 201, seconds: 14.700, TFLOP/s/device: 0.212, Tokens/s/device: 8.708, total_weights: 53, loss: 0.012, lm_loss: 0.000, perplexity: 1.012
+  | 
+[2026-08-10 01:17:08]   output: I0810 01:16:46.323196 139906720529536 peft_trainer.py:748] Train loop finished in: 111.9473 seconds
+  | 
+[2026-08-10 01:17:08]   output: I0810 01:16:46.574071 139906720529536 peft_trainer.py:488] Train step 202 training loss: 0.323556  - training perplexity: 1.382034
+  | I0810 01:16:46.581760 139906720529536 metric_logger.py:226] completed step: 202, seconds: 97.499, TFLOP/s/device: 0.032, Tokens/s/device: 1.313, total_weights: 61, loss: 0.324, lm_loss: 0.000, perplexity: 1.183
+  | 
+[2026-08-10 01:17:08]   output: sft-resume finished in 3.0 minutes (exit 0).
+  | 
+[2026-08-10 01:17:08]   output: <Figure size 800x450 with 1 Axes>
+[2026-08-10 01:17:08]   output: {
+  |   "loaded_nonpadding_tokens_reported": 10754,
+  |   "estimated_effective_nonpadding_tokens": 5377,
+  |   "maximum_effective_training_tokens": 206848,
+  |   "fractional_batch_note": "The MaxText hook counts the full loader batch before loss_fn slices to the effective batch; the effective token count is therefore an estimate.",
+  |   "last_train_loss_rolling_3": 0.11458292168875535,
+  |   "held_out_loss_by_step": [
+  |     {
+  |       "step": 0,
+  |       "loss": 0.8058359622955322
+  |     },
+  |     {
+  |       "step": 25,
+  |       "loss": 0.11159688234329224
+  |     },
+  |     {
+  |       "step": 50,
+  |       "loss": 0.04362247511744499
+  |     },
+  |     {
+  |       "step": 75,
+  |       "loss": 0.07750056684017181
+  |     },
+  |     {
+  |       "step": 100,
+  |       "loss": 0.11050102114677429
+  |     },
+  |     {
+  |       "step": 125,
+  |       "loss": 0.12441155314445496
+  |     },
+  |     {
+  |       "step": 150,
+  |       "loss": 0.07718203961849213
+  |     },
+  |     {
+  |       "step": 175,
+  |       "loss": 0.08234445750713348
+  |     },
+  |     {
+  |       "step": 200,
+  |       "loss": 0.06225566565990448
+  |     }
+  |   ],
+  |   "best_held_out_loss": 0.04362247511744499,
+  |   "best_held_out_step": 50,
+  |   "evaluation_intervals_since_best": 6,
+  |   "last_minus_best_held_out_loss": 0.018633190542459488,
+  |   "generalization_gap_at_last_eval": -0.04065188907164459,
+  |   "initial_run_steps": 200,
+  |   "decision_rule": "Stop after two evaluations without a new held-out best, a task-metric regression, or the cost limit.",
+  |   "recommendation": "Stop or roll back: held-out loss has not set a new best for 6 evaluation intervals."
+  | }
+  | {
+  |   "rollback_step": 200,
+  |   "resumed_steps": [
+  |     201,
+  |     202
+  |   ],
+  |   "optimizer_state_restored": true,
+  |   "optimizer_state_evidence": [
+  |     "optimizer_state existed in the rollback checkpoint",
+  |     "Tunix resumed at the next optimizer step instead of step 1",
+  |     "the final checkpoint contains optimizer_state"
+  |   ],
+  |   "loss_before_resume": 0.007942479103803635,
+  |   "first_loss_after_resume": 0.012249892577528954,
+  |   "rollback_checkpoint": "gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260810t005140z-sft/checkpoints/200/model_params",
+  |   "final_checkpoint": "gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260810t005140z-sft/checkpoints/202/model_params"
+  | }
+  | 
+[2026-08-10 01:17:08] cell 23 DONE in 3.1 min
+[2026-08-10 01:17:08] cell 24 (markdown): ## How Is Reward Training Different From SFT?
+[2026-08-10 01:17:08] cell 25 START: rl_summary = project.run_grpo(
+[2026-08-10 01:24:12]   output: Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s]
+[2026-08-10 01:24:12]   output: Creating parquet from Arrow format:   0%|          | 0/1 [00:00<?, ?ba/s]
+[2026-08-10 01:24:12]   output: {
+  |   "dataset_id": "openai/gsm8k train",
+  |   "dataset_revision": "740312add88f781978c0658806c59bc2815b9866",
+  |   "dataset_license": "MIT",
+  |   "selection": "32 train + 16 held-out rows from 1024 scanned; 5-9 annotated arithmetic operations, prompt <=800 characters, seed 344",
+  |   "student_provided": false,
+  |   "task": "verifiable numeric reasoning",
+  |   "train_examples": 32,
+  |   "held_out_examples": 16,
+  |   "schema": {
+  |     "prompt": "string",
+  |     "answer": "finite decimal string"
+  |   },
+  |   "reward": {
+  |     "format": "0.75 full structure; 0.50 both sections; 0.25 answer tag; 0.10 partial reasoning tag",
+  |     "exact": "1.0 exact numeric answer, tags optional",
+  |     "closeness": "up to 0.10 for an incorrect near miss",
+  |     "maximum": 1.75
+  |   },
+  |   "release_test_contamination": false,
+  |   "raw_rows_in_submission": false,
+  |   "reward_code": "rl_task.py",
+  |   "reward_code_sha256": "34b181d8dfd8adb1bb4240714c8e5f5c2bc78e636289df498ca83b78f69e28ff"
+  | }
+  | 
+[2026-08-10 01:24:12]   output: I0810 01:17:25.908373 140137635462272 max_utils.py:830] System Information: Jax Version: 0.11.0
+  | I0810 01:17:25.908477 140137635462272 max_utils.py:831] System Information: Jaxlib Version: 0.11.0
+  | 
+[2026-08-10 01:24:12]   output: I0810 01:17:31.769776 140137635462272 max_utils.py:832] System Information: Jax Backend: PJRT C API
+  | 
+[2026-08-10 01:24:12]   output: W0810 01:19:54.132479 140137635462272 train_rl.py:738] Pre RL Training: corr=10, total=16, accuracy=62.5%, partial_accuracy=62.5%, format_accuracy=37.5%, mean_reward=1.0671
+  | 
+[2026-08-10 01:24:12]   output: I0810 01:20:27.750110 140137635462272 peft_trainer.py:748] Train loop finished in: 7.9192 seconds
+  | 
+[2026-08-10 01:24:12]   output: I0810 01:20:46.904769 140137635462272 peft_trainer.py:488] Train step 1 training loss: -0.000071  - training perplexity: 0.999929
+  | I0810 01:20:46.909611 140137635462272 peft_trainer.py:748] Train loop finished in: 0.1708 seconds
+  | 
+[2026-08-10 01:24:12]   output: I0810 01:21:16.277163 140137635462272 peft_trainer.py:488] Train step 2 training loss: 0.001412  - training perplexity: 1.001413
+  | I0810 01:21:16.282238 140137635462272 peft_trainer.py:748] Train loop finished in: 0.1714 seconds
+  | 
+[2026-08-10 01:24:12]   output: I0810 01:21:32.872052 140137635462272 peft_trainer.py:488] Train step 3 training loss: -0.003427  - training perplexity: 0.996579
+  | I0810 01:21:32.877075 140137635462272 peft_trainer.py:748] Train loop finished in: 0.1713 seconds
+  | 
+[2026-08-10 01:24:12]   output: I0810 01:21:50.381192 140137635462272 peft_trainer.py:488] Train step 4 training loss: 0.017151  - training perplexity: 1.017299
+  | I0810 01:21:50.386452 140137635462272 peft_trainer.py:748] Train loop finished in: 0.1715 seconds
+  | 
+[2026-08-10 01:24:12]   output: I0810 01:22:05.675857 140137635462272 peft_trainer.py:488] Train step 5 training loss: 0.023984  - training perplexity: 1.024273
+  | I0810 01:22:05.680470 140137635462272 peft_trainer.py:748] Train loop finished in: 0.1712 seconds
+  | 
+[2026-08-10 01:24:12]   output: I0810 01:22:22.216579 140137635462272 peft_trainer.py:488] Train step 6 training loss: 0.039734  - training perplexity: 1.040534
+  | I0810 01:22:22.221335 140137635462272 peft_trainer.py:748] Train loop finished in: 0.1714 seconds
+  | 
+[2026-08-10 01:24:12]   output: I0810 01:22:37.998338 140137635462272 peft_trainer.py:488] Train step 7 training loss: 0.056533  - training perplexity: 1.058162
+  | I0810 01:22:38.003290 140137635462272 peft_trainer.py:748] Train loop finished in: 0.1715 seconds
+  | 
+[2026-08-10 01:24:12]   output: I0810 01:22:54.987698 140137635462272 peft_trainer.py:488] Train step 8 training loss: 0.033112  - training perplexity: 1.033666
+  | I0810 01:22:54.992698 140137635462272 peft_trainer.py:748] Train loop finished in: 0.1719 seconds
+  | 
+[2026-08-10 01:24:12]   output: I0810 01:23:10.594254 140137635462272 peft_trainer.py:488] Train step 9 training loss: 0.054164  - training perplexity: 1.055658
+  | I0810 01:23:10.598776 140137635462272 peft_trainer.py:748] Train loop finished in: 0.1709 seconds
+  | 
+[2026-08-10 01:24:12]   output: I0810 01:23:26.840158 140137635462272 peft_trainer.py:488] Train step 10 training loss: 0.082321  - training perplexity: 1.085804
+  | I0810 01:23:26.844878 140137635462272 peft_trainer.py:748] Train loop finished in: 0.1715 seconds
+  | 
+[2026-08-10 01:24:12]   output: I0810 01:23:42.150216 140137635462272 peft_trainer.py:488] Train step 11 training loss: 0.108017  - training perplexity: 1.114066
+  | I0810 01:23:42.155039 140137635462272 peft_trainer.py:748] Train loop finished in: 0.1711 seconds
+  | 
+[2026-08-10 01:24:12]   output: I0810 01:23:57.134607 140137635462272 peft_trainer.py:488] Train step 12 training loss: 0.083345  - training perplexity: 1.086917
+  | W0810 01:23:57.145066 140137635462272 train_rl.py:763] RL Training Completed Successfully!
+  | 
+[2026-08-10 01:24:12]   output: W0810 01:24:01.499781 140137635462272 train_rl.py:776] Post RL Training: corr=8, total=16, accuracy=50.0%, partial_accuracy=50.0%, format_accuracy=75.0%, mean_reward=1.3522
+  | 
+[2026-08-10 01:24:12]   output: grpo finished in 7.0 minutes (exit 0).
+  | 
+[2026-08-10 01:24:12]   output: <Figure size 1200x380 with 3 Axes>
+[2026-08-10 01:24:12]   output: GRPO CHECK: reward and formatting improved, but exact-answer accuracy fell. Formatting was easier to earn than a correct answer, so keep the SFT checkpoint.
+  | {
+  |   "pre": {
+  |     "correct": 10,
+  |     "total": 16,
+  |     "accuracy_percent": 62.5,
+  |     "partial_accuracy_percent": 62.5,
+  |     "format_accuracy_percent": 37.5,
+  |     "mean_reward": 1.0671
+  |   },
+  |   "post": {
+  |     "correct": 8,
+  |     "total": 16,
+  |     "accuracy_percent": 50.0,
+  |     "partial_accuracy_percent": 50.0,
+  |     "format_accuracy_percent": 75.0,
+  |     "mean_reward": 1.3522
+  |   },
+  |   "training_signal": {
+  |     "groups": 12,
+  |     "groups_with_relative_signal": 7,
+  |     "groups_with_relative_signal_percent": 58.333333333333336,
+  |     "mean_group_reward_span": 0.8569254388625976,
+  |     "mean_total_reward": 1.4878982699139802,
+  |     "component_means": {
+  |       "closeness": 0.0035232699139802343,
+  |       "exact": 0.8541666666666666,
+  |       "format": 0.6302083333333334
+  |     },
+  |     "group_total_rewards": [
+  |       [
+  |         0.1,
+  |         0.10222222222222223,
+  |         1.1,
+  |         1.75
+  |       ],
+  |       [
+  |         1.75,
+  |         0.282,
+  |         1.75,
+  |         1.75
+  |       ],
+  |       [
+  |         1.75,
+  |         0.31341463414634146,
+  |         1.75,
+  |         1.75
+  |       ],
+  |       [
+  |         1.75,
+  |         0.004166666666666663,
+  |         1.75,
+  |         1.75
+  |       ],
+  |       [
+  |         1.75,
+  |         1.75,
+  |         1.75,
+  |         1.75
+  |       ],
+  |       [
+  |         1.75,
+  |         1.1,
+  |         1.75,
+  |         1.75
+  |       ],
+  |       [
+  |         1.75,
+  |         1.75,
+  |         1.75,
+  |         1.75
+  |       ],
+  |       [
+  |         1.75,
+  |         0.11731343283582091,
+  |         1.75,
+  |         1.75
+  |       ],
+  |       [
+  |         1.75,
+  |         0.05,
+  |         1.75,
+  |         1.75
+  |       ],
+  |       [
+  |         1.75,
+  |         1.75,
+  |         1.75,
+  |         1.75
+  |       ],
+  |       [
+  |         1.75,
+  |         1.75,
+  |         1.75,
+  |         1.75
+  |       ],
+  |       [
+  |         1.75,
+  |         1.75,
+  |         1.75,
+  |         1.75
+  |       ]
+  |     ]
+  |   },
+  |   "change": {
+  |     "accuracy_percentage_points": -12.5,
+  |     "format_percentage_points": 37.5,
+  |     "mean_reward": 0.28510000000000013
+  |   },
+  |   "reward_improved": true,
+  |   "exact_accuracy_guardrail_passed": false
+  | }
+  | 
+[2026-08-10 01:24:12] cell 25 DONE in 7.1 min
+[2026-08-10 01:24:12] cell 26 (markdown): ## Did Fine-Tuning Help?
+[2026-08-10 01:24:12] cell 27 START: release_evidence = project.run_evaluation_and_serving(benchmark_requests=8)
+[2026-08-10 01:28:19]   output: 
+  | Evaluating base: loading gs://me344-tpu-labs-west4/data/qwen3-4b-instruct-2507/0/items
+  | 
+[2026-08-10 01:28:19]   output: base server ready at 127.0.0.1:8000
+  | 
+[2026-08-10 01:28:19]   output: base complete: Banking77 exact=70.0%, GSM8K exact=81.2%
+  | 
+[2026-08-10 01:28:19]   output: Stopped the base inference server after 2.1 minutes.
+  | 
+  | Evaluating sft: loading gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260810t005140z-sft/checkpoints/202/model_params
+  | 
+[2026-08-10 01:28:19]   output: sft server ready at 127.0.0.1:8000
+  | 
+[2026-08-10 01:28:19]   output: sft complete: Banking77 exact=92.5%, GSM8K exact=87.5%
+  | SFT changed Banking77 exact match by +22.5 points and format compliance by +0.0 points.
+  | 
+[2026-08-10 01:28:19]   output: {
+  |   "primary_suite": "PolyAI/banking77 test (40 untouched rows)",
+  |   "retention_suite": "openai/gsm8k test[0:16]",
+  |   "secondary_suite_role": "GSM8K is the SFT safety check and the separate GRPO target; Banking77 remains the startup product metric.",
+  |   "models": [
+  |     {
+  |       "label": "base",
+  |       "examples": 40,
+  |       "exact_match_percent": 70.0,
+  |       "format_compliance_percent": 100.0,
+  |       "length_limited_percent": 0.0,
+  |       "mean_completion_tokens": 5.4,
+  |       "retention_examples": 16,
+  |       "retention_exact_match_percent": 81.25,
+  |       "retention_format_compliance_percent": 81.25
+  |     },
+  |     {
+  |       "label": "sft",
+  |       "examples": 40,
+  |       "exact_match_percent": 92.5,
+  |       "format_compliance_percent": 100.0,
+  |       "length_limited_percent": 0.0,
+  |       "mean_completion_tokens": 5.575,
+  |       "retention_examples": 16,
+  |       "retention_exact_match_percent": 87.5,
+  |       "retention_format_compliance_percent": 87.5
+  |     }
+  |   ],
+  |   "regressions": [
+  |     {
+  |       "transition": "base->sft",
+  |       "id": "banking77-card_delivery_estimate-1",
+  |       "expected": "card_delivery_estimate",
+  |       "before": "card_delivery_estimate",
+  |       "after": "card_arrival"
+  |     }
+  |   ]
+  | }
+  | [
+  |   {
+  |     "concurrency": 1,
+  |     "requests": 8,
+  |     "warmup_requests": 8,
+  |     "wall_seconds": 0.2857204439933412,
+  |     "mean_output_tokens": 6.0,
+  |     "requests_per_second": 27.999396501660353,
+  |     "latency_mean_seconds": 0.035615113127278164,
+  |     "ttft_p50_seconds": 0.012131848998251371,
+  |     "ttft_p95_seconds": 0.012253960501402617,
+  |     "latency_p50_seconds": 0.03321707699797116,
+  |     "latency_p95_seconds": 0.050034966159728356,
+  |     "output_tokens_per_second": 167.9963790099621,
+  |     "usage_reported_for_all": true
+  |   },
+  |   {
+  |     "concurrency": 4,
+  |     "requests": 8,
+  |     "warmup_requests": 8,
+  |     "wall_seconds": 0.10248707100981846,
+  |     "mean_output_tokens": 6.0,
+  |     "requests_per_second": 78.05862652893636,
+  |     "latency_mean_seconds": 0.046529023376933765,
+  |     "ttft_p50_seconds": 0.022610963002080098,
+  |     "ttft_p95_seconds": 0.025212501161149703,
+  |     "latency_p50_seconds": 0.04381595599988941,
+  |     "latency_p95_seconds": 0.06012507498817286,
+  |     "output_tokens_per_second": 468.3517591736182,
+  |     "usage_reported_for_all": true
+  |   }
+  | ]
+  | The SFT server is still running for the optional chat. Run project.stop_server() when finished.
+  | 
+[2026-08-10 01:28:19] cell 27 DONE in 4.1 min
+[2026-08-10 01:28:19] cell 28 (markdown): ### How Confident Are We In A Small Evaluation?
+[2026-08-10 01:28:19] cell 29 START: evaluation_bound = project.analyze_evaluation_uncertainty(target_margin=0.10)
+[2026-08-10 01:28:19]   output: <Figure size 700x400 with 1 Axes>
+[2026-08-10 01:28:19]   output: {
+  |   "reason": "A point estimate without uncertainty can turn random prompt variation into a release claim.",
+  |   "assumption": "Prompts are independent and representative; Wilson intervals do not fix biased data.",
+  |   "target_margin_percentage_points": 10.0,
+  |   "worst_case_samples_for_target_margin": 97,
+  |   "models": [
+  |     {
+  |       "label": "base",
+  |       "successes": 28,
+  |       "trials": 40,
+  |       "observed_percent": 70.0,
+  |       "wilson_95_low_percent": 54.56968934567959,
+  |       "wilson_95_high_percent": 81.9253290843047
+  |     },
+  |     {
+  |       "label": "sft",
+  |       "successes": 37,
+  |       "trials": 40,
+  |       "observed_percent": 92.5,
+  |       "wilson_95_low_percent": 80.13546984090249,
+  |       "wilson_95_high_percent": 97.41644432281419
+  |     }
+  |   ],
+  |   "decision": "Treat this suite as a release smoke test; use a larger representative set for a real launch."
+  | }
+  | 
+[2026-08-10 01:28:19] cell 29 DONE in 0.0 min
+[2026-08-10 01:28:19] cell 30 (markdown): ## Optional: Chat With Your Model
+[2026-08-10 01:28:19] cell 31 START: project.stop_server()
+[2026-08-10 01:28:23]   output: Stopped the sft inference server after 2.1 minutes.
+  | 
+[2026-08-10 01:28:23] cell 31 DONE in 0.1 min
+[2026-08-10 01:28:23] cell 32 (markdown): ## Can The Same Checkpoint Run On More Workers?
+[2026-08-10 01:28:23] cell 33 START: scale_handoff = project.prepare_scale_handoff()
+[2026-08-10 01:28:25]   output: Checkpoint: gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260810t005140z-c4/checkpoints/4/items
+  | GKE handoff: gs://me344-tpu-labs-west4/final_projects/qanh/scaling/handoff.json
+  | 
+[2026-08-10 01:28:25] cell 33 DONE in 0.0 min
+[2026-08-10 01:28:25] === PHASE 1 COMPLETE. Waiting for /home/student49/me344_final_project/.gke_done (GKE phase) ===
+[2026-08-10 01:38:25] still waiting for GKE flag (10 min)
+[2026-08-10 01:48:25] still waiting for GKE flag (20 min)
+[2026-08-10 01:58:25] still waiting for GKE flag (30 min)

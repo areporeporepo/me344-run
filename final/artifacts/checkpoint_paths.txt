@@ -1,0 +1,3 @@
+base=gs://me344-tpu-labs-west4/data/qwen3-4b-instruct-2507/0/items
+sft_rollback=gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-sft/checkpoints/200/model_params
+sft=gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-sft/checkpoints/202/model_params

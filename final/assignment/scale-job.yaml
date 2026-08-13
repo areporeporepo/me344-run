@@ -1,0 +1,121 @@
+apiVersion: jobset.x-k8s.io/v1alpha2
+kind: JobSet
+metadata:
+  name: ${JOBSET_NAME}
+  labels:
+    kueue.x-k8s.io/queue-name: student-queue
+    me344.stanford.edu/student: ${SUNET}
+spec:
+  coordinator:
+    replicatedJob: slice
+    jobIndex: 0
+    podIndex: 0
+  network:
+    enableDNSHostnames: true
+    publishNotReadyAddresses: true
+  ttlSecondsAfterFinished: 1800
+  failurePolicy:
+    maxRestarts: 0
+  replicatedJobs:
+    - name: slice
+      replicas: ${NUM_SLICES}
+      template:
+        spec:
+          parallelism: ${PODS_PER_SLICE}
+          completions: ${PODS_PER_SLICE}
+          completionMode: Indexed
+          backoffLimit: 0
+          activeDeadlineSeconds: 2400
+          template:
+            metadata:
+              annotations:
+                gke-gcsfuse/volumes: "true"
+            spec:
+              serviceAccountName: jax-sa
+              restartPolicy: Never
+              nodeSelector:
+                cloud.google.com/gke-tpu-accelerator: tpu-v5-lite-podslice
+                cloud.google.com/gke-tpu-topology: ${TPU_TOPOLOGY}
+                topology.kubernetes.io/zone: us-west4-a
+              containers:
+                - name: maxtext
+                  image: ${IMAGE_URI}
+                  imagePullPolicy: Always
+                  env:
+                    - name: MEGASCALE_NUM_SLICES
+                      valueFrom:
+                        fieldRef:
+                          fieldPath: metadata.labels['jobset.sigs.k8s.io/replicatedjob-replicas']
+                    - name: MEGASCALE_SLICE_ID
+                      valueFrom:
+                        fieldRef:
+                          fieldPath: metadata.labels['jobset.sigs.k8s.io/job-index']
+                    - name: MEGASCALE_COORDINATOR_ADDRESS
+                      valueFrom:
+                        fieldRef:
+                          fieldPath: metadata.labels['jobset.sigs.k8s.io/coordinator']
+                    - name: ME344_NODES_PER_SLICE
+                      value: "${PODS_PER_SLICE}"
+                    - name: ME344_POD_INDEX
+                      valueFrom:
+                        fieldRef:
+                          fieldPath: metadata.annotations['batch.kubernetes.io/job-completion-index']
+                    - name: ME344_CHIPS_PER_WORKER
+                      value: "${CHIPS_PER_POD}"
+                    - name: ME344_TPU_TOPOLOGY
+                      value: "${TPU_TOPOLOGY}"
+                  command: ["bash", "-lc"]
+                  args:
+                    - |
+                      set -euo pipefail
+                      case "${RUN_KIND}" in
+                        baseline)
+                          MODES=(baseline)
+                          ;;
+                        ici)
+                          MODES=(ici_strong ici_weak)
+                          ;;
+                        dcn)
+                          MODES=(strong weak)
+                          ;;
+                        *)
+                          echo "Unknown RUN_KIND=${RUN_KIND}" >&2
+                          exit 2
+                          ;;
+                      esac
+                      for MODE in "${MODES[@]}"; do
+                        CHIPS=16
+                        [[ "${MODE}" == "baseline" ]] && CHIPS=8
+                        python scripts/final_project.py scale-run \
+                          --mode "${MODE}" --chips "${CHIPS}" --student-id "${SUNET}" \
+                          --handoff "/gcs/final_projects/${SUNET}/scaling/handoff.json" \
+                          --result "/gcs/final_projects/${SUNET}/scaling/${MODE}.json"
+                        sleep 5
+                      done
+                  ports:
+                    - containerPort: 8471
+                    - containerPort: 8080
+                    - containerPort: 8431
+                  resources:
+                    requests:
+                      google.com/tpu: "${CHIPS_PER_POD}"
+                      memory: 100Gi
+                    limits:
+                      google.com/tpu: "${CHIPS_PER_POD}"
+                      memory: 100Gi
+                  volumeMounts:
+                    - name: course-bucket
+                      mountPath: /gcs
+                    - name: dshm
+                      mountPath: /dev/shm
+              volumes:
+                - name: course-bucket
+                  csi:
+                    driver: gcsfuse.csi.storage.gke.io
+                    volumeAttributes:
+                      bucketName: me344-tpu-labs-west4
+                      mountOptions: implicit-dirs
+                - name: dshm
+                  emptyDir:
+                    medium: Memory
+                    sizeLimit: 16Gi

@@ -1,0 +1,17 @@
+{
+  "rollback_step": 200,
+  "resumed_steps": [
+    201,
+    202
+  ],
+  "optimizer_state_restored": true,
+  "optimizer_state_evidence": [
+    "optimizer_state existed in the rollback checkpoint",
+    "Tunix resumed at the next optimizer step instead of step 1",
+    "the final checkpoint contains optimizer_state"
+  ],
+  "loss_before_resume": 0.007942479103803635,
+  "first_loss_after_resume": 0.012249892577528954,
+  "rollback_checkpoint": "gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-sft/checkpoints/200/model_params",
+  "final_checkpoint": "gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-sft/checkpoints/202/model_params"
+}

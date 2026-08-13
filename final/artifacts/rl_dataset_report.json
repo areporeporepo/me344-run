@@ -1,0 +1,24 @@
+{
+  "dataset_id": "openai/gsm8k train",
+  "dataset_revision": "740312add88f781978c0658806c59bc2815b9866",
+  "dataset_license": "MIT",
+  "selection": "32 train + 16 held-out rows from 1024 scanned; 5-9 annotated arithmetic operations, prompt <=800 characters, seed 344",
+  "student_provided": false,
+  "task": "verifiable numeric reasoning",
+  "train_examples": 32,
+  "held_out_examples": 16,
+  "schema": {
+    "prompt": "string",
+    "answer": "finite decimal string"
+  },
+  "reward": {
+    "format": "0.75 full structure; 0.50 both sections; 0.25 answer tag; 0.10 partial reasoning tag",
+    "exact": "1.0 exact numeric answer, tags optional",
+    "closeness": "up to 0.10 for an incorrect near miss",
+    "maximum": 1.75
+  },
+  "release_test_contamination": false,
+  "raw_rows_in_submission": false,
+  "reward_code": "rl_task.py",
+  "reward_code_sha256": "34b181d8dfd8adb1bb4240714c8e5f5c2bc78e636289df498ca83b78f69e28ff"
+}

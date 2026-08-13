@@ -1,0 +1,4 @@
+source /home/student49/me344_final_project/.venv-me344-pretrain/bin/activate
+xprof --logdir=/home/student49/me344-artifacts/qanh-20260813t194806z/xprof_profile/tensorboard --port=6006
+# Laptop: open http://127.0.0.1:6006 through the existing SSH tunnels.
+# In XProf, inspect Overview Page, Trace Viewer, and Roofline Analysis.

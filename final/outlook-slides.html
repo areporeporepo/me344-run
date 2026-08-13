@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ME344 Final Project — Outlook, 5-slide cut</title>
+<style>
+  :root {
+    --bg: #f5f5f7; --panel: #ffffff; --border: #d2d2d7;
+    --text: #1d1d1f; --dim: #6e6e73; --accent: #0071e3;
+    --ok: #34c759; --warn: #ff9f0a; --fail: #ff3b30;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body { background: var(--bg); color: var(--text);
+         font: 17px/1.5 -apple-system, BlinkMacSystemFont, "SF Pro Text", Helvetica, Arial, sans-serif; }
+  code, .mono, table { font-family: "SF Mono", ui-monospace, Menlo, monospace; }
+  .deck { height: 100vh; overflow: hidden; }
+  .slide { display: none; height: 100vh; padding: 46px 64px 62px; flex-direction: column; }
+  .slide.active { display: flex; }
+  h1 { font-size: 44px; line-height: 1.1; margin: 0 0 10px; letter-spacing: -0.025em; }
+  h2 { font-size: 32px; margin: 0 0 8px; letter-spacing: -0.015em; }
+  .kicker { color: var(--dim); font-size: 13px; text-transform: uppercase; letter-spacing: 0.09em; margin-bottom: 14px; }
+  .lede { font-size: 19px; color: var(--dim); margin: 0 0 20px; max-width: 76ch; }
+  .body { flex: 1; min-height: 0; overflow: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; background: var(--panel); }
+  th, td { border: 1px solid var(--border); padding: 8px 11px; text-align: right; }
+  th:first-child, td:first-child { text-align: left; }
+  thead th { background: #fafafa; color: var(--dim); font-weight: 600; }
+  tr.hi td { background: #fff8e6; font-weight: 600; }
+  tr.bad td { background: #fff0ef; }
+  tr.good td { background: #eefaf0; }
+  .grid { display: grid; gap: 16px; }
+  .g2 { grid-template-columns: 1fr 1fr; }
+  .g3 { grid-template-columns: repeat(3, 1fr); }
+  .card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 17px 19px; }
+  .card h3 { margin: 0 0 8px; font-size: 13.5px; color: var(--dim); font-weight: 600;
+             text-transform: uppercase; letter-spacing: 0.05em; }
+  .stat { font-size: 38px; font-weight: 650; letter-spacing: -0.025em; }
+  .stat.ok { color: var(--ok); } .stat.bad { color: var(--fail); } .stat.warn { color: var(--warn); }
+  .sub { color: var(--dim); font-size: 13.5px; }
+  ul { margin: 6px 0 0; padding-left: 20px; } li { margin: 6px 0; }
+  .note { color: var(--dim); font-size: 13.5px; margin-top: 12px; }
+  .caveat { border-left: 3px solid var(--warn); padding-left: 12px; background: #fffaf0; }
+  .calc { background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+          padding: 12px 15px; font-family: "SF Mono", ui-monospace, Menlo, monospace;
+          font-size: 14px; margin: 12px 0; }
+  .src { margin-top: 12px; padding-top: 8px; border-top: 1px dashed var(--border);
+         font-family: "SF Mono", ui-monospace, Menlo, monospace; font-size: 11.5px; color: var(--dim); }
+  footer { position: fixed; left: 0; right: 0; bottom: 0; height: 40px; display: flex;
+           align-items: center; justify-content: space-between; padding: 0 64px;
+           border-top: 1px solid var(--border); background: rgba(255,255,255,0.85);
+           backdrop-filter: saturate(180%) blur(16px); font-size: 12px; color: var(--dim); }
+  footer nav button { font: inherit; color: var(--accent); background: none; border: none; cursor: pointer; padding: 4px 8px; }
+  @media print {
+    html, body { height: auto; } .deck { height: auto; overflow: visible; }
+    .slide { display: flex !important; height: auto; min-height: 96vh; page-break-after: always; }
+    footer { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <!-- 1 -->
+  <section class="slide active">
+    <div class="kicker">Stanford ME344 &middot; Final Project &middot; Outlook &middot; Anh Nguyen</div>
+    <h1>What This Run Measured,<br>And What It Will Mean Later</h1>
+    <p class="lede">A dense 4B model on eight chips of a 2023 inference part. Four of the five
+      findings are properties of the method and transfer forward. One is already obsolete. This
+      separates them.</p>
+    <div class="body">
+      <div class="grid g3">
+        <div class="card"><h3>Already obsolete</h3><div class="stat bad">the memory wall</div>
+          <div class="sub">gb512 failed at 18.43 GiB against 15.75 available. That is 10.3% of one
+            Ironwood chip. The exercise resolves to "fits, on one chip, no sharding."</div></div>
+        <div class="card"><h3>Ages best</h3><div class="stat ok">the fabric</div>
+          <div class="sub">ICI 100%, DCN 65%. The boundary moved from 16 chips to 9,216. It did not
+            disappear: Ironwood ICI beats its DCN by roughly 96x.</div></div>
+        <div class="card"><h3>Regime, not fact</h3><div class="stat warn">99% matmul</div>
+          <div class="sub">True at L=256. Attention scales as L&sup2; against matmul's L, so at 1M
+            context the same step is 97% attention. That inversion is why 2026 architectures look
+            the way they do.</div></div>
+      </div>
+      <div class="note" style="margin-top:18px">Full outlook, with derivations and sources:
+        <strong>areporeporepo.github.io/me344-run/final/outlook.html</strong></div>
+      <div class="src">every projection starts from a number in artifacts/qanh-20260813t194806z/ &middot;
+        vendor specs from Google Cloud docs, retrieved 2026-08-13</div>
+    </div>
+  </section>
+
+  <!-- 2 -->
+  <section class="slide">
+    <div class="kicker">Finding 1 &middot; obsolete on v7, and that is the point</div>
+    <h2>The memory wall moved. The arithmetic that predicted it did not.</h2>
+    <div class="body">
+      <div class="grid g2">
+        <div>
+          <table>
+            <thead><tr><th></th><th>v5e (this run)</th><th>Ironwood v7</th><th>x</th></tr></thead>
+            <tbody>
+              <tr><td>Peak BF16</td><td>197 TF/s</td><td>2,307 TF/s</td><td>11.7</td></tr>
+              <tr class="hi"><td>HBM per chip</td><td>16 GB</td><td>192 GB</td><td>12</td></tr>
+              <tr><td>HBM bandwidth</td><td>800 GiB/s</td><td>7,380 GB/s</td><td>8.6</td></tr>
+              <tr><td>ICI per chip</td><td>400 GB/s</td><td>1,200 GB/s</td><td>3</td></tr>
+              <tr><td>Chips per pod</td><td>256</td><td>9,216</td><td>36</td></tr>
+            </tbody>
+          </table>
+          <div class="note">The 18.43 GiB that killed gb512 is <strong>10.3% of one Ironwood
+            chip</strong>. The full 59.94 GiB unsharded state is 33.5% of one chip, so Qwen3-4B
+            trains with no tensor parallelism at all.</div>
+        </div>
+        <div>
+          <div class="sub" style="margin-bottom:8px">Apply this run's own measured constant, 16 bytes
+            of training state per parameter, to what people actually train now:</div>
+          <table>
+            <thead><tr><th>Model</th><th>Params</th><th>State</th><th>v7 chips</th></tr></thead>
+            <tbody>
+              <tr><td>Qwen3-4B (this run)</td><td>4.0B</td><td>64 GB</td><td>0.34</td></tr>
+              <tr><td>Qwen3-30B-A3B</td><td>30.5B</td><td>488 GB</td><td>2.5</td></tr>
+              <tr><td>Qwen3-235B-A22B</td><td>235B</td><td>3.8 TB</td><td>20</td></tr>
+              <tr class="bad"><td>Kimi K2</td><td>1T</td><td>16 TB</td><td>84</td></tr>
+              <tr class="bad"><td>Kimi K3</td><td>2.8T</td><td>44.8 TB</td><td>233</td></tr>
+            </tbody>
+          </table>
+          <div class="note">A whole 256-chip v5e pod holds <strong>4 TB</strong>. Kimi K3 needs 44.8.
+            An Ironwood pod is 1.77 PB and a TPU 8t superpod is a claimed 2 PB. That is why 2.8T
+            open models appeared in 2026 and not in 2023.</div>
+        </div>
+      </div>
+      <div class="src">capacity_report.json &middot; sweep_results.csv &middot; docs.cloud.google.com/tpu/docs/v5e &middot; /tpu7x</div>
+    </div>
+  </section>
+
+  <!-- 3 -->
+  <section class="slide">
+    <div class="kicker">Finding 2 &middot; the one that ages best</div>
+    <h2>The fabric is the scaling unit. The boundary moved; it did not vanish.</h2>
+    <div class="body">
+      <div class="grid g3">
+        <div class="card"><h3>Measured here</h3><div class="stat">16 chips</div>
+          <div class="sub">One ICI slice: 100.1% strong, 99.6% weak. Split across two slices so the
+            all-reduce crosses DCN: 65.2% and 53.6%. Exposed communication 1.08 s to 3.51 s for a
+            payload that never changed size.</div></div>
+        <div class="card"><h3>On Ironwood</h3><div class="stat ok">9,216 chips</div>
+          <div class="sub">The ICI domain grows 36x, so a 16-chip job never leaves ICI. The specific
+            35% penalty measured here does not arise at that scale.</div></div>
+        <div class="card"><h3>Still true</h3><div class="stat bad">~96x</div>
+          <div class="sub">Ironwood ICI is 1,200 GB/s per chip against 100 Gbps of DCN. Every
+            multi-pod run still crosses it. Performance is a step function in <em>where the
+            collective travels</em>, not a smooth function of chip count.</div></div>
+      </div>
+      <div class="grid g2" style="margin-top:16px">
+        <div class="card caveat"><h3>The anomaly, still unexplained</h3>
+          <div class="sub">DCN weak came out <strong>worse per chip than DCN strong</strong>, 1,085
+            against 1,320 tokens/s/chip, which a fixed-size all-reduce should not do. Lost overlap,
+            rematerialization at 110% of the AOT limit, and shared-fabric contention are all
+            consistent. The GKE jobs saved no traces, so I cannot tell you which.</div></div>
+        <div class="card"><h3>Why this matters more under MoE</h3>
+          <div class="sub">Dense training has one collective per step. MoE adds an all-to-all
+            <em>per layer</em>, dispatching tokens to experts and gathering results, on every forward
+            and backward pass. Latency-sensitive, irregular, load-imbalanced when routing skews.
+            <strong>Prediction: MoE across DCN degrades worse than 65.2%.</strong> Untested.</div></div>
+      </div>
+      <div class="src">scale_out.json &middot; all five trials record source_checkpoint from 2026-08-10</div>
+    </div>
+  </section>
+
+  <!-- 4 -->
+  <section class="slide">
+    <div class="kicker">Findings 3 and 4 &middot; what the frontier actually looks like</div>
+    <h2>99% dense matmul is a statement about L=256, not about transformers.</h2>
+    <div class="body">
+      <div class="grid g2">
+        <div>
+          <div class="sub">Attention FLOPs scale as L&sup2;, weight matmul as L, so their ratio scales
+            as L. Taking this run's measured 0.93 / 99.07 split and extending to a 1M context:</div>
+          <div class="calc">0.0094 &times; (1,000,000 / 256) = 36.7<br>
+            &rarr; attention becomes <strong>97.3%</strong> of step FLOPs</div>
+          <div class="sub">The step inverts completely. This run measured the short-context corner
+            where architecture choice is invisible. Both leading open MoE families replaced most of
+            their attention precisely because of this:</div>
+          <ul>
+            <li><strong>Kimi K3</strong> (2026-07-16): Kimi Delta Attention, linear layers interleaved
+              with full attention 3:1, reported 6.3x faster decode at 1M context.</li>
+            <li><strong>Qwen3.5</strong>: Gated DeltaNet replacing 75% of attention layers.</li>
+          </ul>
+        </div>
+        <div>
+          <div class="sub" style="margin-bottom:8px">And essentially nothing at the frontier is dense
+            any more. The trend toward extreme sparsity is monotone:</div>
+          <table>
+            <thead><tr><th>Model</th><th>Total</th><th>Active</th><th>Experts</th></tr></thead>
+            <tbody>
+              <tr><td>Qwen3-4B (this run)</td><td>4.0B</td><td>100%</td><td>dense</td></tr>
+              <tr><td>Qwen3-30B-A3B</td><td>30.5B</td><td>10.8%</td><td>8 / 128</td></tr>
+              <tr><td>Qwen3.6-35B-A3B</td><td>35B</td><td>~9%</td><td>8+1 / 256</td></tr>
+              <tr><td>Kimi K2</td><td>1T</td><td>3.2%</td><td>384+1</td></tr>
+              <tr class="hi"><td>Kimi K3</td><td>2.8T</td><td>n/c</td><td>16 / 896</td></tr>
+            </tbody>
+          </table>
+          <div class="note">Sparse models pay full HBM for every expert and compute for 2 to 11% of
+            them. That is why <strong>192 GB per chip</strong> is Ironwood's headline number rather
+            than the 11.7x compute jump.</div>
+        </div>
+      </div>
+      <div class="src">profile_metrics.jsonl &middot; compute_bound.json &middot; K3 active-parameter count not confirmed publicly</div>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section class="slide">
+    <div class="kicker">So this is not a one-time assignment</div>
+    <h2>Five experiments worth running, all on hardware the course already provides.</h2>
+    <div class="body">
+      <table>
+        <thead><tr><th>#</th><th>Experiment</th><th>What it settles</th><th>Cost</th></tr></thead>
+        <tbody>
+          <tr class="hi"><td>1</td><td>Re-run the two DCN trials with XProf enabled</td>
+            <td>The weak-scaling anomaly, the only broken measurement in the project</td><td>~20 min</td></tr>
+          <tr><td>2</td><td>Re-run the capacity lab in FP8</td>
+            <td>Re-grounds 16 B/param, the constant every projection here scales with</td><td>~1 hr</td></tr>
+          <tr><td>3</td><td>Profile at L=131072 instead of 256</td>
+            <td>Should invert the 99/1 split, testing the derivation on the previous slide</td><td>~1 hr</td></tr>
+          <tr><td>4</td><td>Run the scaling harness on Qwen3-30B-A3B</td>
+            <td>Whether MoE all-to-all degrades worse than 65.2% across DCN</td><td>~half day</td></tr>
+          <tr><td>5</td><td>Grow the eval to 97 examples, score the step-50 checkpoint</td>
+            <td>The stopping rule preferred step 50; no task metric ever ran against it</td><td>~2 hr</td></tr>
+        </tbody>
+      </table>
+      <div class="grid g2" style="margin-top:16px">
+        <div class="card"><h3>The finding with no expiry date</h3>
+          <div class="sub">GRPO's accuracy effect came out <strong>+12.5 points</strong> here and
+            <strong>-12.5</strong> on an identical run three days earlier, guardrail flipping pass to
+            fail. A two-example swing on 16 items. Frontier models are ranked to a tenth of a point
+            on aggregate indices; whether those gaps clear their own intervals is the question cell
+            30 asks, and it is asked far too rarely.</div></div>
+        <div class="card"><h3>What would change this deck</h3>
+          <div class="sub">TPU 8t "Sunfish" and 8i "Zebrafish" ship late 2027 on TSMC 2nm, training
+            and inference split for the first time. Every number quoted for them is a vendor target,
+            not a measurement. Sub-8-bit training becoming standard would rescale the whole capacity
+            table. Each of the five experiments above either confirms or kills a projection here.</div></div>
+      </div>
+      <div class="src">written 2026-08-13 &middot; revisit when v8 ships, or when any of the five run</div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div>Anh Nguyen &middot; ME344 Outlook &middot; from run qanh-20260813t194806z &middot; v5e-8, MaxText 17c7172</div>
+  <nav>
+    <button onclick="go(-1)">&larr; Prev</button>
+    <span id="counter" class="mono"></span>
+    <button onclick="go(1)">Next &rarr;</button>
+  </nav>
+</footer>
+
+<script>
+  const slides = [...document.querySelectorAll('.slide')];
+  let index = 0;
+  function render() {
+    slides.forEach((s, i) => s.classList.toggle('active', i === index));
+    document.getElementById('counter').textContent = `${index + 1} / ${slides.length}`;
+    location.hash = index + 1;
+  }
+  function go(d) { index = Math.min(slides.length - 1, Math.max(0, index + d)); render(); }
+  document.addEventListener('keydown', e => {
+    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { go(1); e.preventDefault(); }
+    if (['ArrowLeft', 'PageUp'].includes(e.key)) { go(-1); e.preventDefault(); }
+  });
+  const start = parseInt(location.hash.slice(1), 10);
+  if (start >= 1 && start <= slides.length) index = start - 1;
+  render();
+</script>
+</body>
+</html>

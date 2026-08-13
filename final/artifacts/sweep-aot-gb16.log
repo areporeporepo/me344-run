@@ -1,0 +1,37 @@
+[transformers] PyTorch was not found. Models won't be available and only tokenizers, configuration and file/data utilities can be used.
+[transformers] DeepseekV32Config got `key=rope_scaling` in kwargs but hasn't set it as attribute. For RoPE standardization you need to set `self.rope_parameters` in model's config. 
+[transformers] DeepseekV4Config got `key=rope_scaling` in kwargs but hasn't set it as attribute. For RoPE standardization you need to set `self.rope_parameters` in model's config. 
+2026-08-13 19:57:04.707433: I external/local_xla/xla/tsl/cuda/cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-08-13 19:57:04.747180: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-08-13 19:57:06.112475: I external/local_xla/xla/tsl/cuda/cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2026-08-13 19:57:09.664177: E external/local_xla/xla/stream_executor/cuda/cuda_platform.cc:51] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: UNKNOWN ERROR (303)
+Starting train_compile.py...
+I0813 19:57:09.893766 140212691377280 max_utils.py:265] Skipping jax distributed system initialization.
+I0813 19:57:09.934267   43943 pjrt_api.cc:119] GetPjrtApi was found for tpu at /home/student49/me344_final_project/.venv-me344-pretrain/lib/python3.12/site-packages/libtpu/libtpu.so
+I0813 19:57:09.934334   43943 pjrt_api.cc:168] The PJRT plugin has PJRT API version 0.112. The framework PJRT API version is 0.112.
+I0813 19:57:15.534907   43943 pjrt_c_api_client.cc:201] PjRtCApiClient created.
+I0813 19:57:15.535643   43943 pjrt_client.cc:579] PjRt-IFRT device count: total=8, addressable=8
+I0813 19:57:15.535659   43943 pjrt_client.cc:583] Addressable PjRt-IFRT device: TpuDevice(id=0, process_index=0, coords=(0,0,0), core_on_chip=0)
+I0813 19:57:15.535661   43943 pjrt_client.cc:583] Addressable PjRt-IFRT device: TpuDevice(id=1, process_index=0, coords=(1,0,0), core_on_chip=0)
+I0813 19:57:15.535663   43943 pjrt_client.cc:583] Addressable PjRt-IFRT device: TpuDevice(id=2, process_index=0, coords=(0,1,0), core_on_chip=0)
+I0813 19:57:15.535664   43943 pjrt_client.cc:583] Addressable PjRt-IFRT device: TpuDevice(id=3, process_index=0, coords=(1,1,0), core_on_chip=0)
+I0813 19:57:15.535665   43943 pjrt_client.cc:583] Addressable PjRt-IFRT device: TpuDevice(id=4, process_index=0, coords=(0,2,0), core_on_chip=0)
+I0813 19:57:15.535667   43943 pjrt_client.cc:583] Addressable PjRt-IFRT device: TpuDevice(id=5, process_index=0, coords=(1,2,0), core_on_chip=0)
+I0813 19:57:15.535668   43943 pjrt_client.cc:583] Addressable PjRt-IFRT device: TpuDevice(id=6, process_index=0, coords=(0,3,0), core_on_chip=0)
+I0813 19:57:15.535669   43943 pjrt_client.cc:583] Addressable PjRt-IFRT device: TpuDevice(id=7, process_index=0, coords=(1,3,0), core_on_chip=0)
+I0813 19:57:15.562016   43943 pjrt_client.cc:579] PjRt-IFRT device count: total=1, addressable=1
+I0813 19:57:15.562041   43943 pjrt_client.cc:583] Addressable PjRt-IFRT device: CpuDevice(id=0)
+I0813 19:57:15.567878 140212691377280 maxtext_utils.py:2243] Num_devices: 8, shape (1, 1, 1, 1, 1, 1, 1, 8, 1, 1, 1)
+I0813 19:57:15.568174 140212691377280 max_utils.py:830] System Information: Jax Version: 0.10.2
+I0813 19:57:15.568222 140212691377280 max_utils.py:831] System Information: Jaxlib Version: 0.10.2
+I0813 19:57:15.568272 140212691377280 max_utils.py:832] System Information: Jax Backend: PJRT C API
+TFRT TPU v5 lite
+Built on Jun 17 2026 11:08:48 (1781719728) cl/933746096
+Jitting and compiling train step...
+/home/student49/me344_final_project/.venv-me344-pretrain/lib/python3.12/site-packages/maxtext/trainers/pre_train/train_compile.py:221: DeprecationWarning: `with mesh:` context manager has been deprecated. Please use `with jax.set_mesh(mesh):` instead.
+  with jax.set_mesh(mesh), mesh, logical_axis_rules:
+Jitting and compilation complete!
+Finished train_compile.py successfully!
+Cost analysis: {'utilization58{}': 1.0, 'bytes accessed12{}': 4276224.0, 'bytes accessedout{1}': 2604874240.0, 'utilization33{}': 3.0, 'utilization14{}': 9.0, 'utilization45{}': 3.0, 'utilization53{}': 1.0, 'bytes accessed9{}': 237010944.0, 'utilization41{}': 3.0, 'utilization36{}': 3.0, 'bytes accessedout{4}': 27136.0, 'utilization29{}': 5.0, 'utilization70{}': 1.0, 'utilization64{}': 1.0, 'bytes accessedout{}': 12767084544.0, 'utilization30{}': 5.0, 'utilization27{}': 5.0, 'bytes accessed1{}': 2335444992.0, 'utilization0{}': 1405.3890380859375, 'utilization28{}': 5.0, 'bytes accessed16{}': 41943040.0, 'utilization19{}': 5.0, 'utilization25{}': 5.0, 'utilization75{}': 1.0, 'bytes accessed0{}': 8760944640.0, 'utilization57{}': 1.0, 'bytes accessed13{}': 82944.0, 'utilization17{}': 5.0, 'utilization73{}': 1.0, 'utilization12{}': 11.0, 'utilization68{}': 1.0, 'utilization67{}': 1.0, 'bytes accessedout{3}': 2011297792.0, 'utilization42{}': 3.0, 'utilization8{}': 33.0, 'utilization22{}': 5.0, 'bytes accessed3{}': 48791020.0, 'utilization46{}': 3.0, 'utilization66{}': 1.0, 'utilization3{}': 115.0, 'utilization60{}': 1.0, 'utilization62{}': 1.0, 'bytes accessed2{}': 497955840.0, 'utilization61{}': 1.0, 'utilization50{}': 3.0, 'utilization43{}': 3.0, 'utilization56{}': 1.0, 'utilization44{}': 3.0, 'utilization37{}': 3.0, 'bytes accessed14{}': 47185920.0, 'bytes accessed8{}': 1825208832.0, 'bytes accessedout{5}': 20480.0, 'transcendentals': 674484288.0, 'utilization38{}': 3.0, 'bytes accessedout{8}': 20480.0, 'utilization1{}': 429.0, 'utilization72{}': 1.0, 'utilization31{}': 3.0, 'bytes accessedout{2}': 2012346368.0, 'bytes accessedout{0}': 165170176.0, 'utilization65{}': 1.0, 'bytes accessed7{}': 98134016.0, 'optimal_seconds': -23.956907272338867, 'utilization13{}': 9.0, 'utilization2{}': 182.0, 'utilization24{}': 5.0, 'utilization15{}': 7.0, 'utilization69{}': 1.0, 'utilization40{}': 3.0, 'utilization49{}': 3.0, 'utilization18{}': 5.0, 'utilization20{}': 5.0, 'utilization16{}': 7.0, 'utilization63{}': 1.0, 'utilization55{}': 1.0, 'utilization32{}': 3.0, 'utilization59{}': 1.0, 'utilization74{}': 1.0, 'bytes accessed5{}': 27457536.0, 'bytes accessed6{}': 1916567552.0, 'utilization54{}': 1.0, 'bytes accessed10{}': 12593152.0, 'utilization39{}': 3.0, 'utilization9{}': 30.0, 'bytes accessed15{}': 1024.0, 'utilization76{}': 1.0, 'utilization26{}': 5.0, 'utilization21{}': 5.0, 'utilization47{}': 3.0, 'utilization71{}': 1.0, 'utilization6{}': 41.0, 'utilization23{}': 5.0, 'bytes accessedout{7}': 20480.0, 'utilization51{}': 3.0, 'bytes accessed11{}': 37225472.0, 'utilization34{}': 3.0, 'utilization7{}': 36.0, 'utilization10{}': 24.0, 'flops': 1359476948992.0, 'utilization4{}': 66.0, 'bytes accessed4{}': 2041372160.0, 'utilization35{}': 3.0, 'utilization52{}': 1.0, 'bytes accessedout{6}': 20480.0, 'utilization11{}': 22.0, 'bytes accessed': 28722386944.0, 'utilization48{}': 3.0, 'utilization5{}': 51.0}
+Memory analysis: CompiledMemoryStats(generated_code_size_in_bytes=32220672, argument_size_in_bytes=6033936896, output_size_in_bytes=6033861120, alias_size_in_bytes=6033854976, temp_size_in_bytes=3633154560, host_generated_code_size_in_bytes=0, host_argument_size_in_bytes=0, host_output_size_in_bytes=0, host_alias_size_in_bytes=0, host_temp_size_in_bytes=0)

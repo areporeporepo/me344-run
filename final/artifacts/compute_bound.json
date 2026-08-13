@@ -1,0 +1,73 @@
+{
+  "reason": "A lower bound shows whether more tuning can matter; no real step can beat peak hardware.",
+  "assumptions": [
+    "Dense-transformer training is approximated as 6 * parameters * tokens FLOPs.",
+    "All eight chips sustain the published 197 BF16 TFLOP/s peak with no communication or stalls.",
+    "The bound is optimistic; measured/peak TFLOPs is a utilization proxy, not model FLOPs utilization."
+  ],
+  "cases": [
+    {
+      "global_batch": 4,
+      "tokens_per_step": 1024,
+      "approximate_training_flops": 24714043981824,
+      "peak_compute_lower_bound_seconds": 0.015681499988467004,
+      "measured_steady_step_seconds": 0.097925,
+      "time_efficiency_percent": 16.013786048983413,
+      "measured_peak_tflops_percent": 16.163369853041903
+    },
+    {
+      "global_batch": 8,
+      "tokens_per_step": 2048,
+      "approximate_training_flops": 49428087963648,
+      "peak_compute_lower_bound_seconds": 0.03136299997693401,
+      "measured_steady_step_seconds": 0.15373124999999999,
+      "time_efficiency_percent": 20.401187121638582,
+      "measured_peak_tflops_percent": 20.592474555924365
+    },
+    {
+      "global_batch": 16,
+      "tokens_per_step": 4096,
+      "approximate_training_flops": 98856175927296,
+      "peak_compute_lower_bound_seconds": 0.06272599995386802,
+      "measured_steady_step_seconds": 0.26664425,
+      "time_efficiency_percent": 23.52422748807372,
+      "measured_peak_tflops_percent": 23.743940211787255
+    },
+    {
+      "global_batch": 32,
+      "tokens_per_step": 8192,
+      "approximate_training_flops": 197712351854592,
+      "peak_compute_lower_bound_seconds": 0.12545199990773603,
+      "measured_steady_step_seconds": 0.494642,
+      "time_efficiency_percent": 25.36218111436878,
+      "measured_peak_tflops_percent": 25.599011284441847
+    },
+    {
+      "global_batch": 64,
+      "tokens_per_step": 16384,
+      "approximate_training_flops": 395424703709184,
+      "peak_compute_lower_bound_seconds": 0.25090399981547207,
+      "measured_steady_step_seconds": 0.9849345,
+      "time_efficiency_percent": 25.474181259309333,
+      "measured_peak_tflops_percent": 25.712015399970415
+    },
+    {
+      "global_batch": 128,
+      "tokens_per_step": 32768,
+      "approximate_training_flops": 790849407418368,
+      "peak_compute_lower_bound_seconds": 0.5018079996309441,
+      "measured_steady_step_seconds": 1.97081775,
+      "time_efficiency_percent": 25.46191800997044,
+      "measured_peak_tflops_percent": 25.699623706037464
+    },
+    {
+      "global_batch": 256,
+      "tokens_per_step": 65536,
+      "approximate_training_flops": 1581698814836736,
+      "peak_compute_lower_bound_seconds": 1.0036159992618883,
+      "measured_steady_step_seconds": 4.038601,
+      "time_efficiency_percent": 24.850585617690093,
+      "measured_peak_tflops_percent": 25.0825846320785
+    }
+  ]
+}

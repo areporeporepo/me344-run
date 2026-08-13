@@ -1,0 +1,38 @@
+{
+  "primary_suite": "PolyAI/banking77 test (40 untouched rows)",
+  "retention_suite": "openai/gsm8k test[0:16]",
+  "secondary_suite_role": "GSM8K is the SFT safety check and the separate GRPO target; Banking77 remains the startup product metric.",
+  "models": [
+    {
+      "label": "base",
+      "examples": 40,
+      "exact_match_percent": 70.0,
+      "format_compliance_percent": 100.0,
+      "length_limited_percent": 0.0,
+      "mean_completion_tokens": 5.4,
+      "retention_examples": 16,
+      "retention_exact_match_percent": 81.25,
+      "retention_format_compliance_percent": 75.0
+    },
+    {
+      "label": "sft",
+      "examples": 40,
+      "exact_match_percent": 92.5,
+      "format_compliance_percent": 100.0,
+      "length_limited_percent": 0.0,
+      "mean_completion_tokens": 5.575,
+      "retention_examples": 16,
+      "retention_exact_match_percent": 87.5,
+      "retention_format_compliance_percent": 87.5
+    }
+  ],
+  "regressions": [
+    {
+      "transition": "base->sft",
+      "id": "banking77-card_delivery_estimate-1",
+      "expected": "card_delivery_estimate",
+      "before": "card_delivery_estimate",
+      "after": "card_arrival"
+    }
+  ]
+}

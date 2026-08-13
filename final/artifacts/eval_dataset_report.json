@@ -1,0 +1,31 @@
+{
+  "created_at_utc": "2026-08-13T20:05:06.242212+00:00",
+  "input_path": "/home/student49/.cache/me344/qanh/source-eval.jsonl",
+  "output_path": "/home/student49/.cache/me344/qanh/eval_messages.jsonl",
+  "output_sha256": "d675833d61044e12e8150c27dd740af8f95e9b1fc03693692654090589c68dd9",
+  "output_schema": "messages",
+  "examples_written": 80,
+  "max_examples": 500,
+  "message_role_counts": {
+    "assistant": 80,
+    "user": 80
+  },
+  "duplicate_prompt_count": 60,
+  "prompt_characters": {
+    "min": 656,
+    "p25": 678,
+    "median": 689,
+    "p75": 726,
+    "max": 882,
+    "mean": 712.95
+  },
+  "completion_characters": {
+    "min": 12,
+    "p25": 20,
+    "median": 22,
+    "p75": 27,
+    "max": 39,
+    "mean": 23.45
+  },
+  "review_reminder": "Before training, inspect at least 20 examples and check the dataset source, license, filtering, privacy, and possible test-set overlap."
+}

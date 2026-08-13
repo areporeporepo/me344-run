@@ -112,6 +112,40 @@
   </a>
 </div>
 
+<h2>Where this goes next</h2>
+<p>The run measures a dense 4B model on eight chips of a 2023 inference part. Four of its five
+findings are properties of the method and transfer forward; one is already obsolete. The outlook
+works out which is which, projects each onto hardware and architectures that exist now or are
+announced, and lists the five experiments that would confirm or kill each projection. Every
+number in it starts from a measurement this run produced.</p>
+<div class="cards">
+  <a class="card" href="outlook.html">
+    <h3>Outlook</h3>
+    <p>Ironwood and the v8 training/inference split against this run's numbers, what MoE and linear
+      attention do to the step profile, and what would have to be re-measured. With derivations
+      and dated sources.</p>
+    <div class="go">Read the outlook &rarr;</div>
+  </a>
+  <a class="card" href="outlook-slides.html">
+    <h3>Outlook, 5-slide cut</h3>
+    <p>The same argument in slide form, matching the project deck. Arrow keys to navigate, Cmd-P
+      prints one slide per PDF page.</p>
+    <div class="go">Open 5-slide outlook &rarr;</div>
+  </a>
+  <a class="card" href="audit.html">
+    <h3>Completeness audit</h3>
+    <p>Every assignment requirement checked against live bucket, TPU and cluster state. Records one
+      defect in the submitted archive, two deviations, and what was left undone.</p>
+    <div class="go">Read the audit &rarr;</div>
+  </a>
+  <a class="card" href="assignment/index.html">
+    <h3>The assignment itself</h3>
+    <p>The course notebook carrying this run's outputs, plus the course-provided code and the
+      scripts used to drive the run headlessly.</p>
+    <div class="go">Open assignment &rarr;</div>
+  </a>
+</div>
+
 <h2>What the run found</h2>
 <div class="stats">
   <div class="stat-card"><div class="n">gb32</div><div class="l">throughput knee, at 59.4% of the HBM limit</div></div>
@@ -200,12 +234,37 @@ any figure can be traced to its source.</p>
   <a href="figures/systems_dashboard.svg">systems_dashboard.svg</a><br>
 </div>
 
+<h2>Everything else</h2>
+<p>The complete archive, not the curated subset above.</p>
+<div class="cards">
+  <a class="card" href="artifacts/">
+    <h3>Full artifact directory</h3>
+    <p>All 82 files the run wrote: every log, metric stream, csv, json and figure, exactly as
+      produced. The 77 MB XProf trace stays in Cloud Storage.</p>
+    <div class="go">Browse artifacts &rarr;</div>
+  </a>
+  <a class="card" href="recovered/">
+    <h3>Recovered 2026-08-10 run</h3>
+    <p>Results salvaged from the earlier run after its VM was deleted. The source of the five GKE
+      scaling files, and of the GRPO result that did not reproduce.</p>
+    <div class="go">Browse recovered &rarr;</div>
+  </a>
+  <a class="card" href="run_progress.log">
+    <h3>Driver progress log</h3>
+    <p>Timestamped stdout for all 18 cells, 141 KB. The source of the outputs in the course
+      notebook.</p>
+    <div class="go">Open log &rarr;</div>
+  </a>
+</div>
+
 <footer>
   Anh Nguyen &middot; Stanford ME344, Summer 2026 &middot; run <code>qanh-20260813t194806z</code> on
   <code>tpu-student49</code> (v5litepod-8, us-west4-a) &middot; MaxText pinned at
   <code>17c7172720ca813b05e5ea248dedd78a0c64612e</code><br>
-  Course-provided assignment code is not republished here. This page contains only measurements,
-  figures and writing produced by the run.
+  Course-provided assignment code <strong>is</strong> republished here, under
+  <a href="assignment/index.html">assignment/</a>, by the author's decision on 2026-08-13. Current
+  ME344 students: reading the filled-in notebook instead of running it yourself costs you the only
+  part of the course that is worth anything.
 </footer>
 
 </div>

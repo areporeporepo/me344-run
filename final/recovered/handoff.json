@@ -1,0 +1,17 @@
+{
+  "assignment_version": "2026.08.02.2",
+  "maxtext_git_sha": "17c7172720ca813b05e5ea248dedd78a0c64612e",
+  "student_id": "qanh",
+  "model_name": "qwen3-4b-thinking-2507",
+  "checkpoint_type": "MaxText full training state",
+  "checkpoint_path": "gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260810t020258z-c4/checkpoints/4/items",
+  "checkpoint_step": 4,
+  "next_step": 5,
+  "source": {
+    "global_batch": 2,
+    "sequence_length": 512,
+    "pilot_steps": 5,
+    "checkpoint_after_steps": 5,
+    "dataset": "allenai/c4:en"
+  }
+}

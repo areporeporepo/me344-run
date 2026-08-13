@@ -1,0 +1,43 @@
+{
+  "created_at_utc": "2026-08-13T20:05:06.137941+00:00",
+  "input_path": "/home/student49/.cache/me344/qanh/source-train.jsonl",
+  "output_path": "/home/student49/.cache/me344/qanh/messages.jsonl",
+  "output_sha256": "6aa70ce93844e8298fdbbaea99442f2995272a5e4e03993873a4e66f11886224",
+  "output_schema": "messages",
+  "examples_written": 400,
+  "max_examples": 500,
+  "message_role_counts": {
+    "assistant": 400,
+    "user": 400
+  },
+  "duplicate_prompt_count": 0,
+  "prompt_characters": {
+    "min": 655,
+    "p25": 679,
+    "median": 692,
+    "p75": 718,
+    "max": 980,
+    "mean": 710.265
+  },
+  "completion_characters": {
+    "min": 12,
+    "p25": 20,
+    "median": 22,
+    "p75": 27,
+    "max": 39,
+    "mean": 23.45
+  },
+  "review_reminder": "Before training, inspect at least 20 examples and check the dataset source, license, filtering, privacy, and possible test-set overlap.",
+  "dataset_id": "PolyAI/banking77",
+  "dataset_revision": "8eed2b348ec07d40ffbe91dcc4718e2f0f977714",
+  "dataset_license": "CC BY 4.0",
+  "manual_review_required": 20,
+  "held_out_examples": 20,
+  "held_out_repetitions": 4,
+  "held_out_source": "one unused PolyAI/banking77 train row per selected intent",
+  "release_suite": "PolyAI/banking77 test (40 untouched rows)",
+  "retention_suite": "openai/gsm8k test[0:16]",
+  "primary_release_examples": 40,
+  "retention_release_examples": 16,
+  "raw_data_in_submission": false
+}

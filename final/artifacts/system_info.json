@@ -1,0 +1,50 @@
+{
+  "storage": {
+    "base_checkpoint": "gs://me344-tpu-labs-west4/data/qwen3-4b-instruct-2507/0/items",
+    "output_directory": "gs://me344-tpu-labs-west4/final_projects/qanh/runs",
+    "submission_uri": "gs://me344-tpu-labs-west4/final_projects/qanh/submission",
+    "read_write_delete": "passed"
+  },
+  "pretrain": {
+    "python": "3.12.13",
+    "jax": "0.10.2",
+    "maxtext_commit": "17c7172720ca813b05e5ea248dedd78a0c64612e",
+    "backend": "tpu",
+    "process_index": 0,
+    "process_count": 1,
+    "device_count": 8,
+    "local_device_count": 8,
+    "host_ram_bytes": 405698183168,
+    "devices": [
+      "TPU_0(process=0,(0,0,0,0))",
+      "TPU_1(process=0,(1,0,0,0))",
+      "TPU_2(process=0,(0,1,0,0))",
+      "TPU_3(process=0,(1,1,0,0))",
+      "TPU_4(process=0,(0,2,0,0))",
+      "TPU_5(process=0,(1,2,0,0))",
+      "TPU_6(process=0,(0,3,0,0))",
+      "TPU_7(process=0,(1,3,0,0))"
+    ]
+  },
+  "posttrain": {
+    "python": "3.12.13",
+    "jax": "0.11.0",
+    "maxtext_commit": "17c7172720ca813b05e5ea248dedd78a0c64612e",
+    "backend": "tpu",
+    "process_index": 0,
+    "process_count": 1,
+    "device_count": 8,
+    "local_device_count": 8,
+    "host_ram_bytes": 405698183168,
+    "devices": [
+      "TPU_0(process=0,(0,0,0,0))",
+      "TPU_1(process=0,(1,0,0,0))",
+      "TPU_2(process=0,(0,1,0,0))",
+      "TPU_3(process=0,(1,1,0,0))",
+      "TPU_4(process=0,(0,2,0,0))",
+      "TPU_5(process=0,(1,2,0,0))",
+      "TPU_6(process=0,(0,3,0,0))",
+      "TPU_7(process=0,(1,3,0,0))"
+    ]
+  }
+}

@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Full artifact directory</title>
+<style>
+  :root {
+    --bg: #f5f5f7; --panel: #ffffff; --border: #d2d2d7;
+    --text: #1d1d1f; --dim: #6e6e73; --accent: #0071e3;
+    --ok: #34c759; --warn: #ff9f0a; --fail: #ff3b30;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.65 -apple-system, BlinkMacSystemFont, "SF Pro Text", Helvetica, Arial, sans-serif; }
+  code, pre, table { font-family: "SF Mono", ui-monospace, Menlo, monospace; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 48px 24px 80px; }
+  .back { font-size: 13px; color: var(--accent); text-decoration: none; }
+  h1 { font-size: 34px; line-height: 1.15; margin: 14px 0 8px; letter-spacing: -0.02em; }
+  h2 { font-size: 22px; margin: 38px 0 10px; letter-spacing: -0.01em;
+       border-top: 1px solid var(--border); padding-top: 22px; }
+  h3 { font-size: 16.5px; margin: 24px 0 8px; }
+  p, li { max-width: 78ch; }
+  a { color: var(--accent); }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; background: var(--panel); margin: 12px 0; }
+  th, td { border: 1px solid var(--border); padding: 7px 10px; text-align: right; }
+  th:first-child, td:first-child { text-align: left; }
+  thead th { background: #fafafa; color: var(--dim); font-weight: 600; }
+  pre { background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+        padding: 13px 16px; overflow-x: auto; font-size: 13px; }
+  code { font-size: 13.5px; }
+  p code, li code, td code { background: #ececf0; padding: 1px 5px; border-radius: 4px; }
+  pre code { background: none; padding: 0; }
+  blockquote { border-left: 3px solid var(--warn); background: #fffaf0; margin: 14px 0;
+               padding: 10px 16px; color: var(--dim); font-size: 14px; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+  footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--border);
+           font-size: 12.5px; color: var(--dim); }
+</style>
+</head>
+<body>
+<div class="wrap">
+<a class="back" href="../index.html">&larr; Overview</a>
+<h1>Full artifact directory</h1>
+<p>Everything run <code>qanh-20260813t194806z</code> wrote, exactly as produced. The 77 MB XProf trace is excluded and lives in Cloud Storage at <code>gs://me344-tpu-labs-west4/final_projects/qanh/runs/me344-qanh-20260813t194806z-profile/tensorboard/</code>.</p>
+<blockquote>
+<p>The <code>answers.md</code> in here is the blank TODO template, because the run wrote it before the answers existed and the filled-in copy was installed on the TPU VM rather than in this directory. The submitted answers are at <a href="../answers.md"><code>../answers.md</code></a>. See the <a href="../audit.html">audit</a> for why.</p>
+</blockquote>
+<p>82 files.</p>
+<table>
+<thead>
+<tr>
+  <th>File</th>
+  <th>Bytes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><a href="answers.md"><code>answers.md</code></a></td>
+  <td>407</td>
+</tr>
+<tr>
+  <td><a href="capacity-dp8-aot.log"><code>capacity-dp8-aot.log</code></a></td>
+  <td>7,514</td>
+</tr>
+<tr>
+  <td><a href="capacity-tp8-aot.log"><code>capacity-tp8-aot.log</code></a></td>
+  <td>7,454</td>
+</tr>
+<tr>
+  <td><a href="capacity.svg"><code>capacity.svg</code></a></td>
+  <td>57,076</td>
+</tr>
+<tr>
+  <td><a href="capacity_report.json"><code>capacity_report.json</code></a></td>
+  <td>2,346</td>
+</tr>
+<tr>
+  <td><a href="checkpoint_paths.txt"><code>checkpoint_paths.txt</code></a></td>
+  <td>308</td>
+</tr>
+<tr>
+  <td><a href="commands.sh"><code>commands.sh</code></a></td>
+  <td>21,477</td>
+</tr>
+<tr>
+  <td><a href="compute_bound.json"><code>compute_bound.json</code></a></td>
+  <td>2,856</td>
+</tr>
+<tr>
+  <td><a href="compute_bound.svg"><code>compute_bound.svg</code></a></td>
+  <td>51,025</td>
+</tr>
+<tr>
+  <td><a href="config.json"><code>config.json</code></a></td>
+  <td>3,070</td>
+</tr>
+<tr>
+  <td><a href="cost_ledger.csv"><code>cost_ledger.csv</code></a></td>
+  <td>2,640</td>
+</tr>
+<tr>
+  <td><a href="dataset_report.json"><code>dataset_report.json</code></a></td>
+  <td>1,415</td>
+</tr>
+<tr>
+  <td><a href="eval_dataset_report.json"><code>eval_dataset_report.json</code></a></td>
+  <td>893</td>
+</tr>
+<tr>
+  <td><a href="eval_suite.jsonl"><code>eval_suite.jsonl</code></a></td>
+  <td>64,627</td>
+</tr>
+<tr>
+  <td><a href="evaluation_results.csv"><code>evaluation_results.csv</code></a></td>
+  <td>277</td>
+</tr>
+<tr>
+  <td><a href="evaluation_summary.json"><code>evaluation_summary.json</code></a></td>
+  <td>1,177</td>
+</tr>
+<tr>
+  <td><a href="evaluation_uncertainty.json"><code>evaluation_uncertainty.json</code></a></td>
+  <td>851</td>
+</tr>
+<tr>
+  <td><a href="evaluation_uncertainty.svg"><code>evaluation_uncertainty.svg</code></a></td>
+  <td>25,358</td>
+</tr>
+<tr>
+  <td><a href="inference-base.log"><code>inference-base.log</code></a></td>
+  <td>34,514</td>
+</tr>
+<tr>
+  <td><a href="inference-sft.log"><code>inference-sft.log</code></a></td>
+  <td>37,627</td>
+</tr>
+<tr>
+  <td><a href="me344-qanh-20260813t194806z-sweep-gb128.log"><code>me344-qanh-20260813t194806z-sweep-gb128.log</code></a></td>
+  <td>8,821</td>
+</tr>
+<tr>
+  <td><a href="me344-qanh-20260813t194806z-sweep-gb16.log"><code>me344-qanh-20260813t194806z-sweep-gb16.log</code></a></td>
+  <td>8,807</td>
+</tr>
+<tr>
+  <td><a href="me344-qanh-20260813t194806z-sweep-gb256.log"><code>me344-qanh-20260813t194806z-sweep-gb256.log</code></a></td>
+  <td>8,825</td>
+</tr>
+<tr>
+  <td><a href="me344-qanh-20260813t194806z-sweep-gb32.log"><code>me344-qanh-20260813t194806z-sweep-gb32.log</code></a></td>
+  <td>8,809</td>
+</tr>
+<tr>
+  <td><a href="me344-qanh-20260813t194806z-sweep-gb4.log"><code>me344-qanh-20260813t194806z-sweep-gb4.log</code></a></td>
+  <td>8,805</td>
+</tr>
+<tr>
+  <td><a href="me344-qanh-20260813t194806z-sweep-gb64.log"><code>me344-qanh-20260813t194806z-sweep-gb64.log</code></a></td>
+  <td>8,819</td>
+</tr>
+<tr>
+  <td><a href="me344-qanh-20260813t194806z-sweep-gb8.log"><code>me344-qanh-20260813t194806z-sweep-gb8.log</code></a></td>
+  <td>8,805</td>
+</tr>
+<tr>
+  <td><a href="outputs_base.jsonl"><code>outputs_base.jsonl</code></a></td>
+  <td>93,050</td>
+</tr>
+<tr>
+  <td><a href="outputs_sft.jsonl"><code>outputs_sft.jsonl</code></a></td>
+  <td>91,794</td>
+</tr>
+<tr>
+  <td><a href="pretrain.log"><code>pretrain.log</code></a></td>
+  <td>38,784</td>
+</tr>
+<tr>
+  <td><a href="pretrain_metrics.jsonl"><code>pretrain_metrics.jsonl</code></a></td>
+  <td>3,510</td>
+</tr>
+<tr>
+  <td><a href="profile.log"><code>profile.log</code></a></td>
+  <td>10,470</td>
+</tr>
+<tr>
+  <td><a href="profile_metrics.jsonl"><code>profile_metrics.jsonl</code></a></td>
+  <td>6,885</td>
+</tr>
+<tr>
+  <td><a href="recovery_report.json"><code>recovery_report.json</code></a></td>
+  <td>693</td>
+</tr>
+<tr>
+  <td><a href="rl.log"><code>rl.log</code></a></td>
+  <td>149,271</td>
+</tr>
+<tr>
+  <td><a href="rl_dataset_report.json"><code>rl_dataset_report.json</code></a></td>
+  <td>926</td>
+</tr>
+<tr>
+  <td><a href="rl_reward.png"><code>rl_reward.png</code></a></td>
+  <td>84,369</td>
+</tr>
+<tr>
+  <td><a href="rl_reward.svg"><code>rl_reward.svg</code></a></td>
+  <td>72,265</td>
+</tr>
+<tr>
+  <td><a href="rl_reward_events.jsonl"><code>rl_reward_events.jsonl</code></a></td>
+  <td>58,052</td>
+</tr>
+<tr>
+  <td><a href="rl_summary.json"><code>rl_summary.json</code></a></td>
+  <td>1,925</td>
+</tr>
+<tr>
+  <td><a href="rl_task.py"><code>rl_task.py</code></a></td>
+  <td>6,155</td>
+</tr>
+<tr>
+  <td><a href="scale_handoff.json"><code>scale_handoff.json</code></a></td>
+  <td>550</td>
+</tr>
+<tr>
+  <td><a href="scale_out.json"><code>scale_out.json</code></a></td>
+  <td>5,403</td>
+</tr>
+<tr>
+  <td><a href="scale_out.png"><code>scale_out.png</code></a></td>
+  <td>54,140</td>
+</tr>
+<tr>
+  <td><a href="scaling/baseline.json"><code>scaling/baseline.json</code></a></td>
+  <td>831</td>
+</tr>
+<tr>
+  <td><a href="scaling/ici_strong.json"><code>scaling/ici_strong.json</code></a></td>
+  <td>840</td>
+</tr>
+<tr>
+  <td><a href="scaling/ici_weak.json"><code>scaling/ici_weak.json</code></a></td>
+  <td>838</td>
+</tr>
+<tr>
+  <td><a href="scaling/strong.json"><code>scaling/strong.json</code></a></td>
+  <td>830</td>
+</tr>
+<tr>
+  <td><a href="scaling/weak.json"><code>scaling/weak.json</code></a></td>
+  <td>834</td>
+</tr>
+<tr>
+  <td><a href="serving_results.csv"><code>serving_results.csv</code></a></td>
+  <td>579</td>
+</tr>
+<tr>
+  <td><a href="sft-resume.log"><code>sft-resume.log</code></a></td>
+  <td>39,749</td>
+</tr>
+<tr>
+  <td><a href="sft.log"><code>sft.log</code></a></td>
+  <td>134,831</td>
+</tr>
+<tr>
+  <td><a href="sft_metrics.jsonl"><code>sft_metrics.jsonl</code></a></td>
+  <td>102,652</td>
+</tr>
+<tr>
+  <td><a href="sft_resume_metrics.jsonl"><code>sft_resume_metrics.jsonl</code></a></td>
+  <td>1,009</td>
+</tr>
+<tr>
+  <td><a href="smoke.log"><code>smoke.log</code></a></td>
+  <td>7,495</td>
+</tr>
+<tr>
+  <td><a href="smoke_metrics.jsonl"><code>smoke_metrics.jsonl</code></a></td>
+  <td>3,646</td>
+</tr>
+<tr>
+  <td><a href="sweep-aot-gb128.log"><code>sweep-aot-gb128.log</code></a></td>
+  <td>7,480</td>
+</tr>
+<tr>
+  <td><a href="sweep-aot-gb16.log"><code>sweep-aot-gb16.log</code></a></td>
+  <td>7,467</td>
+</tr>
+<tr>
+  <td><a href="sweep-aot-gb256.log"><code>sweep-aot-gb256.log</code></a></td>
+  <td>7,482</td>
+</tr>
+<tr>
+  <td><a href="sweep-aot-gb32.log"><code>sweep-aot-gb32.log</code></a></td>
+  <td>7,470</td>
+</tr>
+<tr>
+  <td><a href="sweep-aot-gb4.log"><code>sweep-aot-gb4.log</code></a></td>
+  <td>7,455</td>
+</tr>
+<tr>
+  <td><a href="sweep-aot-gb512.log"><code>sweep-aot-gb512.log</code></a></td>
+  <td>7,514</td>
+</tr>
+<tr>
+  <td><a href="sweep-aot-gb64.log"><code>sweep-aot-gb64.log</code></a></td>
+  <td>7,477</td>
+</tr>
+<tr>
+  <td><a href="sweep-aot-gb8.log"><code>sweep-aot-gb8.log</code></a></td>
+  <td>7,458</td>
+</tr>
+<tr>
+  <td><a href="sweep-gb128.jsonl"><code>sweep-gb128.jsonl</code></a></td>
+  <td>5,540</td>
+</tr>
+<tr>
+  <td><a href="sweep-gb16.jsonl"><code>sweep-gb16.jsonl</code></a></td>
+  <td>5,605</td>
+</tr>
+<tr>
+  <td><a href="sweep-gb256.jsonl"><code>sweep-gb256.jsonl</code></a></td>
+  <td>5,667</td>
+</tr>
+<tr>
+  <td><a href="sweep-gb32.jsonl"><code>sweep-gb32.jsonl</code></a></td>
+  <td>5,532</td>
+</tr>
+<tr>
+  <td><a href="sweep-gb4.jsonl"><code>sweep-gb4.jsonl</code></a></td>
+  <td>5,621</td>
+</tr>
+<tr>
+  <td><a href="sweep-gb64.jsonl"><code>sweep-gb64.jsonl</code></a></td>
+  <td>5,522</td>
+</tr>
+<tr>
+  <td><a href="sweep-gb8.jsonl"><code>sweep-gb8.jsonl</code></a></td>
+  <td>5,603</td>
+</tr>
+<tr>
+  <td><a href="sweep.svg"><code>sweep.svg</code></a></td>
+  <td>155,740</td>
+</tr>
+<tr>
+  <td><a href="sweep_results.csv"><code>sweep_results.csv</code></a></td>
+  <td>3,685</td>
+</tr>
+<tr>
+  <td><a href="system_info.json"><code>system_info.json</code></a></td>
+  <td>1,508</td>
+</tr>
+<tr>
+  <td><a href="systems_dashboard.png"><code>systems_dashboard.png</code></a></td>
+  <td>374,072</td>
+</tr>
+<tr>
+  <td><a href="systems_dashboard.svg"><code>systems_dashboard.svg</code></a></td>
+  <td>217,604</td>
+</tr>
+<tr>
+  <td><a href="token_budget.json"><code>token_budget.json</code></a></td>
+  <td>543</td>
+</tr>
+<tr>
+  <td><a href="token_budget.svg"><code>token_budget.svg</code></a></td>
+  <td>28,636</td>
+</tr>
+<tr>
+  <td><a href="training_curve.svg"><code>training_curve.svg</code></a></td>
+  <td>50,177</td>
+</tr>
+<tr>
+  <td><a href="training_decision.json"><code>training_decision.json</code></a></td>
+  <td>1,479</td>
+</tr>
+<tr>
+  <td><a href="wandb_run.json"><code>wandb_run.json</code></a></td>
+  <td>95</td>
+</tr>
+<tr>
+  <td><a href="xprof_command.txt"><code>xprof_command.txt</code></a></td>
+  <td>327</td>
+</tr>
+</tbody>
+</table>
+
+<footer>Anh Nguyen &middot; Stanford ME344, Summer 2026 &middot; run <code>qanh-20260813t194806z</code> &middot;
+generated by <code>publish_site.py</code></footer>
+</div>
+</body>
+</html>
