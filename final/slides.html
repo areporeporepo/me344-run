@@ -553,6 +553,62 @@
 
   <!-- 14 -->
   <section class="slide">
+    <div class="kicker">What it took</div>
+    <h2>Where the 40 minutes and the $5.96 went</h2>
+    <p class="lede">Wall-clock per notebook cell from the driver's own progress log, next to the
+      estimated TPU cost per stage from the cost ledger.</p>
+    <div class="body">
+      <div class="grid g2">
+        <div class="card"><h3>Wall clock per cell</h3>
+          <table style="margin-top:4px">
+            <thead><tr><th>Cell</th><th>What it does</th><th>Duration</th></tr></thead>
+            <tbody>
+              <tr class="hi"><td>11</td><td>batch/HBM frontier sweep, 8 shapes</td><td>9m 05s</td></tr>
+              <tr><td>22</td><td>SFT, 200 steps</td><td>7m 27s</td></tr>
+              <tr><td>26</td><td>GRPO, 12 updates</td><td>7m 10s</td></tr>
+              <tr><td>28</td><td>evaluation + vLLM serving</td><td>4m 02s</td></tr>
+              <tr><td>9</td><td>smoke + continued pre-training</td><td>3m 58s</td></tr>
+              <tr><td>24</td><td>resume from checkpoint</td><td>3m 41s</td></tr>
+              <tr><td>5</td><td>device probe, both venvs</td><td>1m 28s</td></tr>
+              <tr><td>7</td><td>AOT capacity lab</td><td>1m 19s</td></tr>
+              <tr><td>15</td><td>XProf capture</td><td>1m 02s</td></tr>
+              <tr><td>36</td><td>collect GKE results (reuse)</td><td>0m 11s</td></tr>
+              <tr><td>13, 20, 30, 32, 34, 38</td><td>analysis and packaging, no TPU step</td><td>&lt; 5s each</td></tr>
+            </tbody>
+          </table>
+          <div class="note">19:48:15Z to 20:27:51Z, 39m 36s of measured cell time. The sweep is the
+            single most expensive cell because it compiles and benchmarks eight shapes, and one of
+            them is a deliberate OOM.</div>
+        </div>
+        <div class="card"><h3>Estimated TPU cost by stage</h3>
+          <table style="margin-top:4px">
+            <thead><tr><th>Stage</th><th>USD</th></tr></thead>
+            <tbody>
+              <tr><td>SFT + recovery</td><td>$1.76</td></tr>
+              <tr><td>AOT batch frontier</td><td>$1.45</td></tr>
+              <tr><td>GRPO</td><td>$1.14</td></tr>
+              <tr><td>evaluation + serving</td><td>$0.66</td></tr>
+              <tr><td>continued pre-training</td><td>$0.54</td></tr>
+              <tr><td>capacity lab</td><td>$0.17</td></tr>
+              <tr><td>XProf</td><td>$0.16</td></tr>
+              <tr><td>smoke</td><td>$0.09</td></tr>
+              <tr class="hi"><td><strong>total, 25 commands</strong></td><td><strong>$5.96</strong></td></tr>
+            </tbody>
+          </table>
+          <div class="note">Worth noting what this buys: the entire memory-planning exercise, the one
+            that told us gb512 fails before we ever ran it, cost $0.17. The AOT check is the cheapest
+            line item that prevents the most expensive kind of mistake.</div>
+        </div>
+      </div>
+      <div class="src"><b>source:</b> run_progress.log (per-cell START/DONE timestamps emitted by the
+        driver), cost_ledger.csv (kind=command rows, estimated_usd grouped by stage prefix)<br>
+        <b>note:</b> two non-zero exit codes in the ledger are the deliberate DP8 and gb512 OOM
+        probes, not failures.</div>
+    </div>
+  </section>
+
+  <!-- 15 -->
+  <section class="slide">
     <div class="kicker">Recommendation</div>
     <h2>What would I ship?</h2>
     <div class="body">
