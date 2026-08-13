@@ -167,11 +167,15 @@
             against 1,320 tokens/s/chip, which a fixed-size all-reduce should not do. Lost overlap,
             rematerialization at 110% of the AOT limit, and shared-fabric contention are all
             consistent. The GKE jobs saved no traces, so I cannot tell you which.</div></div>
-        <div class="card"><h3>Why this matters more under MoE</h3>
+        <div class="card"><h3>Google built silicon around this exact point</h3>
           <div class="sub">Dense training has one collective per step. MoE adds an all-to-all
-            <em>per layer</em>, dispatching tokens to experts and gathering results, on every forward
-            and backward pass. Latency-sensitive, irregular, load-imbalanced when routing skews.
-            <strong>Prediction: MoE across DCN degrades worse than 65.2%.</strong> Untested.</div></div>
+            <em>per layer</em>, on every forward and backward pass. My prediction was that MoE across
+            DCN degrades worse than 65.2%, and it is still untested by me. But <strong>TPU 8i drops
+            the 3D torus for a high-radix topology that cuts network diameter from 16 hops to 7, for
+            a claimed 50% better all-to-all latency</strong>, and Google names MoE serving as the
+            reason. A vendor redesigning its interconnect to make all-to-all cheaper is the
+            strongest signal available that this collective, not the gradient all-reduce, is what
+            now decides performance.</div></div>
       </div>
       <div class="src">scale_out.json &middot; all five trials record source_checkpoint from 2026-08-10</div>
     </div>
@@ -230,20 +234,24 @@
             can you reach before falling off the fast fabric?</em> That is now a design choice, and
             the answers differ by two orders of magnitude.</div>
           <table>
-            <thead><tr><th></th><th>v5e</th><th>Ironwood v7</th><th>TPU 8t</th><th>Zhenwu M890</th></tr></thead>
+            <thead><tr><th></th><th>v5e</th><th>Ironwood</th><th>TPU 8t</th><th>TPU 8i</th><th>M890</th></tr></thead>
             <tbody>
-              <tr><td>HBM/chip</td><td>16 GB</td><td>192 GB</td><td>8x12-hi HBM3e</td><td>144 GB</td></tr>
-              <tr><td>Inter-chip</td><td>400 GB/s</td><td>1,200 GB/s</td><td>+30% v7</td><td>800 GB/s</td></tr>
-              <tr class="hi"><td>Fast domain</td><td>256</td><td>9,216</td><td>9,600</td><td>128 / rack</td></tr>
-              <tr><td>Status</td><td>measured</td><td>shipping</td><td>late 2027</td><td>2026-05-20</td></tr>
+              <tr><td>HBM/chip</td><td>16 GB</td><td>192 GB</td><td>216 GB</td><td>288 GB</td><td>144 GB</td></tr>
+              <tr><td>HBM BW</td><td>800 GiB/s</td><td>7,380</td><td>6,528</td><td>8,601</td><td>n/p</td></tr>
+              <tr class="hi"><td>Fast domain</td><td>256</td><td>9,216</td><td>9,600</td><td>1,152</td><td>128</td></tr>
+              <tr><td>Topology</td><td>2D</td><td>3D torus</td><td>3D torus</td><td>Boardfly</td><td>rack</td></tr>
             </tbody>
           </table>
-          <div class="note"><strong>8t "Sunfish"</strong> (Broadcom, training) and <strong>8i
-            "Zebrafish"</strong> (MediaTek, inference) split training from inference for the first
-            time, TSMC 2nm, late 2027. Every figure for them is a vendor target.
-            <strong>Zhenwu M890</strong> is T-Head's PPU, announced with Qwen3.7-Max, racked 128-wide
-            as the Panjiu AL128. If 128 is a real fabric boundary, the wall this run hit at 16 chips
-            arrives at 128 there, not 9,216. Unverified.</div>
+          <div class="note"><strong>Google now ships two answers in one generation.</strong> 9,600
+            chips in a 3D torus for training, 1,152 in a high-radix fabric for serving, because the
+            collective that matters differs. Note 8i, the <em>inference</em> part, has more HBM and
+            more bandwidth than 8t, the training part. Beyond the superpod, the Virgo network claims
+            4x the prior scale-out DCN bandwidth and over 1 million chips in one training cluster
+            via JAX and Pathways. Google is spending hard on exactly the boundary this run measured
+            a 35% penalty at.</div>
+          <div class="note"><strong>Zhenwu M890</strong> is T-Head's PPU, announced with Qwen3.7-Max,
+            racked 128-wide as the Panjiu AL128. If 128 is a real fabric boundary rather than a SKU,
+            the wall this run hit at 16 chips arrives at 128 there, not 9,216. Unverified.</div>
         </div>
         <div>
           <div class="sub" style="margin-bottom:8px">And a constraint that decides whether any of
@@ -267,8 +275,20 @@
             travels. All three need weights.</div>
         </div>
       </div>
-      <div class="src">docs.cloud.google.com/tpu &middot; Alibaba Cloud, 2026-05-20 &middot; 35-hour M890
-        kernel-optimization claim had no independent reproduction as of 2026-05-25</div>
+      <div class="card caveat" style="margin-top:16px"><h3>And the workload the silicon is shaped around is not this one</h3>
+        <div class="sub">Google says 8t and 8i are "built to efficiently train and serve world models
+          like Google DeepMind's <strong>Genie 3</strong>, enabling millions of agents to practice and
+          refine their reasoning in diverse simulated environments." Genie 3 generates navigable
+          worlds at 24 fps and 720p; Project Genie shipped 2026-01-29. That is neither the dense text
+          pre-training measured here nor ordinary chat serving: it is simulation for agents to train
+          inside. 8i's 288 GB of HBM and its on-silicon KV cache for long-context decoding read as
+          built for exactly that. <strong>My prediction: the interesting systems question of 2027 is
+          not tokens/s on a training step, it is throughput and latency of a
+          simulate-act-learn loop</strong>, where the fabric question this run measured reappears
+          between the model and the environment rather than between two model replicas.</div></div>
+      <div class="src">cloud.google.com TPU 8t/8i deep dive, 2026-04-22 &middot; deepmind.google/models/genie
+        &middot; Alibaba Cloud, 2026-05-20 &middot; the 35-hour M890 kernel claim had no independent
+        reproduction as of 2026-05-25</div>
     </div>
   </section>
 

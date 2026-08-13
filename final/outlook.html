@@ -114,13 +114,80 @@ it says so.</p>
 </tr>
 </tbody>
 </table>
-<p>Announced but not shipping: the eighth generation splits into two parts for the first time.
-<strong>TPU 8t &quot;Sunfish&quot;</strong> (Broadcom, training, two compute dies, eight stacks of 12-high HBM3e,
-about 30% more memory bandwidth than Ironwood, superpods to 9,600 chips and 2 PB of shared
-HBM, targeted at 2.8x Ironwood's training price-performance) and <strong>TPU 8i &quot;Zebrafish&quot;</strong>
-(MediaTek, inference, single compute die, six HBM3e stacks, 20 to 30% cheaper than the
-training part). Both TSMC 2nm, both late 2027. Those are vendor targets, not measurements,
-and no one outside Google has run anything on either.</p>
+<p>The eighth generation, announced at Google Cloud Next on 2026-04-22, splits into two parts for the
+first time. These figures are from Google's own technical deep dive, not secondary reporting:</p>
+<table>
+<thead>
+<tr>
+  <th></th>
+  <th>TPU 8t &quot;Sunfish&quot; (training)</th>
+  <th>TPU 8i &quot;Zebrafish&quot; (inference)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Peak FP4</td>
+  <td>12.6 PFLOP/s</td>
+  <td>10.1 PFLOP/s</td>
+</tr>
+<tr>
+  <td>HBM per chip</td>
+  <td>216 GB</td>
+  <td>288 GB</td>
+</tr>
+<tr>
+  <td>HBM bandwidth</td>
+  <td>6,528 GB/s</td>
+  <td>8,601 GB/s</td>
+</tr>
+<tr>
+  <td>On-chip SRAM (Vmem)</td>
+  <td>128 MB</td>
+  <td>384 MB</td>
+</tr>
+<tr>
+  <td>Topology</td>
+  <td>3D torus</td>
+  <td>Boardfly, high-radix</td>
+</tr>
+<tr>
+  <td>Domain size</td>
+  <td>9,600-chip superpod</td>
+  <td>1,152-chip pod, 1,024 active</td>
+</tr>
+<tr>
+  <td>Network diameter</td>
+  <td></td>
+  <td>7 hops, down from 16</td>
+</tr>
+<tr>
+  <td>Versus Ironwood</td>
+  <td>2.7x training performance per dollar</td>
+  <td>80% better inference per dollar</td>
+</tr>
+<tr>
+  <td>CPU header</td>
+  <td>Arm Axion</td>
+  <td>Arm Axion</td>
+</tr>
+</tbody>
+</table>
+<p>Both claim up to 2x better performance per watt. 8t adds TPUDirect Storage at a claimed 10x faster
+storage access than Ironwood, and scales past the superpod over the <strong>Virgo</strong> network: up to 4x the
+raw scale-out DCN bandwidth of the previous generation, a fabric spanning 134,000 chips at up to 47
+petabits/s non-blocking bisectional bandwidth, and over 1 million chips in a single training cluster
+via JAX and Pathways. Secondary reporting adds TSMC 2nm and a late 2027 ship date; Google's own page
+gives specifications but no availability date, so treat the timing as unconfirmed.</p>
+<p>Two numbers there deserve a second look. <strong>8t's HBM bandwidth is lower than Ironwood's</strong>, 6,528
+against 7,380 GB/s, while its peak compute goes up sharply. And <strong>8i, the inference part, has more
+HBM and more bandwidth than 8t, the training part</strong>, which is the clearest possible statement that
+Google now considers serving large sparse models a harder memory problem than training them.</p>
+<p>Google states the target workload outright: these are &quot;built to efficiently train and serve world
+models like Google DeepMind's Genie 3, enabling millions of agents to practice and refine their
+reasoning in diverse simulated environments.&quot; Genie 3 generates navigable environments at 24 fps and
+720p; Project Genie shipped to users on 2026-01-29. That is the workload the silicon is shaped
+around, and it is neither the dense text pre-training this assignment measured nor conventional
+chat serving.</p>
 <h2>Finding 1: the memory wall. Obsolete on v7, and that is the point</h2>
 <p><strong>What this run measured.</strong> Global batch 512 failed to compile: 18.43 GiB of temporaries
 against 15.75 GiB available. The replicated DP8 layout failed harder, needing 65.47 GiB.
@@ -295,6 +362,17 @@ per-layer all-to-all. <strong>Prediction: an MoE model split across DCN degrades
 worse than the 65.2% measured here.</strong> I have not measured this and neither has anyone else in
 the class. It is testable with the same <code>scale-job.yaml</code> harness and a Qwen3-30B-A3B
 checkpoint.</p>
+<p><strong>Google appears to agree, and built silicon around it.</strong> TPU 8i abandons the 3D torus that recent
+TPU generations have used, in favour of a high-radix topology called Boardfly that cuts the maximum
+network diameter from 16 hops to 7, a 56% reduction, for a claimed <strong>up to 50% improvement in
+all-to-all latency</strong>. Google names low-latency serving of large MoE models as the reason. A vendor
+redesigning its interconnect topology specifically to make all-to-all cheaper is close to the
+strongest available signal that the per-layer expert collective, not the per-step gradient
+all-reduce, is now the communication pattern that decides performance. That does not make my
+prediction measured. It does mean the people with the most data reached the same conclusion.</p>
+<p>Note the asymmetry: Boardfly is on <strong>8i</strong>, the inference part, while the 9,600-chip training part
+keeps the 3D torus. The all-to-all problem is being treated as most acute during serving, which
+fits a world where a 2.8T model is trained once and served constantly.</p>
 <h2>Finding 5: 16 bytes per parameter. The number most likely to be wrong already</h2>
 <p><strong>What this run measured.</strong> 16 bytes per parameter at peak, 12 persistent plus 4 transient,
 under BF16.</p>
@@ -331,7 +409,8 @@ this run measured.</p>
   <th></th>
   <th>v5e (this run)</th>
   <th>Ironwood v7</th>
-  <th>TPU 8t (late 2027)</th>
+  <th>TPU 8t</th>
+  <th>TPU 8i</th>
   <th>Zhenwu M890</th>
 </tr>
 </thead>
@@ -340,14 +419,24 @@ this run measured.</p>
   <td>HBM per chip</td>
   <td>16 GB</td>
   <td>192 GB</td>
-  <td>8 stacks, 12-high HBM3e</td>
-  <td>144 GB HBM3</td>
+  <td>216 GB</td>
+  <td>288 GB</td>
+  <td>144 GB</td>
 </tr>
 <tr>
-  <td>Inter-chip bandwidth</td>
+  <td>HBM bandwidth</td>
+  <td>800 GiB/s</td>
+  <td>7,380 GB/s</td>
+  <td>6,528 GB/s</td>
+  <td>8,601 GB/s</td>
+  <td>not published</td>
+</tr>
+<tr>
+  <td>Inter-chip</td>
   <td>400 GB/s</td>
   <td>1,200 GB/s</td>
-  <td>~30% above Ironwood</td>
+  <td>2x prior gen</td>
+  <td>Boardfly, 7 hops</td>
   <td>800 GB/s</td>
 </tr>
 <tr>
@@ -355,17 +444,25 @@ this run measured.</p>
   <td>256 chips</td>
   <td>9,216 chips</td>
   <td>9,600 chips</td>
-  <td>128 per Panjiu AL128 rack</td>
+  <td>1,152 chips</td>
+  <td>128 per rack</td>
 </tr>
 <tr>
   <td>Status</td>
   <td>measured here</td>
   <td>shipping</td>
-  <td>vendor target</td>
+  <td>announced 2026-04-22</td>
+  <td>announced 2026-04-22</td>
   <td>announced 2026-05-20</td>
 </tr>
 </tbody>
 </table>
+<p>The fast domain is no longer one number per vendor. Google now ships two answers in the same
+generation: 9,600 chips in a 3D torus for training, 1,152 chips in a high-radix fabric for serving,
+because the collective that matters differs between the two. Beyond the 8t superpod, the Virgo
+network claims 4x the previous generation's scale-out DCN bandwidth, a 134,000-chip fabric at up to
+47 petabits/s bisectional, and over 1 million chips in a single training cluster through JAX and
+Pathways. Google is spending heavily on exactly the boundary this run measured a 35% penalty at.</p>
 <p>Alibaba announced the <strong>Zhenwu M890</strong> on 2026-05-20, the same day as Qwen3.7-Max: an in-house PPU
 (Parallel Processing Unit) architecture from T-Head with a Transformer core engine, claiming 3x the
 previous Zhenwu 810E, packaged into a <strong>Panjiu AL128</strong> rack that links 128 accelerators as one unit.
@@ -521,6 +618,12 @@ table says so rather than guessing.</li>
 does better on real training workloads is the biggest unknown here and nothing above answers it.</li>
 <li><strong>Whether the Zhenwu M890's 128-accelerator rack is a hard fabric boundary.</strong> Decides whether
 finding 7's comparison is fair.</li>
+<li><strong>Whether world models become the workload that matters.</strong> Google says 8t and 8i were built to
+train and serve models like Genie 3 so that &quot;millions of agents&quot; can rehearse in simulation. If
+that is where the compute goes, the interesting systems question of 2027 is not tokens per second
+on a training step but the throughput and latency of a simulate, act, learn loop, and the fabric
+question this run measured reappears between the model and its environment rather than between
+two model replicas. This is a prediction, not a measurement.</li>
 <li><strong>Any of the five experiments above.</strong> Each one either confirms or kills a projection here.</li>
 </ul>
 <p><code>RESEARCH_PROMPT.md</code> in this repository holds a prompt written to close these gaps. Run it through
@@ -528,12 +631,23 @@ a research agent, hand back the results, and this page gets rebuilt from them.</
 <h2>Sources</h2>
 <p>Hardware specifications, Google Cloud documentation, retrieved 2026-08-13:</p>
 <ul>
-<li><a href="https://docs.cloud.google.com/tpu/docs/v5e">Cloud TPU v5e</a></li>
-<li><a href="https://docs.cloud.google.com/tpu/docs/tpu7x">TPU7x (Ironwood)</a></li>
-<li><a href="https://cloud.google.com/blog/products/compute/ironwood-tpus-and-new-axion-based-vms-for-your-ai-workloads">Ironwood TPUs and new Axion-based VMs</a></li>
-<li><a href="https://blog.google/innovation-and-ai/infrastructure-and-cloud/google-cloud/ironwood-tpu-age-of-inference/">Ironwood: the first Google TPU for the age of inference</a></li>
+<li><p><a href="https://docs.cloud.google.com/tpu/docs/v5e">Cloud TPU v5e</a></p>
+</li>
+<li><p><a href="https://docs.cloud.google.com/tpu/docs/tpu7x">TPU7x (Ironwood)</a></p>
+</li>
+<li><p><a href="https://cloud.google.com/blog/products/compute/ironwood-tpus-and-new-axion-based-vms-for-your-ai-workloads">Ironwood TPUs and new Axion-based VMs</a></p>
+</li>
+<li><p><a href="https://blog.google/innovation-and-ai/infrastructure-and-cloud/google-cloud/ironwood-tpu-age-of-inference/">Ironwood: the first Google TPU for the age of inference</a></p>
+</li>
+<li><p><a href="https://cloud.google.com/blog/products/compute/tpu-8t-and-tpu-8i-technical-deep-dive">TPU 8t and TPU 8i technical deep dive</a>, Google Cloud, 2026-04-22, the primary source for all 8t and 8i figures above</p>
+</li>
+<li><p><a href="https://deepmind.google/blog/genie-3-a-new-frontier-for-world-models/">Genie 3, a new frontier for world models</a></p>
+</li>
+<li><p><a href="https://blog.google/innovation-and-ai/models-and-research/google-deepmind/project-genie/">Project Genie</a>, shipped 2026-01-29</p>
+</li>
 </ul>
-<p>Eighth-generation TPU split, secondary reporting from Google Cloud Next 2026:</p>
+<p>Eighth-generation TPU split, secondary reporting from Google Cloud Next 2026 (used only for the
+TSMC 2nm and late-2027 timing claims, which Google's own page does not state):</p>
 <ul>
 <li><a href="https://thenextweb.com/news/google-ironwood-tpu-inference-cloud-next">Google previews eighth-gen split into training and inference chips at TSMC 2nm</a></li>
 <li><a href="https://hyperframeresearch.com/2026/04/22/google-cloud-next-2026-google-cloud-bifurcates-the-ai-future-specialized-tpu-8t-and-8i-architectures-signal-the-end-of-general-purpose-silicon/">Google Cloud Next 2026: specialized TPU 8t and 8i architectures</a></li>
