@@ -44,10 +44,18 @@
 <h1>Outlook: What This Run Measured, And What It Will Mean Later</h1>
 <p>Written 2026-08-13, from the measurements in run <code>qanh-20260813t194806z</code>.</p>
 <p>The assignment measures a dense 4B model on 8 chips of a 2023 inference part. That sounds
-narrow. It is not: four of the five things it measures are properties of the <em>method</em>, and
-they transfer. One of them is already obsolete. This page separates those, projects each one
-onto hardware and architectures that exist now or are announced, and records what would have
-to be re-measured to check the projection.</p>
+narrow. It is not: most of what it measures are properties of the <em>method</em>, and they transfer.
+One finding is already obsolete. One turns out to have scaled better than anything else here.
+This page separates them, projects each onto hardware and architectures that exist now or are
+announced, and records what would have to be re-measured to check the projection.</p>
+<p><strong>On the model and the dataset, briefly.</strong> The run fine-tunes <strong>Qwen3-4B-Instruct-2507</strong>, a dense
+4.022B-parameter model, on <strong>PolyAI/banking77</strong> (400 training examples, 77 intent labels, CC BY
+4.0, revision pinned), with <code>openai/gsm8k test[0:16]</code> as a retention check. Both were fixed by the
+course, not chosen here, and neither is the point. banking77's job in this assignment is to be a
+task simple enough that a small model measurably changes behavior in 200 steps, so the systems work
+around it can be measured cleanly. It does that job well, which is a compliment to whoever picked
+it. Every accuracy number in this project should be read as an instrument reading rather than a
+capability claim. The rest of this page is about the instrument.</p>
 <p>Everything derived here starts from a number this run actually produced. Vendor specs are
 from Google Cloud's own documentation, cited at the bottom, and dated. Where I am guessing,
 it says so.</p>
@@ -410,6 +418,52 @@ Kimi K3 the reason this exercise is still possible at frontier scale at all.</p>
 <p>That is a systems argument, not a licensing opinion: the methods this assignment teaches, predict
 the memory before you spend it, find the throughput knee, measure where the collective travels,
 require access to weights. Whoever keeps publishing them decides who gets to do this work.</p>
+<h2>Finding 9: ahead-of-time compilation did not go away. It got automated and aimed at 671B</h2>
+<p>This is a correction to finding 1 as much as an addition.</p>
+<p>The capacity lab is the part of this assignment that looks most like ceremony. You compile a
+shape without running it, read the compiler's memory accounting, and predict fit or failure. On
+a 4B model on eight chips that takes about a minute and feels like a formality.</p>
+<p>It is the technique that scaled best of anything here.</p>
+<p><strong>What this run did.</strong> <code>run_capacity_lab()</code> compiled two layouts ahead of time at global batch 2,
+sequence length 512, and predicted both outcomes correctly before a single training step ran. TP8
+predicted fit and fit, at 8.23 GiB per chip. DP8 predicted out of memory and produced exactly that,
+65.47 GiB of temporaries against 15.75 GiB available.</p>
+<p><strong>What MaxText does with the same primitive now.</strong> <code>train_compile.py</code> still exists and still does
+precisely this. Per the current documentation it &quot;will flag any out of memory (OOM) information,
+such as when the <code>per_device_batch_size</code> is set too high, with an identical OOM stack trace as if
+it was compiled on the target hardware.&quot; Three properties make it scale:</p>
+<ul>
+<li><strong>You can compile for a TPU cluster from a CPU.</strong> No TPU is needed to discover that a config
+will not fit. The documented example compiles a 16B model for two v5e pods from a single VM.</li>
+<li><strong>Compiled artifacts save and reload</strong>, so the compile cost is paid once and startup and restart
+get faster.</li>
+<li><strong>It has been wrapped in an automated search.</strong> MaxText now ships <code>estimator.py</code>, which drives
+<code>train_compile</code> in a loop to find a workable configuration without target hardware. The
+documented example runs it against <strong>DeepSeek3 671B on a tpu7x-512 pod</strong>, in policy-only mode,
+searching for &quot;the least aggressive remat policy that fits.&quot;</li>
+</ul>
+<p>So the thing done by hand here at 4B on 8 chips is now an automated search loop at 671B on 512
+Ironwood chips. Same primitive, three orders of magnitude apart.</p>
+<p><strong>Why it matters more at trillion scale, not less.</strong> Three reasons, and they compound:</p>
+<ol>
+<li><strong>The cost of finding out empirically scales with the cluster.</strong> Discovering an OOM twenty
+minutes into a 512-chip Ironwood job is expensive in a way that discovering it on eight v5e
+chips is not. AOT moves that discovery onto a CPU.</li>
+<li><strong>MoE makes the memory boundary harder to reason about on paper.</strong> Expert sharding, capacity
+factor and all-to-all buffers all move it. The compiler's own accounting is worth more when
+your own arithmetic is less trustworthy, which is exactly the sparse-model case.</li>
+<li><strong>Compiler flags move the boundary.</strong> SparseCore collective offloading and latency-hiding
+scheduling change the memory layout, so they change where OOM happens. No closed-form estimate
+captures that. You have to ask the compiler.</li>
+</ol>
+<p><strong>The honest limit, which this run also measured.</strong> Global batch 256 was AOT-predicted at 17.37
+GiB, which is 110% of the 15.75 GiB limit, and it ran anyway at 16,227 tokens/s. The AOT figure is
+a compile-time estimate, not a runtime guarantee, and rematerialization absorbed the overshoot. So
+AOT locates the boundary approximately and tells you which side of it you are on. It does not give
+you an exact number, and this run has the counterexample in its own sweep table.</p>
+<p><strong>Correcting finding 1.</strong> Calling the memory wall obsolete is right about the number and wrong
+about the method. The 18.43 GiB that stopped this run is 10.3% of one Ironwood chip. The technique
+that predicted it got promoted into an automated search over 671B-parameter models.</p>
 <h2>The five experiments worth actually running</h2>
 <p>Ranked by value per unit of effort. All five use the harness already in this repo.</p>
 <table>
@@ -483,6 +537,12 @@ a research agent, hand back the results, and this page gets rebuilt from them.</
 <ul>
 <li><a href="https://thenextweb.com/news/google-ironwood-tpu-inference-cloud-next">Google previews eighth-gen split into training and inference chips at TSMC 2nm</a></li>
 <li><a href="https://hyperframeresearch.com/2026/04/22/google-cloud-next-2026-google-cloud-bifurcates-the-ai-future-specialized-tpu-8t-and-8i-architectures-signal-the-end-of-general-purpose-silicon/">Google Cloud Next 2026: specialized TPU 8t and 8i architectures</a></li>
+</ul>
+<p>Ahead-of-time compilation, MaxText documentation, retrieved 2026-08-13:</p>
+<ul>
+<li><a href="https://maxtext.readthedocs.io/en/latest/guides/monitoring_and_debugging/features_and_diagnostics.html">Features and diagnostics, AOT compilation</a></li>
+<li><a href="https://maxtext.readthedocs.io/en/latest/guides/optimization/benchmark_and_performance.html">Benchmarking and tuning guide, the estimator</a></li>
+<li><a href="https://github.com/AI-Hypercomputer/maxtext">MaxText source</a></li>
 </ul>
 <p>Model architectures:</p>
 <ul>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ME344 Final Project: Outlook, 6-slide cut</title>
+<title>ME344 Final Project: Outlook, 7-slide cut</title>
 <style>
   :root {
     --bg: #f5f5f7; --panel: #ffffff; --border: #d2d2d7;
@@ -66,23 +66,34 @@
   <section class="slide active">
     <div class="kicker">Stanford ME344 &middot; Final Project &middot; Outlook &middot; Anh Nguyen</div>
     <h1>What This Run Measured,<br>And What It Will Mean Later</h1>
-    <p class="lede">A dense 4B model on eight chips of a 2023 inference part. Four of the five
-      findings are properties of the method and transfer forward. One is already obsolete. This
-      separates them.</p>
+    <p class="lede">A dense 4B model on eight chips of a 2023 inference part. Most of what it
+      measures is a property of the method, not the hardware, so it transfers. One finding is
+      already dead. One scaled further than anything else here. This sorts them.</p>
     <div class="body">
-      <div class="grid g3">
+      <div class="grid g2">
+        <div class="card"><h3>Scaled best of everything</h3><div class="stat ok">AOT compile</div>
+          <div class="sub">Predicting memory before spending it looked like ceremony at 4B on 8
+            chips. MaxText now wraps the same primitive in an automated search running against
+            <strong>DeepSeek3 671B on a tpu7x-512 pod</strong>, and you can drive it from a CPU.
+            The technique got promoted, not retired.</div></div>
+        <div class="card"><h3>Ages best</h3><div class="stat ok">the fabric</div>
+          <div class="sub">ICI 100%, DCN 65%. The boundary moved from 256 chips on v5e to 9,216 on
+            Ironwood, but it did not disappear: Ironwood ICI beats its own DCN by roughly 96x. And
+            MoE puts a second collective on the critical path.</div></div>
         <div class="card"><h3>Already obsolete</h3><div class="stat bad">the memory wall</div>
           <div class="sub">gb512 failed at 18.43 GiB against 15.75 available. That is 10.3% of one
-            Ironwood chip. The exercise resolves to "fits, on one chip, no sharding."</div></div>
-        <div class="card"><h3>Ages best</h3><div class="stat ok">the fabric</div>
-          <div class="sub">ICI 100%, DCN 65%. The boundary moved from 16 chips to 9,216. It did not
-            disappear: Ironwood ICI beats its DCN by roughly 96x.</div></div>
+            Ironwood chip, so this specific wall is gone. The <em>arithmetic</em> that predicted it
+            is what still says which models a fleet can train at all.</div></div>
         <div class="card"><h3>Regime, not fact</h3><div class="stat warn">99% matmul</div>
-          <div class="sub">True at L=256. Attention scales as L&sup2; against matmul's L, so at 1M
-            context the same step is 97% attention. That inversion is why 2026 architectures look
-            the way they do.</div></div>
+          <div class="sub">True at L=256, and only there. Attention scales as L&sup2; against
+            matmul's L, so the same step is 97% attention at 1M context. That inversion is why 2026
+            architectures replaced most of their attention layers.</div></div>
       </div>
-      <div class="note" style="margin-top:18px">Full outlook, with derivations and sources:
+      <div class="note" style="margin-top:18px">Model and dataset were fixed by the course:
+        Qwen3-4B-Instruct-2507, 4.022B dense, fine-tuned on PolyAI/banking77 (400 examples, 77
+        intents) with GSM8K as a retention check. Neither is the point. Read every accuracy number
+        here as an instrument reading, not a capability claim.</div>
+      <div class="note">Full outlook, with derivations and sources:
         <strong>areporeporepo.github.io/me344-run/final/outlook.html</strong></div>
       <div class="src">every projection starts from a number in artifacts/qanh-20260813t194806z/ &middot;
         vendor specs from Google Cloud docs, retrieved 2026-08-13</div>
@@ -262,6 +273,54 @@
   </section>
 
   <!-- 6 -->
+  <section class="slide">
+    <div class="kicker">Finding 9 &middot; a correction to slide 2</div>
+    <h2>Ahead-of-time compilation did not go away. It got automated and aimed at 671B.</h2>
+    <div class="body">
+      <div class="grid g3">
+        <div class="card"><h3>What this run did by hand</h3><div class="stat">2 shapes</div>
+          <div class="sub">Compiled TP8 and DP8 ahead of time at gb2 / L512 and predicted both
+            outcomes before a training step ran. TP8: predicted fit, fit at 8.23 GiB/chip. DP8:
+            predicted OOM, produced 65.47 GiB against 15.75 available. Felt like ceremony at 4B on
+            8 chips.</div></div>
+        <div class="card"><h3>What MaxText does now</h3><div class="stat ok">671B</div>
+          <div class="sub"><code>train_compile.py</code> still flags OOM "with an identical OOM
+            stack trace as if it was compiled on the target hardware", and you can compile for a
+            TPU cluster <strong>from a CPU</strong>. It is now wrapped in <code>estimator.py</code>,
+            which searches remat policies automatically. The documented example: DeepSeek3 671B on
+            a tpu7x-512 pod, finding the least aggressive policy that fits.</div></div>
+        <div class="card"><h3>The honest limit</h3><div class="stat warn">110%</div>
+          <div class="sub">gb256 was AOT-predicted at 17.37 GiB, <em>110% of the 15.75 GiB
+            limit</em>, and ran anyway at 16,227 tokens/s. Rematerialization absorbed the overshoot.
+            AOT locates the boundary and tells you which side you are on. It is not an exact
+            number, and this run has the counterexample in its own sweep.</div></div>
+      </div>
+      <div class="grid g2" style="margin-top:16px">
+        <div class="card"><h3>Why this matters more at trillion scale, not less</h3>
+          <ul>
+            <li>The cost of finding out empirically scales with the cluster. Discovering an OOM 20
+              minutes into a 512-chip Ironwood job is real money. AOT moves it to a CPU.</li>
+            <li>MoE makes the boundary harder to reason about on paper: expert sharding, capacity
+              factor, all-to-all buffers. The compiler's accounting is worth more when your own
+              arithmetic is worth less.</li>
+            <li>SparseCore offloading and latency-hiding scheduling change the memory layout, so
+              compiler flags move the OOM point. No closed form captures that.</li>
+          </ul>
+        </div>
+        <div class="card caveat"><h3>So slide 2 was half wrong</h3>
+          <div class="sub">Calling the memory wall obsolete is right about the <em>number</em> and
+            wrong about the <em>method</em>. The 18.43 GiB that stopped this run is 10.3% of one
+            Ironwood chip, so that specific wall is gone. But the technique that predicted it did
+            not get retired, it got promoted into an automated search loop running against
+            671-billion-parameter MoE models. <strong>Of everything measured here, the capacity lab
+            is the part that scaled best.</strong></div></div>
+      </div>
+      <div class="src">capacity_report.json &middot; sweep_results.csv &middot; maxtext.readthedocs.io,
+        features and diagnostics + benchmarking and tuning, retrieved 2026-08-13</div>
+    </div>
+  </section>
+
+  <!-- 7 -->
   <section class="slide">
     <div class="kicker">So this is not a one-time assignment</div>
     <h2>Five experiments worth running, all on hardware the course already provides.</h2>
