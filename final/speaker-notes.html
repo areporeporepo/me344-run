@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Speaker script: 5 slides, 5 minutes</title>
+<style>
+  :root {
+    --bg: #f5f5f7; --panel: #ffffff; --border: #d2d2d7;
+    --text: #1d1d1f; --dim: #6e6e73; --accent: #0071e3;
+    --ok: #34c759; --warn: #ff9f0a; --fail: #ff3b30;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.65 -apple-system, BlinkMacSystemFont, "SF Pro Text", Helvetica, Arial, sans-serif; }
+  code, pre, table { font-family: "SF Mono", ui-monospace, Menlo, monospace; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 48px 24px 80px; }
+  .back { font-size: 13px; color: var(--accent); text-decoration: none; }
+  h1 { font-size: 34px; line-height: 1.15; margin: 14px 0 8px; letter-spacing: -0.02em; }
+  h2 { font-size: 22px; margin: 38px 0 10px; letter-spacing: -0.01em;
+       border-top: 1px solid var(--border); padding-top: 22px; }
+  h3 { font-size: 16.5px; margin: 24px 0 8px; }
+  p, li { max-width: 78ch; }
+  a { color: var(--accent); }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; background: var(--panel); margin: 12px 0; }
+  th, td { border: 1px solid var(--border); padding: 7px 10px; text-align: right; }
+  th:first-child, td:first-child { text-align: left; }
+  thead th { background: #fafafa; color: var(--dim); font-weight: 600; }
+  pre { background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+        padding: 13px 16px; overflow-x: auto; font-size: 13px; }
+  code { font-size: 13.5px; }
+  p code, li code, td code { background: #ececf0; padding: 1px 5px; border-radius: 4px; }
+  pre code { background: none; padding: 0; }
+  blockquote { border-left: 3px solid var(--warn); background: #fffaf0; margin: 14px 0;
+               padding: 10px 16px; color: var(--dim); font-size: 14px; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+  footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--border);
+           font-size: 12.5px; color: var(--dim); }
+</style>
+</head>
+<body>
+<div class="wrap">
+<a class="back" href="index.html">&larr; Overview</a>
+<h1>Speaker Script: 5 Slides, 5 Minutes</h1>
+<p>For recording the ME344 final presentation against
+<a href="https://areporeporepo.github.io/me344-run/final/five.html"><code>five.html</code></a>. Open the deck, hit
+record, read this. Arrow keys advance.</p>
+<p>Roughly 700 words, which lands near 5:00 at a normal speaking pace. Timings are cumulative.
+If you are running long, the cuttable sentences are marked <strong>[cut]</strong>.</p>
+<hr />
+<h2>Slide 1: Title (0:00 to 0:45)</h2>
+<blockquote>
+<p>This is Train, Tune and Scale Qwen3-4B on a TPU v5e-8.</p>
+<p>Forty minutes of wall clock and about six dollars on eight v5e chips, spent answering three
+questions: what fits, what is worth running, and what breaks when you add more chips.</p>
+<p>The short version of all three. What fits is tensor parallel, not data parallel, and I predicted
+that before running it. What is worth running is global batch 32, which is nowhere near the
+memory limit. And what breaks is not the chip count, it is the network fabric.</p>
+<p>Everything I show you traces to a named artifact file from one run.</p>
+</blockquote>
+<p><em>Advance.</em></p>
+<hr />
+<h2>Slide 2: Memory (0:45 to 1:45)</h2>
+<blockquote>
+<p>First: the useful batch and the memory wall are not the same shape, and that gap is the whole
+point of the capacity lab.</p>
+<p>Throughput saturates at global batch 32. Sixteen thousand five hundred tokens a second, using
+59% of HBM. The first shape that actually fails to compile is global batch 512. That is four
+doublings of headroom between &quot;as fast as this gets&quot; and &quot;out of memory&quot;, and everything in
+between spends memory for nothing. Going from 32 to 64 buys you 0.4% more throughput for 13%
+more memory.</p>
+<p>The other number here is the ceiling. 25.5% of the chip's BF16 peak, and it plateaus there
+across an eight-times range of batch sizes. More work per step does not help after gb32.</p>
+<p><strong>[cut]</strong> And the cheapest thing on this slide is the ahead-of-time compile. Seventeen cents of
+compute told me the DP8 layout would die before I ran a single training step. It needed 65
+gigabytes against 15.75 available.</p>
+</blockquote>
+<p><em>Advance.</em></p>
+<hr />
+<h2>Slide 3: The model (1:45 to 2:45)</h2>
+<blockquote>
+<p>Second: fine-tuning worked, and the evidence for it is thinner than the headline number
+suggests.</p>
+<p>Two hundred steps of SFT moved banking77 exact match from 70% to 92.5% on forty held-out
+prompts, with format compliance holding at 100% and GSM8K retention going up rather than down.
+That is a clean result and it is the one I would ship.</p>
+<p>Here is why I will not call it a launch decision. GRPO's accuracy effect came out plus 12.5
+points on this run, and minus 12.5 points on an identically configured run three days earlier,
+with the guardrail flipping from pass to fail. That is a two-example swing on a sixteen-item
+set.</p>
+<p>The primary suite says the same thing more formally. The Wilson intervals still overlap by 1.8
+points, and I would need 97 examples for a plus or minus ten point margin. I used forty.</p>
+<p>So the honest framing is: this is a release smoke test, not a launch.</p>
+</blockquote>
+<p><em>Advance.</em></p>
+<hr />
+<h2>Slide 4: Scaling (2:45 to 4:00)</h2>
+<blockquote>
+<p>Third, and this is the result I would actually defend: chip count is not the scaling unit. The
+fabric is.</p>
+<p>Going from 8 to 16 chips inside one ICI slice is essentially free. 100.1% strong scaling
+efficiency, 99.6% weak. Per chip throughput goes from 2,025 tokens a second to 2,026. You get
+the second eight chips for nothing.</p>
+<p>Now take those same sixteen chips and split them across two slices, so the data-parallel
+gradient all-reduce has to cross DCN instead of ICI. Same model, same batches, same logical
+layout. Efficiency drops to 65.2% strong and 53.6% weak.</p>
+<p>And there is one result I cannot explain. DCN weak scaling came out worse per chip than DCN
+strong. 1,085 tokens per second per chip against 1,320. A fixed-size gradient all-reduce should
+not do that, because the payload is set by the model, not the batch. Differencing against ICI at
+matched batch shows 3.51 seconds of exposed communication against 1.08, a 3.2 times jump for
+the same payload.</p>
+<p>Lost compute-communication overlap, rematerialization at 110% of the AOT limit, and contention
+from other students on a shared fabric are all consistent with that. The GKE jobs saved no
+traces, so I genuinely cannot tell you which it is. Re-running those two trials with profiling
+on is the first thing I would do with more time.</p>
+</blockquote>
+<p><em>Advance.</em></p>
+<hr />
+<h2>Slide 5: Conclusion (4:00 to 5:00)</h2>
+<blockquote>
+<p>So: what I would ship, and what this pod says about bigger models.</p>
+<p>I would ship the SFT checkpoint at step 202. It is the only candidate with a domain gain, no
+retention regression, and an actual serving measurement behind it. I would explicitly not lean
+on GRPO, because its accuracy win did not reproduce.</p>
+<p><strong>[cut]</strong> One caveat I will state rather than hide: the run's own stopping rule prefers step 50,
+where held-out loss was best at 0.0436 before drifting to 0.0623 by step 200. No task metric was
+ever run against step 50, which is a gap.</p>
+<p>Two things here generalize past this hardware. The first is the arithmetic: 16 bytes of training
+state per parameter is what tells you which models a fleet can train at all. Apply it to a
+2.8 trillion parameter model and you need eleven times the HBM of an entire 256-chip v5e pod,
+which is why those models arrived in 2026 and not 2023.</p>
+<p>The second is the fabric result. On Ironwood that boundary moves from sixteen chips to over nine
+thousand, but it does not disappear, and mixture-of-experts models put a second collective on
+the critical path. Google's new inference part drops the 3D torus for a topology built
+specifically to make all-to-all cheaper, which suggests they reached the same conclusion.</p>
+<p>Thanks.</p>
+</blockquote>
+<hr />
+<h2>Recording notes</h2>
+<ul>
+<li><strong>Cmd-P on the deck</strong> prints one slide per PDF page if you want slides as a file.</li>
+<li>The deck is at 100% zoom by default. Full-screen the browser before recording so the footer
+navigation is not in frame.</li>
+<li>If you overrun, cut the two <strong>[cut]</strong> paragraphs. That saves about 35 seconds.</li>
+<li>Slide 4 is the strongest content. If you have to rush anything, rush slide 3, not slide 4.</li>
+<li>The forward-looking material lives in the separate 7-slide outlook deck and is not needed here.
+The last paragraph of slide 5 is the only place it appears, deliberately.</li>
+</ul>
+
+<footer>Anh Nguyen &middot; Stanford ME344, Summer 2026 &middot; run <code>qanh-20260813t194806z</code> &middot;
+generated by <code>publish_site.py</code></footer>
+</div>
+</body>
+</html>
