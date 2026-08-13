@@ -1,0 +1,234 @@
+final/audit.html
+  s_12283f6ed82210::t_240a08fa27a4bb 1-414
+final/assignment/index.html
+  s_12283f6ed82210::t_240a08fa27a4bb 1-148
+final/outlook.html
+  s_12283f6ed82210::t_240a08fa27a4bb 1-397
+final/artifacts/index.html
+  s_12283f6ed82210::t_8f46dfc79d1ff7 1-393
+final/index.html
+  s_12283f6ed82210::t_aff723c3c75785 115-148
+  s_12283f6ed82210::t_594a5bc3fd8713 237-259,264-267
+final/recovered/index.html
+  s_12283f6ed82210::t_8f46dfc79d1ff7 1-94
+final/assignment/final_project.html
+  s_12283f6ed82210::t_240a08fa27a4bb 1-10121
+final/outlook-slides.html
+  s_12283f6ed82210::t_99f4390c742df8 1-277
+final/artifacts/answers.md
+  s_12283f6ed82210::t_af28558223afcc 1-11
+final/artifacts/capacity-dp8-aot.log
+  s_12283f6ed82210::t_3d3a5009a018e1 1-76
+final/artifacts/capacity-tp8-aot.log
+  s_12283f6ed82210::t_47c03fba0fa561 1-37
+final/artifacts/capacity.svg
+  s_12283f6ed82210::t_66f1bfa7d2d75c 1-1927
+final/artifacts/capacity_report.json
+  s_12283f6ed82210::t_6bad40a8233b13 1-63
+final/artifacts/checkpoint_paths.txt
+  s_12283f6ed82210::t_d93c1803124e12 1-3
+final/artifacts/commands.sh
+  s_12283f6ed82210::t_52178b605f6f4c 1-38
+final/artifacts/compute_bound.json
+  s_12283f6ed82210::t_b9a496db8b73b2 1-73
+final/artifacts/compute_bound.svg
+  s_12283f6ed82210::t_cc7a77f3dbc5d2 1-1675
+final/artifacts/config.json
+  s_12283f6ed82210::t_ec7e0dfe865335 1-105
+final/artifacts/cost_ledger.csv
+  s_12283f6ed82210::t_9321a5f6f10afc 1-26
+final/artifacts/dataset_report.json
+  s_12283f6ed82210::t_d882d8b319b2b5 1-43
+final/artifacts/eval_dataset_report.json
+  s_12283f6ed82210::t_95d74fd32c8ef6 1-31
+final/artifacts/eval_suite.jsonl
+  s_12283f6ed82210::t_079539247a6d1a 1-56
+final/artifacts/evaluation_results.csv
+  s_12283f6ed82210::t_4b427422781016 1-3
+final/artifacts/evaluation_summary.json
+  s_12283f6ed82210::t_3bfd84e8570bd4 1-38
+final/artifacts/evaluation_uncertainty.json
+  s_12283f6ed82210::t_86a7298d8ada97 1-25
+final/artifacts/evaluation_uncertainty.svg
+  s_12283f6ed82210::t_b542d06946d895 1-996
+final/artifacts/inference-base.log
+  s_12283f6ed82210::t_d5c82422c5389e 1-217
+final/artifacts/inference-sft.log
+  s_12283f6ed82210::t_77f1123154565e 1-248
+final/artifacts/me344-qanh-20260813t194806z-sweep-gb128.log
+  s_12283f6ed82210::t_f143d2e9e57593 1-68
+final/artifacts/me344-qanh-20260813t194806z-sweep-gb16.log
+  s_12283f6ed82210::t_e0a9b82433d769 1-68
+final/artifacts/me344-qanh-20260813t194806z-sweep-gb256.log
+  s_12283f6ed82210::t_26b156cae5378a 1-68
+final/artifacts/me344-qanh-20260813t194806z-sweep-gb32.log
+  s_12283f6ed82210::t_accd364ce82546 1-68
+final/artifacts/me344-qanh-20260813t194806z-sweep-gb4.log
+  s_12283f6ed82210::t_f08d3a3763578a 1-68
+final/artifacts/me344-qanh-20260813t194806z-sweep-gb64.log
+  s_12283f6ed82210::t_3aa8510c0f424f 1-68
+final/artifacts/me344-qanh-20260813t194806z-sweep-gb8.log
+  s_12283f6ed82210::t_ca96b00be1459f 1-68
+final/artifacts/outputs_base.jsonl
+  s_12283f6ed82210::t_4a8c1cce6ede21 1-56
+final/artifacts/outputs_sft.jsonl
+  s_12283f6ed82210::t_e4fe38b9137447 1-56
+final/artifacts/pretrain.log
+  s_12283f6ed82210::t_e8ba0bf02f4eb0 1-195
+final/artifacts/pretrain_metrics.jsonl
+  s_12283f6ed82210::t_a108b624bacc7e 1-5
+final/artifacts/profile.log
+  s_12283f6ed82210::t_1f1a099771b99b 1-80
+final/artifacts/profile_metrics.jsonl
+  s_12283f6ed82210::t_8ddbe99d80a536 1-10
+final/artifacts/recovery_report.json
+  s_12283f6ed82210::t_1ac768f3e5296f 1-17
+final/artifacts/rl.log
+  s_12283f6ed82210::t_4dee2ec7687553 1-846
+final/artifacts/rl_dataset_report.json
+  s_12283f6ed82210::t_40cdd17021f585 1-24
+final/artifacts/rl_reward.svg
+  s_12283f6ed82210::t_16a7d8e4a8c4a9 1-2189
+final/artifacts/rl_reward_events.jsonl
+  s_12283f6ed82210::t_5683c939c2b2cd 1-132
+final/artifacts/rl_summary.json
+  s_12283f6ed82210::t_830f8321189c32 1-111
+final/artifacts/rl_task.py
+  s_12283f6ed82210::t_e07b73b9a459b1 1-159
+final/artifacts/scale_handoff.json
+  s_12283f6ed82210::t_8a368c569b4297 1-17
+final/artifacts/scale_out.json
+  s_12283f6ed82210::t_b27150ab0f5a9d 1-145
+final/artifacts/scaling/baseline.json
+  s_12283f6ed82210::t_1d379999d50ce2 1-25
+final/artifacts/scaling/ici_strong.json
+  s_12283f6ed82210::t_7ab3504add8cd8 1-25
+final/artifacts/scaling/ici_weak.json
+  s_12283f6ed82210::t_ae20967dfb444d 1-25
+final/artifacts/scaling/strong.json
+  s_12283f6ed82210::t_8da6340151932d 1-25
+final/artifacts/scaling/weak.json
+  s_12283f6ed82210::t_4fe6b5cffba197 1-25
+final/artifacts/serving_results.csv
+  s_12283f6ed82210::t_4f96d15afd40c4 1-3
+final/artifacts/sft-resume.log
+  s_12283f6ed82210::t_09b6da99e34cb7 1-210
+final/artifacts/sft.log
+  s_12283f6ed82210::t_e17baeb3efbfaf 1-760
+final/artifacts/sft_metrics.jsonl
+  s_12283f6ed82210::t_04cfb70baa614e 1-209
+final/artifacts/sft_resume_metrics.jsonl
+  s_12283f6ed82210::t_3f507cee3be292 1-2
+final/artifacts/smoke.log
+  s_12283f6ed82210::t_d2834a475d7ce2 1-57
+final/artifacts/smoke_metrics.jsonl
+  s_12283f6ed82210::t_abf25993d1ce7a 1-5
+final/artifacts/sweep-aot-gb128.log
+  s_12283f6ed82210::t_0714297796a948 1-37
+final/artifacts/sweep-aot-gb16.log
+  s_12283f6ed82210::t_4985428474200a 1-37
+final/artifacts/sweep-aot-gb256.log
+  s_12283f6ed82210::t_ab9a25ff01414c 1-37
+final/artifacts/sweep-aot-gb32.log
+  s_12283f6ed82210::t_3f4941305be964 1-37
+final/artifacts/sweep-aot-gb4.log
+  s_12283f6ed82210::t_5cadbf1b1e71e6 1-37
+final/artifacts/sweep-aot-gb512.log
+  s_12283f6ed82210::t_a662253803a3ef 1-76
+final/artifacts/sweep-aot-gb64.log
+  s_12283f6ed82210::t_61125666d97c7c 1-37
+final/artifacts/sweep-aot-gb8.log
+  s_12283f6ed82210::t_1fc8dabb2fcd5d 1-37
+final/artifacts/sweep-gb128.jsonl
+  s_12283f6ed82210::t_145b7c6f4c63b7 1-8
+final/artifacts/sweep-gb16.jsonl
+  s_12283f6ed82210::t_9fbbc24a6ee6e4 1-8
+final/artifacts/sweep-gb256.jsonl
+  s_12283f6ed82210::t_e44d97e7905651 1-8
+final/artifacts/sweep-gb32.jsonl
+  s_12283f6ed82210::t_2e4160b41f7810 1-8
+final/artifacts/sweep-gb4.jsonl
+  s_12283f6ed82210::t_c75ff9e5e7ff9a 1-8
+final/artifacts/sweep-gb64.jsonl
+  s_12283f6ed82210::t_044323063922b8 1-8
+final/artifacts/sweep-gb8.jsonl
+  s_12283f6ed82210::t_a9f096dbd019d3 1-8
+final/artifacts/sweep.svg
+  s_12283f6ed82210::t_8d566e114ebfb8 1-4427
+final/artifacts/sweep_results.csv
+  s_12283f6ed82210::t_5987d885a1c1fa 1-9
+final/artifacts/system_info.json
+  s_12283f6ed82210::t_4cdf40230984ca 1-50
+final/artifacts/systems_dashboard.svg
+  s_12283f6ed82210::t_e7158aa235cad6 1-5935
+final/artifacts/token_budget.json
+  s_12283f6ed82210::t_d9da8e3d03dd79 1-14
+final/artifacts/token_budget.svg
+  s_12283f6ed82210::t_ff57989fddb4a6 1-1075
+final/artifacts/training_curve.svg
+  s_12283f6ed82210::t_0bc14d0ee6907a 1-1708
+final/artifacts/training_decision.json
+  s_12283f6ed82210::t_65d93aeeae32e1 1-53
+final/artifacts/wandb_run.json
+  s_12283f6ed82210::t_c1c230799aecc1 1-6
+final/artifacts/xprof_command.txt
+  s_12283f6ed82210::t_1ec3d86d9d4c67 1-4
+final/assignment/Dockerfile
+  s_12283f6ed82210::t_4657dc5cf4927d 1-32
+final/assignment/README.md
+  s_12283f6ed82210::t_06ed75f30201fb 1-264
+final/assignment/examples/sft_pairs.jsonl
+  s_12283f6ed82210::t_e9855a9444fada 1-4
+final/assignment/final_project.ipynb
+  s_12283f6ed82210::t_0e85a5ecea61ac 1-869
+final/assignment/scale-job.yaml
+  s_12283f6ed82210::t_57a58aec34c044 1-121
+final/assignment/scripts/chat.py
+  s_12283f6ed82210::t_61c444bb5d4cba 1-117
+final/assignment/scripts/final_project.py
+  s_12283f6ed82210::t_5a3b52584f74d1 1-5195
+final/assignment/scripts/prepare_sft_jsonl.py
+  s_12283f6ed82210::t_88bae57b3dbe81 1-220
+final/assignment/scripts/start_tpu_vm.sh
+  s_12283f6ed82210::t_0bcf3b734f21cd 1-132
+final/assignment/scripts_used/bootstrap_tpu.sh
+  s_12283f6ed82210::t_f83fb8bbac7d82 1-65
+final/assignment/scripts_used/package_only.py
+  s_12283f6ed82210::t_adbe8fb6dd1928 1-47
+final/assignment/scripts_used/repackage.py
+  s_12283f6ed82210::t_53b6c034d3a0b7 1-45
+final/assignment/scripts_used/rerun_cells.py
+  s_12283f6ed82210::t_83b606ae54f922 1-133
+final/recovered/RECOVERED_RESULTS.md
+  s_12283f6ed82210::t_2bfb8062400504 1-126
+final/recovered/baseline.json
+  s_12283f6ed82210::t_e5c7909fdcbe01 1-25
+final/recovered/handoff.json
+  s_12283f6ed82210::t_c9c3355ba1de5e 1-17
+final/recovered/ici_strong.json
+  s_12283f6ed82210::t_4dd9361c3209fe 1-25
+final/recovered/ici_weak.json
+  s_12283f6ed82210::t_055f8a6cfb8087 1-25
+final/recovered/session3-cells1-33-full.log
+  s_12283f6ed82210::t_93ca950185f482 1-1502
+final/recovered/strong.json
+  s_12283f6ed82210::t_12c2f6fb4a5216 1-25
+final/recovered/weak.json
+  s_12283f6ed82210::t_c2789211b1c6db 1-25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "50301ebd49739fd269e485d7e3356e97cca487fe",
+  "prompts": {},
+  "sessions": {
+    "s_12283f6ed82210": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9e3fc376-acc5-43cc-b10a-9b8d5821f7cc",
+        "model": "claude-opus-5"
+      },
+      "human_author": "anh nguyen <anh.nqqq@icloud.com>"
+    }
+  }
+}
