@@ -1,0 +1,21 @@
+final/five.html
+  s_c12f428810e9e0::t_d2b5d3495f95cb 1-270
+final/index.html
+  s_c12f428810e9e0::t_eecd32d112476f 96-101
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "68c07151aefd0e6c2d81f95baeb0b3cab10f2255",
+  "prompts": {},
+  "sessions": {
+    "s_c12f428810e9e0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cfd0e4e8-14d7-4b14-9c6c-623e99c77f37",
+        "model": "claude-opus-5"
+      },
+      "human_author": "anh nguyen <anh.nqqq@icloud.com>"
+    }
+  }
+}
