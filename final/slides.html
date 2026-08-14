@@ -849,6 +849,57 @@
   </section>
 
   <section class="slide">
+    <div class="kicker">The open question, now answered</div>
+    <h2>Does the ceiling track HBM bandwidth? Yes.</h2>
+    <p class="lede">The deck asked whether the knee follows HBM bandwidth or stays at gb32. On
+      2026-08-14 the same config ran on v6e and v5p, and the answer is bandwidth: every chip lands
+      near its bandwidth ratio, nowhere near its FLOPs ratio.</p>
+    <div class="body">
+      <table>
+        <thead><tr><th>Chip</th><th>Chips</th><th>Batch/chip</th><th>s/step</th><th>tokens/s</th>
+          <th>tokens/s/chip</th><th>MFU</th><th>Bytes/FLOP</th></tr></thead>
+        <tbody>
+          <tr><td>v5e</td><td>8</td><td>32</td><td>4.039</td><td>16,226</td><td>2,028</td>
+            <td>25.1%</td><td>4.16</td></tr>
+          <tr><td>v6e</td><td>8</td><td>32</td><td>1.870</td><td>35,052</td><td>4,382</td>
+            <td class="bad">11.6%</td><td>1.79</td></tr>
+          <tr class="good"><td>v6e</td><td>16</td><td>16</td><td>0.962</td><td>68,102</td><td>4,256</td>
+            <td class="bad">11.3%</td><td>1.79</td></tr>
+          <tr class="good"><td>v5p</td><td>4</td><td>32</td><td>1.372</td><td>23,880</td><td>5,969</td>
+            <td>31.7%</td><td>6.02</td></tr>
+        </tbody>
+      </table>
+      <div class="grid g3" style="margin-top:14px">
+        <div class="card"><h3>ICI still nearly free, on v6e too</h3><div class="stat ok">97.1%</div>
+          <div class="sub">8 to 16 v6e chips at fixed batch: 1.870 s to 0.962 s, a 1.943&times;
+            speedup for 2&times; the chips. Matches the ~100% ICI efficiency measured on v5e.</div></div>
+        <div class="card"><h3>Speedup follows bandwidth, not FLOPs</h3><div class="stat">2.16&times;</div>
+          <div class="sub">v6e has <b>4.66&times;</b> the bf16 peak of v5e but delivered
+            <b>2.16&times;</b>, almost exactly its <b>2.00&times;</b> bandwidth ratio. v5p likewise:
+            2.94&times; measured against a 3.38&times; bandwidth ratio.</div></div>
+        <div class="card"><h3>Bytes per FLOP predicts MFU</h3><div class="stat ok">rank-perfect</div>
+          <div class="sub">v5p 6.02 &rarr; 31.7%, v5e 4.16 &rarr; 25.1%, v6e 1.79 &rarr; 11.6%.
+            The <em>fastest</em> chip has the <em>worst</em> MFU, because its compute outgrew its
+            memory. So the fix is longer sequences, not newer silicon.</div></div>
+      </div>
+      <div class="note" style="margin-top:12px">Two practical consequences. Never compare MFU across
+        generations without saying so, since the denominator moves: report tokens/s and MFU together.
+        And if v6e costs more than 2.16&times; v5e per chip-hour, <b>v5e is the better value for this
+        exact config</b>. Google's own roadmap agrees with the diagnosis: TPU 8t raises HBM from
+        8-high to 12-high stacks for roughly 30% more bandwidth.</div>
+      <div class="src"><b>source:</b> tpu-capacity-hunter/benchmarks/RESULTS-2026-08-14.md,
+        identical MaxText 17c7172 config throughout (qwen3-4b-thinking-2507, seq 256, synthetic data,
+        <code>learning_rate=0</code>, FSDP off, TP capped at 8, 12 steps averaging the last 8).<br>
+        <b class="mono" style="color:#b3261e">provenance caveat:</b> these four runs are <b>TPU VM</b>
+        runs on <b>spot</b> capacity (v5e us-south1-a, v6e us-central1-b, v5p us-east5-a), not GKE
+        JobSet runs, and every one is a <b>single slice</b>, so nothing here measures DCN on v6e. The
+        v5e row is an independent re-measurement that reproduces the 8-chip baseline on this deck to
+        within 2% (2,028 against 2,025 tokens/s/chip), which is what makes the comparison legitimate.
+        TP caps at 8 because Qwen3-4B has 8 KV heads, so the 16-chip run is DP2&times;TP8.</div>
+    </div>
+  </section>
+
+  <section class="slide">
     <div class="kicker">Next</div>
     <h2>What I would try with more time</h2>
     <div class="body">
@@ -878,8 +929,11 @@
               fusion rather than attention.</li>
             <li>Sweep sequence length as well as batch, to find where the knee moves as attention
               share grows.</li>
-            <li>Repeat the frontier on a v6e to see whether the knee tracks HBM bandwidth or stays
-              at gb32.</li>
+            <li><s>Repeat the frontier on a v6e to see whether the knee tracks HBM bandwidth or
+              stays at gb32.</s> <b>Done 2026-08-14: it tracks bandwidth.</b> v6e gave 2.16&times;
+              against a 2.00&times; bandwidth ratio and a 4.66&times; FLOPs ratio, and MFU fell to
+              11.6%. What remains is the sequence-length sweep on v6e, and DCN on v6e, which needs
+              two slices and a Kueue flavor the class queue does not have.</li>
           </ul>
         </div>
         <div class="card"><h3>Reproducibility notes worth keeping</h3>
@@ -902,7 +956,7 @@
 </div>
 
 <footer>
-  <div>Anh Nguyen &middot; ME344 Final Project &middot; run qanh-20260813t194806z &middot; TPU v5e-8, MaxText 17c7172</div>
+  <div>Anh Nguyen &middot; ME344 Final Project &middot; run qanh-20260813t194806z &middot; TPU v5e-8, MaxText 17c7172 &middot; v6e/v5p addendum 2026-08-14</div>
   <nav>
     <button onclick="go(-1)">&larr; Prev</button>
     <span id="counter" class="mono"></span>

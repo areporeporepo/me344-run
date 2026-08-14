@@ -99,9 +99,12 @@
         <p>Fails to compile. 18.43 GiB of temporaries against 15.75 available.</p>
         <h3>The ceiling: 25.5%</h3>
         <p>Of the 197 BF16 TFLOP/s peak, and it plateaus there across an 8x range of batch sizes.</p>
-        <h3 class="warn">What I did not isolate</h3>
-        <p>At 25.5% of peak the arithmetic units are clearly not the limit. Memory bandwidth and
-          fixed per-step overhead are both candidates. This run did not separate them.</p>
+        <h3 class="ok">Now isolated: it is memory bandwidth</h3>
+        <p>Re-running the identical config on v6e and v5p separates the two candidates. v6e has
+          4.66x the compute of v5e but delivered 2.16x, almost exactly its 2.00x bandwidth ratio,
+          and MFU <em>fell</em> to 11.6%. Across all three chips MFU rank-orders perfectly by bytes
+          per FLOP: v5p 6.02 to 31.7%, v5e 4.16 to 25.1%, v6e 1.79 to 11.6%. Bandwidth is the limit,
+          not per-step overhead.</p>
       </div>
     </div>
     <div class="src">sweep_results.csv &middot; capacity_report.json &middot; 8 batch sizes, AOT
@@ -141,7 +144,8 @@
       <div class="points">
         <h3 class="ok">Inside one ICI slice: free</h3>
         <p>8 to 16 chips holds 100.1% strong and 99.6% weak efficiency. Per chip throughput goes
-          2,025 to 2,026.</p>
+          2,025 to 2,026. <b>Replicated on v6e</b> on 2026-08-14: 8 to 16 chips gave 97.1% strong
+          scaling, 1.870 s to 0.962 s. The result is not specific to v5e.</p>
         <h3 class="bad">Across DCN: 35% gone</h3>
         <p>Same model, same batches, same logical layout. Only the fabric the gradient all-reduce
           travels over changed.</p>
@@ -190,7 +194,7 @@
 </div>
 
 <footer>
-  <div>Anh Nguyen &middot; ME344 Final Project &middot; run qanh-20260813t194806z &middot; v5e-8, MaxText 17c7172</div>
+  <div>Anh Nguyen &middot; ME344 Final Project &middot; run qanh-20260813t194806z &middot; v5e-8, MaxText 17c7172 &middot; v6e/v5p addendum 2026-08-14</div>
   <nav>
     <button onclick="go(-1)">&larr; Prev</button>
     <span id="counter" class="mono"></span>
