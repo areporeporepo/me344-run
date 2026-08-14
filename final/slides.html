@@ -256,7 +256,7 @@
     <div class="kicker">Question 3</div>
     <h2>Where does a training step actually spend its time?</h2>
     <div class="body">
-      <div class="figrow"><img src="figures/slide_step_split.svg" alt="The FLOP split of one step, and how it inverts with L" style="max-height:40vh"></div>
+      <div class="figrow figpair"><img src="figures/slide_step_split.svg" alt="The FLOP split of one step, and how it inverts with L" style="max-height:30vh"><img class="explainer" src="https://storage.googleapis.com/gweb-cloudblog-publish/images/1_Z5xATZ3.max-2000x2000.png" alt="Google diagram: the Ironwood TPU, built around MXU matrix units, VPU, HBM and ICI" style="max-height:30vh" loading="lazy"></div>
       <div class="grid g2">
         <div class="card"><h3>XProf, per train step</h3>
           <div class="stat">24.94 TFLOPs</div>
@@ -279,7 +279,7 @@
           </ul>
         </div>
       </div>
-      <div class="src"><b>source:</b> profile.log (<code>Total TFLOPs: 24.94, split as 99.07%
+      <div class="src"><b>diagram:</b> Google Cloud, "From silicon to softmax: inside the Ironwood AI stack", 2025-11-06, reproduced for teaching with attribution.<br><b>source:</b> profile.log (<code>Total TFLOPs: 24.94, split as 99.07%
         learnable weight flops and 0.93% attention flops</code>), profile_metrics.jsonl<br>
         <b>invocation:</b> xprof_command.txt &middot; <b>trace:</b> xprof_profile/ (kept out of the
         public site for size)</div>
@@ -478,7 +478,7 @@
     <p class="lede">Five GKE JobSet runs: an 8-chip baseline, then 16 chips two ways, inside one
       ICI slice and across two slices over DCN.</p>
     <div class="body">
-      <div class="figrow figpair"><img src="figures/slide_scaling.svg" alt="Per-chip throughput across the five scaling trials" style="max-height:23vh"><img class="explainer" src="https://storage.googleapis.com/gweb-cloudblog-publish/images/1a-01.max-1600x1600.png" alt="Google diagram: two TPU pods, a slice in each, ICI inside a slice and DCN between them" style="max-height:23vh" loading="lazy"></div>
+      <div class="figrow figpair"><img src="figures/slide_scaling.svg" alt="Per-chip throughput across the five scaling trials" style="max-height:21vh"><img class="explainer" src="https://storage.googleapis.com/gweb-cloudblog-publish/images/1a-01.max-1600x1600.png" alt="Google diagram: two TPU pods, a slice in each, ICI inside a slice and DCN between them" style="max-height:21vh" loading="lazy"></div>
       <table>
         <thead><tr><th>Run</th><th>Chips</th><th>Fabric</th><th>Topology</th><th>Slices</th>
           <th>Batch</th><th>s/step</th><th>tokens/s</th><th>tokens/s/chip</th><th>Efficiency</th></tr></thead>
@@ -685,6 +685,7 @@
     <p class="lede">Two measurements from this run generalize past Qwen3-4B: the 16 bytes/parameter
       memory law, and the 0.93% attention share. Both say something concrete about frontier models.</p>
     <div class="body">
+      <div class="figrow"><img class="explainer" src="https://storage.googleapis.com/gweb-cloudblog-publish/images/5_I1mUzjb.max-1300x1300.png" alt="Google diagram: TPU 8i Boardfly, four-chip blocks into fully connected groups" style="max-height:19vh" loading="lazy"></div>
       <div class="grid g2">
         <div class="card"><h3>1. Memory forces you onto the slow fabric</h3>
           <div class="sub">Minimum chips to hold training state ≈ 16 bytes &times; params / 15.75 GiB.
@@ -723,7 +724,7 @@
             is a different machine problem than the one I benchmarked, using the same chips.</div>
         </div>
       </div>
-      <div class="src"><b>derived from:</b> capacity_report.json (16 bytes/param law, validated
+      <div class="src"><b>diagram:</b> Google Cloud, "Inside the eighth-generation TPU", 2026-04-22, reproduced for teaching with attribution.<br><b>derived from:</b> capacity_report.json (16 bytes/param law, validated
         against persistent_training_state_gib = 44.95), sweep_results.csv
         (runtime_hbm_limit_gib_per_chip = 15.75), profile.log (0.93% attention at L=256),
         scale_out.json (DCN efficiency).<br>
