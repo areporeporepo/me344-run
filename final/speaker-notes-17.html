@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Speaker script: 17 slides, about 17 minutes</title>
+<style>
+  :root {
+    --bg: #f5f5f7; --panel: #ffffff; --border: #d2d2d7;
+    --text: #1d1d1f; --dim: #6e6e73; --accent: #0071e3;
+    --ok: #34c759; --warn: #ff9f0a; --fail: #ff3b30;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.65 -apple-system, BlinkMacSystemFont, "SF Pro Text", Helvetica, Arial, sans-serif; }
+  code, pre, table { font-family: "SF Mono", ui-monospace, Menlo, monospace; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 48px 24px 80px; }
+  .back { font-size: 13px; color: var(--accent); text-decoration: none; }
+  h1 { font-size: 34px; line-height: 1.15; margin: 14px 0 8px; letter-spacing: -0.02em; }
+  h2 { font-size: 22px; margin: 38px 0 10px; letter-spacing: -0.01em;
+       border-top: 1px solid var(--border); padding-top: 22px; }
+  h3 { font-size: 16.5px; margin: 24px 0 8px; }
+  p, li { max-width: 78ch; }
+  a { color: var(--accent); }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; background: var(--panel); margin: 12px 0; }
+  th, td { border: 1px solid var(--border); padding: 7px 10px; text-align: right; }
+  th:first-child, td:first-child { text-align: left; }
+  thead th { background: #fafafa; color: var(--dim); font-weight: 600; }
+  pre { background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+        padding: 13px 16px; overflow-x: auto; font-size: 13px; }
+  code { font-size: 13.5px; }
+  p code, li code, td code { background: #ececf0; padding: 1px 5px; border-radius: 4px; }
+  pre code { background: none; padding: 0; }
+  blockquote { border-left: 3px solid var(--warn); background: #fffaf0; margin: 14px 0;
+               padding: 10px 16px; color: var(--dim); font-size: 14px; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+  footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--border);
+           font-size: 12.5px; color: var(--dim); }
+</style>
+</head>
+<body>
+<div class="wrap">
+<a class="back" href="index.html">&larr; Overview</a>
+<h1>Speaker Script: 17 Slides, About 17 Minutes</h1>
+<p>The long technical walkthrough, for
+<a href="https://areporeporepo.github.io/me344-run/final/slides.html"><code>slides.html</code></a>. The five-minute cut
+and its script are separate: see <a href="speaker-notes.html"><code>speaker-notes.html</code></a>.</p>
+<p>Roughly 2,550 words. Timings are cumulative. Nine slides carry a chart, and slides 11 and 12 pair
+a measured chart with Google's own Multislice diagram, so on those two say what the diagram shows
+before you give the number.</p>
+<p>Drafted by Gemini 3.1 Pro against the deck and the outlook, then checked against the artifact
+files. Two things were corrected in that pass: it conflated the two utilisation metrics on slide 4,
+and it quoted Kimi K3's training state in TiB where the chart uses TB.</p>
+<hr />
+<h2>Slide 1: Introduction (0:00 to 1:00)</h2>
+<blockquote>
+<p>Welcome. I am presenting my final project for ME344 on 13 August 2026. I trained, tuned, and scaled Qwen3-4B on a TPU v5e-8. This run, qanh-20260813t194806z, took about 40 minutes, from 19:48Z to 20:28Z. I started by planning the memory before running it. I found the batch boundary, profiled the step, and ran 200 steps of supervised fine tuning. Then I recovered from a checkpoint, ran GRPO, evaluated the changes, and tested GKE ICI versus DCN scaling. My hardware is 8 v5e chips in a 2x4 ICI topology, giving 15.75 GiB of XLA-reported HBM per chip and a 197 BF16 TFLOP/s peak. The model has exactly 4,022,468,096 parameters, and its BF16 checkpoint takes 7.49 GiB. Every single number you will see today is traceable to an artifact file under artifacts/qanh-20260813t194806z.</p>
+</blockquote>
+<h2>Slide 2: AOT Memory Planning (1:00 to 2:05)</h2>
+<blockquote>
+<p>Question one is whether the first training step will fit before I pay for it. I used ahead of time compilation to find out. I gave the compiler two layouts. The first layout used TP8, tensor parallelism of 8. The compiler predicted it would need 8.23 GiB per chip, which fits within our 15.75 GiB limit. I ran it, and it fit. The second layout was DP8, replicating the state on every chip. The compiler predicted an out of memory error, needing 65.47 GiB of HLO temporaries. I ran it anyway, and it immediately crashed at exactly 65.47 GiB. I ran a failure on purpose because a formula that only ever agrees with successes has not been tested. This proves the 16 bytes per parameter rule. You need 12 bytes of persistent state, which is FP32 weights 4 plus two Adam moments 8, plus a 4 byte transient FP32 gradient. Multiplying 12 by 4.022e9 parameters gives 44.95 GiB of state. Tensor parallelism shards that dense persistent state eight ways. Data parallelism replicates it on every chip, demanding the whole 59.94 GiB against the 15.75 GiB available.</p>
+</blockquote>
+<h2>Slide 3: The Batch Boundary (2:05 to 3:10)</h2>
+<blockquote>
+<p>Question two asks how much work one step should hold. I asked the compiler to check 8 global batch sizes at sequence length 256. Then I measured them. The memory boundary and the throughput knee are 4 doublings apart. The throughput knee hits at global batch 32. At that shape, the step processes 16,562 tokens/s and consumes 59.4% of the memory limit. This is the smallest batch within 1% of peak. Pushing to global batch 64 buys only 0.4% more throughput for 13% more HBM. Past the knee, throughput sits flat within noise for global batch 128, then goes down. Global batch 256 is 2% slower while using 86% more memory. It compiles at 110.3% of the limit and still runs, because the ahead of time total is conservative rather than exact. The memory boundary hits at global batch 512. The compiler showed it needs 18.43 GiB of temporary memory against 15.75 GiB available, so I knew it would fail before running it.</p>
+</blockquote>
+<h2>Slide 4: Hardware Headroom (3:10 to 4:15)</h2>
+<blockquote>
+<p>The second part of question two is how much hardware headroom is left. I computed a theoretical compute lower bound using 6 parameters times tokens against the published 197 BF16 TFLOP/s peak. Measured throughput saturates near one quarter of peak. At global batch 32, we hit 25.6% of the BF16 peak. At global batch 64 and global batch 128, the curve flattens completely at 25.7%. It never improves past that point. The run did not isolate why throughput plateaus there. The compute units are clearly not saturated at a quarter of peak. Note there are two closely related numbers here: 25.7% is measured TFLOP/s against the peak, and 25.5% is the time-efficiency measure against a compute-bound lower bound on step time. The remaining 74% is not recoverable by making the step bigger. It would take a different execution strategy, like better overlap, fewer rematerializations, or a fused attention path. The lower bound also assumes zero communication and zero stalls, so it is a utilization proxy rather than true model FLOP utilization.</p>
+</blockquote>
+<h2>Slide 5: Profiling the Step (4:15 to 5:20)</h2>
+<blockquote>
+<p>Question three asks where a training step actually spends its time. XProf captured 3 profiled steps after 3 warmup steps at sequence length 256. The profiler shows a 24.94 TFLOP step, split as 99.07% learnable weight FLOPs and exactly 0.93% attention FLOPs. A few instrumented steps report implausible rates like 2,301 TFLOP/s/device over 0.011 seconds, but that is profiler distortion, not throughput. What this tells us is a very specific tuning story. At sequence length 256, this is a dense matmul workload, not an attention bound one. Attention tricks have under 1% of the step to win back, so they are the wrong lever here. The lever that matters is how efficiently the weight matmuls are fed, which is why the batch sweep saturates instead of climbing. But this 0.93% share is a statement about this specific shape, not about the model. We will see why it inverts on the final slides.</p>
+</blockquote>
+<h2>Slide 6: Supervised Fine Tuning (5:20 to 6:20)</h2>
+<blockquote>
+<p>Question four asks what changed after fine tuning. I ran 200 SFT steps on banking77 intent classification at global batch 4, sequence length 256, and learning rate 3e-6. The domain gain was 22.5 points. On exact match, the model went from 70.0% to 92.5%, moving from 28 out of 40 correct to 37 out of 40. Format compliance held perfectly at 100.0%. For retention, GSM8K went up 6.25 points, from 81.25% to 87.5%, rather than down. This means the fine tune did not trade general ability for the domain. The training loss reached 0.007942 at step 200, from 209 logged points. The earlier Aug 10 run reached 0.007942 as well, matching to six digits.</p>
+</blockquote>
+<h2>Slide 7: Resuming from Checkpoints (6:20 to 7:25)</h2>
+<blockquote>
+<p>The second part of question four asks if we can resume without starting over. I rolled back to step 200, restored the optimizer state, and resumed for steps 201 and 202. The loss before the resume was 0.007942, and the first loss after the resume was 0.012250. This small loss bump is the expected effect of re-entering the data stream, not a lost optimizer state. The state restored successfully. But the stopping rule disagrees. The best held out loss was 0.0436 at step 50. This drifted to 0.0623 by step 200, meaning 6 evaluation intervals passed with no new best. The run recorded a recommendation to stop or roll back. So the task metric prefers step 202, and the held out loss prefers step 50. No task metric was ever run against step 50, which is a real gap in the evaluation.</p>
+</blockquote>
+<h2>Slide 8: Reward Training (7:25 to 8:30)</h2>
+<blockquote>
+<p>Question five asks how reward training is different from SFT. I ran GRPO for 12 updates, using 4 generations per prompt on top of the SFT checkpoint. What GRPO reliably did was teach the output contract. Format compliance jumped from 37.50% to 93.75%, a plus 56.25 point swing. That translates to 6 out of 16 formatted correctly moving to 15 out of 16. The training signal was healthy, with 11 of 12 groups, or 91.7%, having relative signal, and a mean group reward span of 1.36. What it did not reliably do is improve exact accuracy. The exact correct count moved from 10 out of 16 to 12 out of 16, a change of 12.5 points. But an identically configured earlier run from Aug 10 produced a minus 12.5 point drop on this same metric with the guardrail failing. Same config, opposite sign. The accuracy result simply did not reproduce, so it is not trusted. This is direct evidence the accuracy effect is not resolvable at n=16.</p>
+</blockquote>
+<h2>Slide 9: Evaluation Sample Size (8:30 to 9:30)</h2>
+<blockquote>
+<p>How confident can a 40 example evaluation make us? A point estimate without an interval turns random prompt variation into a release claim. I calculated Wilson 95% intervals. The base model hit 70.0%, giving an interval from 54.6% to 81.9%. SFT step 202 hit 92.5%, giving an interval from 80.1% to 97.4%. The intervals still touch by 1.8 points. SFT's lower bound of 80.1% sits just under the base's upper bound of 81.9%. The plus 22.5 point gain is large and almost certainly real, but this suite cannot formally separate them. To get a plus or minus 10 point margin, the worst case sample size is 97 examples. This suite used 40. The run recorded a decision to treat this suite as a release smoke test, and to use a larger representative set for a real launch. I agree with that decision.</p>
+</blockquote>
+<h2>Slide 10: Serving Costs (9:30 to 10:30)</h2>
+<blockquote>
+<p>What does the chosen checkpoint cost to serve? I tested concurrency 1 and concurrency 4 with 8 requests each. 4x concurrency buys 2.80x throughput, moving from 26.97 to 75.48 req/s. The trade off is a 1.91x increase in TTFT p50, moving from 12.5 ms to 23.8 ms. This is worth taking for a batch workload, but a judgement call for an interactive one. Notice what this actually measures. The mean output is exactly 6.0 tokens. This is short generation classification. It says nothing about long form decoding, where KV cache growth dominates. Also, 8 requests after 8 warmup requests means the p95 latency over 8 samples is simply the second slowest request. Treat the tail number as indicative only.</p>
+</blockquote>
+<h2>Slide 11: Scaling Over Fabrics (10:30 to 11:30)</h2>
+<blockquote>
+<p>Question six asks if the same checkpoint can run on more workers. I collected five GKE JobSet results produced on 2026-08-10 and reused them into this run. They test an 8 chip baseline, then a 16 chip experiment two ways. The 16 chips is just the experiment size; the v5e ICI domain is 256 chips. Scaling inside one ICI slice gives nearly 100% efficiency. Doubling chips keeps the per chip rate moving from 2,025 to 2,026 tokens/s, representing 100.1% strong scaling efficiency. But across two slices, efficiency drops by 35% and 46%. Same 16 chips, same work, but the data parallel gradient all reduce now crosses DCN. ICI beats DCN by 1.53x strong and 1.86x weak. The lesson is that chip count is not the scaling unit. The fabric the collective crosses is. You must fill the ICI slice before adding a second one.</p>
+</blockquote>
+<h2>Slide 12: The Weak Scaling Anomaly (11:30 to 12:35)</h2>
+<blockquote>
+<p>There is an anomaly worth explaining, not asserting. Why is DCN weak scaling worse per chip than DCN strong? With DP2 and TP8, the cross slice all reduce carries gradients, whose size is set by the model parameters rather than the batch size. Doubling per slice work should amortize a fixed cost better, not worse. By backing out the exposed communication, the penalty grew from 1.08 seconds at gb256 to 3.51 seconds at gb512. That is 3.2x the exposed cost for the same payload, which a fixed size all reduce should not do. There are three candidates I cannot separate. It could be lost overlap. It could be HBM pressure, since gb256 compiles at 110% of the AOT limit. Or it could be shared fabric contention, since these ran from 01:37Z to 01:58Z alongside other students. The GKE jobs saved no XProf traces, so the evidence to distinguish these does not exist.</p>
+</blockquote>
+<h2>Slide 13: Artifacts and Submission (12:35 to 13:20)</h2>
+<blockquote>
+<p>The submitted artifact combines nine panels and one figure. The dashboard is built from the sweep results, SFT metrics, evaluation results, serving latencies, recovery report, scaling numbers, and the cost ledger. This figure plus answers.md is the entire Canvas submission, packaged into qanh-20260813t194806z.final.tar.gz. The archive is 325 KiB and was uploaded to Google Cloud Storage at 20:32:45Z.</p>
+</blockquote>
+<h2>Slide 14: Time and Cost (13:20 to 14:10)</h2>
+<blockquote>
+<p>Here is what it took, specifically where the 40 minutes and $5.96 went. The run took 39m 36s of measured cell time, from 19:48:15Z to 20:27:51Z. The sweep was the most expensive cell because it benchmarks 8 shapes, including a deliberate OOM, taking 9m 05s. Estimated TPU cost by stage shows SFT and recovery cost $1.76. The AOT batch frontier cost $1.45. What is worth noting is the capacity lab cost exactly $0.17. The entire memory planning exercise that told us gb512 fails before we ever ran it is the cheapest line item that prevents the most expensive kind of mistake. The 25 commands total $5.96, and the two non zero exit codes in the ledger are the deliberate DP8 and gb512 OOM probes, not failures.</p>
+</blockquote>
+<h2>Slide 15: Launch Recommendations (14:10 to 15:00)</h2>
+<blockquote>
+<p>My recommendation on what I would ship is SFT step 202. It is the only candidate with all three of a domain gain, no retention regression, and a serving measurement behind it. The banking77 exact score went from 70.0% to 92.5%, GSM8K retention improved from 81.25% to 87.5%, and format compliance held at 100%. I would absolutely not ship the GRPO checkpoint. Its plus 12.5 point accuracy change is just 2 examples out of 16, and an identical earlier config gave minus 12.5 points. But even for the SFT checkpoint, I would hold this as a smoke test. The Wilson intervals still overlap by 1.8 points, and a plus or minus 10 point margin needs 97 examples rather than 40. Before a real launch, I would close the DCN question with traces and score the step 50 checkpoint that the stopping rule actually preferred.</p>
+</blockquote>
+<h2>Slide 16: Hardware Extrapolation (15:00 to 16:00)</h2>
+<blockquote>
+<p>What does this pod predict about extrapolation to the next generation? Memory forces you onto the slow fabric. The minimum chips to hold training state equals 16 bytes times parameters divided by 15.75 GiB. Qwen3-4B needs 3.8 chips, so we used 8. But a 2.8T model like Kimi K3 needs 44.8 TB of state, which is 41 TiB, demanding 2,648 chips. That spans 11 v5e slices. Because a slice caps at 256 chips, trillion parameter training is forced across DCN, exactly where we measured 65.2% strong and 53.6% weak scaling. Even on Ironwood with 192 GB per chip, you eventually hit the fabric edge. Mixture of experts does not help because every expert needs optimizer state. It also puts a per layer all to all collective on the critical path. That is exactly why the TPU 8t and 8i split, with 8i using a Boardfly topology to cut network hops for MoE all to alls. Finally, the batch knee is a short sequence artifact. Attention FLOPs grow as L squared while weight FLOPs grow as L. At 256 tokens, attention was 0.93% of the step. At a million tokens, it hits roughly 97%. The workload completely inverts.</p>
+</blockquote>
+<h2>Slide 17: Next Steps and Outlook (16:00 to 17:00)</h2>
+<blockquote>
+<p>For my next steps, I would close the DCN question by re running the two DCN trials with XProf enabled to read the collective timeline directly. I would also repeat it at a per slice batch below the 110% of AOT point to test the rematerialization theory. To make the evaluation load bearing, I would grow the suite to 97 examples and evaluate the step 50 checkpoint. I would also test XLA flag variants that change matmul fusion to push on the 74% of peak throughput left on the table. But the biggest takeaway is how ahead of time compilation scaled up. MaxText now uses this primitive in an automated search loop. They run a rematerialization policy search against DeepSeek3 671B on a tpu7x-512 pod without holding the target chips. The memory lab I ran on eight chips is now an automated search at frontier scale.</p>
+</blockquote>
+
+<footer>Anh Nguyen &middot; Stanford ME344, Summer 2026 &middot; run <code>qanh-20260813t194806z</code> &middot;
+generated by <code>publish_site.py</code></footer>
+</div>
+</body>
+</html>

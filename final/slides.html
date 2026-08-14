@@ -82,6 +82,26 @@
     .slide { display: flex !important; height: auto; min-height: 96vh; page-break-after: always; }
     footer { display: none; }
   }
+
+  /* a chart above the slide's existing content, capped by height so the table still fits.
+     Slides carrying a chart also tighten their own type, otherwise the table below runs off. */
+  .figrow { margin: 0 0 10px; text-align: center; }
+  .figrow img { max-width: 100%; width: auto; display: inline-block; }
+  /* a measured chart beside the Google diagram that explains the mechanism behind it */
+  .figpair { display: flex; gap: 18px; align-items: center; justify-content: center; }
+  .figpair img { max-width: 49%; }
+  .figpair .explainer { border: 1px solid var(--border); border-radius: 8px;
+                        background: #fff; padding: 6px; }
+  .slide:has(.figrow) h2 { font-size: 25px; }
+  .slide:has(.figrow) .lede { font-size: 14.5px; margin-bottom: 10px; }
+  .slide:has(.figrow) .body table { font-size: 10.5px; }
+  .slide:has(.figrow) .body th, .slide:has(.figrow) .body td { padding: 4px 6px; }
+  .slide:has(.figrow) .card { padding: 10px 12px; }
+  .slide:has(.figrow) .card h3 { font-size: 11px; margin-bottom: 5px; }
+  .slide:has(.figrow) .card p, .slide:has(.figrow) .card li { font-size: 11.5px; }
+  .slide:has(.figrow) .stat { font-size: 24px; }
+  .slide:has(.figrow) .grid { gap: 10px; }
+  @media print { .figrow img { max-height: none; } }
 </style>
 </head>
 <body>
@@ -127,6 +147,7 @@
     <p class="lede">Ahead-of-time compilation answers the memory question without holding the chips.
       I predicted two layouts, then ran both, including one I expected to fail.</p>
     <div class="body">
+      <div class="figrow"><img src="figures/capacity.svg" alt="Model state against per-chip HBM for the TP8 and DP8 layouts" style="max-height:34vh"></div>
       <table>
         <thead><tr><th>Layout</th><th>Optimistic state shards</th><th>Predicted GiB/chip</th>
           <th>Prediction</th><th>Observed</th><th>AOT total GiB/chip</th></tr></thead>
@@ -207,6 +228,7 @@
     <p class="lede">Against a 6 &middot; parameters &middot; tokens lower bound and the published
       197 BF16 TFLOP/s peak, utilization saturates near one quarter of peak.</p>
     <div class="body">
+      <div class="figrow"><img src="figures/slide_utilization.svg" alt="Percent of BF16 peak against global batch size" style="max-height:35vh"></div>
       <table>
         <thead><tr><th>Global batch</th><th>Tokens/step</th><th>Compute lower bound (s)</th>
           <th>Measured steady step (s)</th><th>Time efficiency</th><th>% of BF16 peak</th></tr></thead>
@@ -234,6 +256,7 @@
     <div class="kicker">Question 3</div>
     <h2>Where does a training step actually spend its time?</h2>
     <div class="body">
+      <div class="figrow"><img src="figures/slide_step_split.svg" alt="The FLOP split of one step, and how it inverts with L" style="max-height:40vh"></div>
       <div class="grid g2">
         <div class="card"><h3>XProf, per train step</h3>
           <div class="stat">24.94 TFLOPs</div>
@@ -270,6 +293,7 @@
     <p class="lede">200 SFT steps on banking77 intent classification at global batch 4,
       sequence length 256, learning rate 3e-6.</p>
     <div class="body">
+      <div class="figrow"><img src="figures/training_curve.svg" alt="Training and held-out loss across 202 SFT steps" style="max-height:35vh"></div>
       <table>
         <thead><tr><th>Checkpoint</th><th>n</th><th>banking77 exact</th><th>Format compliance</th>
           <th>Mean output tokens</th><th>GSM8K retention n</th><th>GSM8K exact</th></tr></thead>
@@ -345,6 +369,7 @@
     <h2>How is reward training different from SFT?</h2>
     <p class="lede">GRPO, 12 updates, 4 generations per prompt, on top of the SFT checkpoint.</p>
     <div class="body">
+      <div class="figrow"><img src="figures/rl_reward.svg" alt="GRPO reward and accuracy across 12 updates" style="max-height:27vh"></div>
       <table>
         <thead><tr><th>Metric</th><th>Before</th><th>After</th><th>Change</th></tr></thead>
         <tbody>
@@ -384,6 +409,7 @@
     <p class="lede">A point estimate without an interval turns random prompt variation into a
       release claim. Wilson 95% intervals on the same numbers:</p>
     <div class="body">
+      <div class="figrow"><img src="figures/slide_evaluation.svg" alt="Base and SFT accuracy with 95% Wilson intervals" style="max-height:34vh"></div>
       <table>
         <thead><tr><th>Checkpoint</th><th>Successes</th><th>Observed</th>
           <th>Wilson 95% low</th><th>Wilson 95% high</th></tr></thead>
@@ -418,6 +444,7 @@
     <div class="kicker">Serving</div>
     <h2>What does the chosen checkpoint cost to serve?</h2>
     <div class="body">
+      <div class="figrow"><img src="figures/slide_serving.svg" alt="Serving throughput and p95 latency against concurrency" style="max-height:40vh"></div>
       <table>
         <thead><tr><th>Concurrency</th><th>Requests</th><th>req/s</th><th>TTFT p50</th>
           <th>Latency p50</th><th>Latency p95</th><th>Output tok/s</th><th>Mean out tokens</th></tr></thead>
@@ -451,6 +478,7 @@
     <p class="lede">Five GKE JobSet runs: an 8-chip baseline, then 16 chips two ways, inside one
       ICI slice and across two slices over DCN.</p>
     <div class="body">
+      <div class="figrow figpair"><img src="figures/slide_scaling.svg" alt="Per-chip throughput across the five scaling trials" style="max-height:23vh"><img class="explainer" src="https://storage.googleapis.com/gweb-cloudblog-publish/images/1a-01.max-1600x1600.png" alt="Google diagram: two TPU pods, a slice in each, ICI inside a slice and DCN between them" style="max-height:23vh" loading="lazy"></div>
       <table>
         <thead><tr><th>Run</th><th>Chips</th><th>Fabric</th><th>Topology</th><th>Slices</th>
           <th>Batch</th><th>s/step</th><th>tokens/s</th><th>tokens/s/chip</th><th>Efficiency</th></tr></thead>
@@ -478,7 +506,7 @@
           <div class="sub">Chip count is not the scaling unit. The fabric the collective crosses is.
             Fill the ICI slice before adding a second one.</div></div>
       </div>
-      <div class="src"><b>source:</b> scale_out.json (per-mode chips/fabric/topology/steady_step_seconds/
+      <div class="src"><b>diagram:</b> Google Cloud, "How to scale AI training to up to tens of thousands of Cloud TPU chips with Multislice", 2023-08-31, reproduced for teaching with attribution.<br><b>source:</b> scale_out.json (per-mode chips/fabric/topology/steady_step_seconds/
         tokens_per_second_per_chip, ici_strong_scaling_efficiency_percent = 100.05,
         weak_scaling_efficiency_percent = 53.56, ici_over_dcn_weak_ratio = 1.86)<br>
         <b class="mono" style="color:#b3261e">provenance caveat:</b> these five JobSet results were
@@ -498,6 +526,7 @@
       by the model rather than the batch. Doubling per-slice work should amortize a fixed cost
       better, not worse.</p>
     <div class="body">
+      <div class="figrow figpair"><img src="figures/slide_communication.svg" alt="Exposed communication per step on DCN at two batches" style="max-height:40vh"><img class="explainer" src="https://storage.googleapis.com/gweb-cloudblog-publish/images/1b-01.max-2200x2200.png" alt="Google diagram: data-parallel replicas, activations over ICI, gradients over DCN" style="max-height:40vh" loading="lazy"></div>
       <div class="grid g2">
         <div class="card"><h3>Backing out exposed communication</h3>
           <table style="margin-top:4px">
@@ -525,7 +554,7 @@
             as a finding.</div>
         </div>
       </div>
-      <div class="src"><b>derived from:</b> scale_out.json steady_step_seconds, differencing DCN
+      <div class="src"><b>diagram:</b> Google Cloud, "How to scale AI training to up to tens of thousands of Cloud TPU chips with Multislice", 2023-08-31, reproduced for teaching with attribution.<br><b>derived from:</b> scale_out.json steady_step_seconds, differencing DCN
         against ICI at matched global batch (strong 3.104 - 2.022; weak 7.553 - 4.045).
         Re-derived in the notebook, section 10.<br>
         <b>missing evidence:</b> no xprof_profile/ under the GKE result files, unlike the local
@@ -539,7 +568,7 @@
     <h2>Nine panels, one figure</h2>
     <div class="body" style="display:flex; flex-direction:column">
       <img src="figures/systems_dashboard.png" alt="Nine-panel systems dashboard"
-           style="max-width:100%; max-height:74vh; object-fit:contain; align-self:center;
+           style="max-width:100%; max-height:68vh; object-fit:contain; align-self:center;
                   background:#fff; border:1px solid var(--border); border-radius:10px; padding:6px">
       <div class="src"><b>source:</b> systems_dashboard.png, built by
         <code>project.build_dashboard()</code> from sweep_results.csv, sft_metrics.jsonl,
