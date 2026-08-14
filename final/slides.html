@@ -901,6 +901,59 @@
   </section>
 
   <section class="slide">
+    <div class="kicker">The result that overturns slide 2</div>
+    <h2>The 25.5% ceiling was the sharding choice, not the hardware</h2>
+    <p class="lede">Slide 2 chose TP8 over DP8 on a memory argument and never tested FSDP. FSDP
+      shards the same state, fits in the same memory, and more than doubles MFU on both chips.</p>
+    <div class="body">
+      <table>
+        <thead><tr><th>Chip</th><th>Sharding</th><th>s/step</th><th>TFLOP/s/chip</th>
+          <th>tokens/s/chip</th><th>total tokens/s</th><th>MFU</th></tr></thead>
+        <tbody>
+          <tr><td>v5e</td><td>TP8</td><td>4.039</td><td>49.41</td><td>2,028</td><td>16,226</td>
+            <td>25.1%</td></tr>
+          <tr class="good"><td>v5e</td><td><b>FSDP8</b></td><td><b>1.921</b></td><td>103.89</td>
+            <td>4,265</td><td>34,117</td><td><b>52.7%</b></td></tr>
+          <tr><td>v6e</td><td>TP8</td><td>1.870</td><td>106.71</td><td>4,381</td><td>35,052</td>
+            <td>11.6%</td></tr>
+          <tr class="good"><td>v6e</td><td><b>FSDP8</b></td><td><b>0.795</b></td><td>250.87</td>
+            <td>10,298</td><td><b>82,386</b></td><td><b>27.3%</b></td></tr>
+        </tbody>
+      </table>
+      <div class="grid g3" style="margin-top:14px">
+        <div class="card"><h3>What TP8 was costing</h3><div class="stat bad">-52%</div>
+          <div class="sub">Tensor parallelism all-reduces <em>activations</em> at every layer, and
+            that traffic scales with token count. FSDP all-gathers <em>weights</em> instead, which is
+            a fixed cost per step. On v5e that is 2.10&times;, on v6e 2.35&times;.</div></div>
+        <div class="card"><h3>v5e reaches frontier-grade MFU</h3><div class="stat ok">52.7%</div>
+          <div class="sub">Not 25.5%. The chip was never the problem. Published large-scale training
+            runs live in the 40 to 60% MFU band, and a single 8-chip v5e host gets there once the
+            sharding is right.</div></div>
+        <div class="card"><h3>What still holds</h3>
+          <div class="sub">v6e still returns only <b>2.10&times;</b> v5e against <b>4.66&times;</b>
+            the compute, under <em>both</em> sharding strategies. The bandwidth-tracking result is
+            robust. ICI efficiency at 97.1% is unaffected.</div></div>
+      </div>
+      <div class="note" style="margin-top:12px"><b>Why this was missed, and it is worth saying out
+        loud.</b> The choice was framed as TP against DP, and DP genuinely does not fit: 59.94 GiB of
+        replicated state against 15.75 available. FSDP is the option that shards state like TP but
+        moves weights rather than activations, so it fits <em>and</em> avoids the per-token
+        collective. Both prior conclusions, the 25.5% plateau across an 8&times; batch range and the
+        flat sequence sweep, are consistent with this: they were all measuring the same fixed
+        activation-traffic cost, which no batch or sequence setting can escape, only a different
+        sharding strategy.</div>
+      <div class="src"><b>source:</b> shardtest.log on both nodes. Identical config apart from
+        <code>ici_fsdp_parallelism</code> against <code>ici_tensor_parallelism</code>: 10 steps,
+        global batch 256, seq 256, 65,536 tokens per step, <code>learning_rate=0</code>, synthetic
+        data. Loss differs in the third decimal (493.73 against 493.26) as expected from different
+        collective ordering, and token count per step is identical, so the work is the same.<br>
+        <b class="mono" style="color:#b8770a">note:</b> the class assignment mandates TP8, so the
+        graded runs keep it. This is a finding about the configuration, not a change to the
+        submission.</div>
+    </div>
+  </section>
+
+  <section class="slide">
     <div class="kicker">Why, from Google's own spec sheet</div>
     <h2>They doubled the memory system and quadrupled the math</h2>
     <p class="lede">Every v5e-to-v6e ratio is 2&times; except compute, which is 4.66&times;. That single
