@@ -186,20 +186,8 @@
     <p class="lede">Eight global batch sizes at sequence length 256, AOT-checked first, then measured.
       The memory boundary and the throughput knee are four doublings apart.</p>
     <div class="body">
-      <table>
-        <thead><tr><th>Global batch</th><th>Per device</th><th>AOT GiB/chip</th>
-          <th>% of 15.75 limit</th><th>Steady step (s)</th><th>tokens/s</th><th>TFLOP/s/device</th></tr></thead>
-        <tbody>
-          <tr><td>4</td><td>0.5</td><td>8.23</td><td>52.2%</td><td>0.0979</td><td>10,457</td><td>31.84</td></tr>
-          <tr><td>8</td><td>1.0</td><td>8.36</td><td>53.1%</td><td>0.1537</td><td>13,322</td><td>40.57</td></tr>
-          <tr><td>16</td><td>2.0</td><td>9.00</td><td>57.2%</td><td>0.2666</td><td>15,361</td><td>46.78</td></tr>
-          <tr class="hi"><td>32</td><td>4.0</td><td>9.35</td><td>59.4%</td><td>0.4946</td><td>16,562</td><td>50.43</td></tr>
-          <tr><td>64</td><td>8.0</td><td>10.60</td><td>67.3%</td><td>0.9849</td><td>16,635</td><td>50.65</td></tr>
-          <tr><td>128</td><td>16.0</td><td>12.99</td><td>82.5%</td><td>1.9708</td><td>16,627</td><td>50.63</td></tr>
-          <tr><td>256</td><td>32.0</td><td>17.37</td><td>110.3%</td><td>4.0386</td><td>16,227</td><td>49.41</td></tr>
-          <tr class="bad"><td>512</td><td>64.0</td><td colspan="5">AOT <strong>oom</strong>: needs 18.43 GiB temporaries against 15.75 GiB available</td></tr>
-        </tbody>
-      </table>
+      <div class="figrow dense"><img src="figures/slide_throughput.svg" alt="Throughput and AOT memory against global batch size" style="max-height:30vh"></div>
+      
       <div class="grid g3" style="margin-top:14px">
         <div class="card"><h3>Memory boundary</h3><div class="stat bad">gb512</div>
           <div class="sub">First shape past the wall. gb256 compiles at 110% of the AOT limit and
@@ -609,25 +597,7 @@
             single most expensive cell because it compiles and benchmarks eight shapes, and one of
             them is a deliberate OOM.</div>
         </div>
-        <div class="card"><h3>Estimated TPU cost by stage</h3>
-          <table style="margin-top:4px">
-            <thead><tr><th>Stage</th><th>USD</th></tr></thead>
-            <tbody>
-              <tr><td>SFT + recovery</td><td>$1.76</td></tr>
-              <tr><td>AOT batch frontier</td><td>$1.45</td></tr>
-              <tr><td>GRPO</td><td>$1.14</td></tr>
-              <tr><td>evaluation + serving</td><td>$0.66</td></tr>
-              <tr><td>continued pre-training</td><td>$0.54</td></tr>
-              <tr><td>capacity lab</td><td>$0.17</td></tr>
-              <tr><td>XProf</td><td>$0.16</td></tr>
-              <tr><td>smoke</td><td>$0.09</td></tr>
-              <tr class="hi"><td><strong>total, 25 commands</strong></td><td><strong>$5.96</strong></td></tr>
-            </tbody>
-          </table>
-          <div class="note">Worth noting what this buys: the entire memory-planning exercise, the one
-            that told us gb512 fails before we ever ran it, cost $0.17. The AOT check is the cheapest
-            line item that prevents the most expensive kind of mistake.</div>
-        </div>
+        
       </div>
       <div class="src"><b>source:</b> run_progress.log (per-cell START/DONE timestamps emitted by the
         driver), cost_ledger.csv (kind=command rows, estimated_usd grouped by stage prefix)<br>
@@ -737,6 +707,61 @@
   </section>
 
   <!-- 16 -->
+
+    <section class="slide">
+    <div class="kicker">The generation after the one I measured</div>
+    <h2>TPU 8t and 8i: the first time training and inference get different silicon</h2>
+    <p class="lede">Announced 2026-04-22, after this run. Google split the eighth generation in two,
+      and the split lands on exactly the two things this project measured: memory capacity and the
+      cost of a collective.</p>
+    <div class="body">
+      <div class="figrow figpair">
+        <img class="explainer" src="https://storage.googleapis.com/gweb-cloudblog-publish/images/1_v4.max-1600x1600.png"
+             alt="Google diagram: TPU 8t block diagram, TensorCore with two MXUs, SparseCores, six HBM3E controllers"
+             style="max-height:34vh" loading="lazy">
+        <img class="explainer" src="https://storage.googleapis.com/gweb-cloudblog-publish/images/4_v1_nUZDsJM.max-1800x1800.png"
+             alt="Google diagram: TPU 8i block diagram, two TensorCores, eight HBM3 controllers, SC-CAE inside the ICI block"
+             style="max-height:34vh" loading="lazy">
+      </div>
+      <div class="grid g2">
+        <div class="card">
+          <h3>What the two block diagrams differ on</h3>
+          <table>
+            <thead><tr><th></th><th>8t, training</th><th>8i, inference</th></tr></thead>
+            <tbody>
+              <tr><td>Peak FP4</td><td>12.6 PFLOP/s</td><td>10.1 PFLOP/s</td></tr>
+              <tr class="hi"><td>HBM</td><td>216 GB @ 6,528 GB/s</td><td>288 GB @ 8,601 GB/s</td></tr>
+              <tr><td>On-chip SRAM</td><td>128 MB</td><td>384 MB, for KV cache</td></tr>
+              <tr><td>Special unit</td><td>SparseCore, embeddings</td><td>SC-CAE, collectives</td></tr>
+              <tr><td>Topology</td><td>3D torus, 9,600 chips</td><td>Boardfly, 1,152 chips</td></tr>
+              <tr><td>Versus Ironwood</td><td>2.7x train per dollar</td><td>80% better per dollar</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card">
+          <h3>Why this is the answer to slides 11 and 12</h3>
+          <ul>
+            <li><b>The inference part has more memory than the training part.</b> 288 GB against
+              216, and more bandwidth with it. Serving a sparse model is now the harder memory
+              problem, which is what the 16 bytes/parameter arithmetic predicts once total
+              parameters outrun active ones.</li>
+            <li><b>There is a collectives engine on the die.</b> SC-CAE sits inside 8i's ICI block.
+              I measured a 35% penalty for one all-reduce crossing the wrong fabric; Google put
+              silicon on the chip to make collectives cheaper.</li>
+            <li><b>8t keeps the 3D torus, 8i does not.</b> The all-to-all problem is being treated
+              as most acute during serving, which fits a world where a 2.8T model is trained once
+              and served constantly.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="src"><b>diagram:</b> Google Cloud, "Inside the eighth-generation TPU", 2026-04-22,
+      reproduced for teaching with attribution.<br>
+      <b>specifications:</b> the same article. Announced, not shipping: nobody outside Google has
+      measured either part, and secondary reporting adds TSMC 2nm and a late-2027 date that
+      Google's own page does not state.</div>
+  </section>
+
   <section class="slide">
     <div class="kicker">Next</div>
     <h2>What I would try with more time</h2>
