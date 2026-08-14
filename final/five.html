@@ -27,6 +27,12 @@
   .figure { flex: 1 1 66%; min-width: 0; display: flex; align-items: flex-start;
             justify-content: center; }
   .figure img { max-width: 100%; max-height: 100%; object-fit: contain; }
+  .figstack { flex-direction: column; gap: 8px; justify-content: flex-start; }
+  .figstack img { max-height: 47%; }
+  .figstack .explainer { border: 1px solid var(--border); border-radius: 8px;
+                         background: #fff; padding: 5px; }
+  .titlefig { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; }
+  .titlefig img { max-width: 100%; max-height: 100%; object-fit: contain; }
   .points { flex: 0 0 30%; overflow: auto; }
   .points h3 { margin: 0 0 3px; font-size: 14px; }
   .points p { margin: 0 0 15px; font-size: 13px; color: var(--dim); line-height: 1.5; }
@@ -62,8 +68,8 @@
     <h1>Train, Tune, And Scale Qwen3-4B<br>on a TPU v5e-8</h1>
     <p class="lede">Forty minutes on eight v5e chips, 5.0 chip-hours, spent answering three
       questions: what fits, what is worth running, and what breaks when you add more chips.</p>
-    <div class="body">
-      <div class="grid3" style="flex:1">
+    <div class="body" style="flex-direction:column; gap:14px">
+      <div class="grid3">
         <div class="col">
           <h3>What fits</h3><div class="stat accent">TP8, not DP8</div>
           <p>Tensor parallel shards the 16 bytes per parameter of training state eight ways and
@@ -81,6 +87,10 @@
             gradient all-reduce crosses DCN: 65% strong, 54% weak.</p>
         </div>
       </div>
+      <div class="titlefig">
+        <img src="figures/slide_memory.svg"
+             alt="Training state per chip under DP8, TP8 and FSDP8 against the 15.75 GiB a v5e chip has">
+      </div>
     </div>
     <div class="src">run qanh-20260813t194806z &middot; MaxText 17c7172 &middot; every number traces
       to a named artifact file &middot; areporeporepo.github.io/me344-run/final/</div>
@@ -91,7 +101,10 @@
     <div class="kicker">1 of 4 &middot; memory</div>
     <h2>The useful batch and the memory wall are not the same shape</h2>
     <div class="body">
-      <div class="figure"><img src="figures/slide_throughput.svg" alt="Throughput and AOT memory against global batch size"></div>
+      <div class="figure figstack">
+        <img src="figures/slide_throughput.svg" alt="Throughput and AOT memory against global batch size">
+        <img src="figures/slide_sharding.svg" alt="TP8 all-reduces activations, FSDP8 all-gathers weights, and the measured MFU difference">
+      </div>
       <div class="points">
         <h3 class="ok">The knee: gb32</h3>
         <p>16,562 tokens/s at 59.4% of HBM. gb64 buys 0.4% more throughput for 13% more memory.</p>
@@ -99,18 +112,21 @@
         <p>Fails to compile. 18.43 GiB of temporaries against 15.75 available.</p>
         <h3>The ceiling: 25.5%</h3>
         <p>Of the 197 BF16 TFLOP/s peak, and it plateaus there across an 8x range of batch sizes.</p>
-        <h3 class="ok">Now isolated: it is memory bandwidth</h3>
-        <p>Re-running the identical config on v6e and v5p separates the two candidates. v6e has
-          4.66x the compute of v5e but delivered 2.16x, almost exactly its 2.00x bandwidth ratio,
-          and MFU <em>fell</em> to 11.6%. Across all three chips MFU rank-orders perfectly by bytes
-          per FLOP: v5p 6.02 to 31.7%, v5e 4.16 to 25.1%, v6e 1.79 to 11.6%. Google's own specs say
-          why: v5e to v6e doubles HBM, bandwidth and ICI but multiplies compute by 4.66. Bandwidth is
-          the limit, not per-step overhead. And a sequence sweep to 2048 moves MFU under half a point
-          on either chip, so the plateau is a hardware ratio, not a tuning failure.</p>
+        <h3 class="ok">Isolated, in two parts</h3>
+        <p><b>Across chips it is bandwidth.</b> v6e has 4.66x the compute of v5e but delivered
+          2.16x, almost exactly its 2.00x bandwidth ratio, and MFU <em>fell</em> to 11.6%. MFU
+          rank-orders perfectly by bytes per FLOP: v5p 6.02 to 31.7%, v5e 4.16 to 25.1%, v6e 1.79
+          to 11.6%. v5e to v6e doubles HBM, bandwidth and ICI but multiplies compute by 4.66.</p>
+        <p><b>Within a chip it was my sharding.</b> TP8 all-reduces activations at every layer, so
+          its traffic scales with tokens and no batch or sequence setting escapes it, which is why
+          this curve is flat across an 8x range. FSDP8 ships weights instead, a fixed cost per
+          step: same chips, same memory, <b>52.7% MFU</b>. The ceiling was a choice, not the
+          hardware.</p>
       </div>
     </div>
     <div class="src">sweep_results.csv &middot; capacity_report.json &middot; 8 batch sizes, AOT
-      compiled then benchmarked at 8 steps each</div>
+      compiled then benchmarked at 8 steps each &middot; v6e, v5p and FSDP figures measured
+      2026-08-14 on identical MaxText config</div>
   </section>
 
   <!-- 3 -->
@@ -142,7 +158,11 @@
     <div class="kicker">3 of 4 &middot; scaling</div>
     <h2>Chip count is not the scaling unit. The fabric is.</h2>
     <div class="body">
-      <div class="figure"><img src="figures/slide_scaling.svg" alt="Per-chip throughput across ICI and DCN, strong and weak scaling"></div>
+      <div class="figure figstack">
+        <img src="figures/slide_scaling.svg" alt="Per-chip throughput across ICI and DCN, strong and weak scaling">
+        <img class="explainer" src="https://storage.googleapis.com/gweb-cloudblog-publish/images/1a-01.max-1600x1600.png" loading="lazy"
+             alt="Google diagram: two TPU pods, a slice in each, ICI wiring inside a slice and DCN between them">
+      </div>
       <div class="points">
         <h3 class="ok">Inside one ICI slice: free</h3>
         <p>8 to 16 chips holds 100.1% strong and 99.6% weak efficiency. Per chip throughput goes
@@ -160,7 +180,9 @@
       </div>
     </div>
     <div class="src">scale_out.json &middot; 5 trials &middot; the GKE results are dated 2026-08-10
-      and reused, each records a source_checkpoint from that run</div>
+      and reused, each records a source_checkpoint from that run<br>
+      <b>diagram:</b> Google Cloud, "How to scale AI training to up to tens of thousands of Cloud
+      TPU chips with Multislice", 2023-08-31, reproduced for teaching with attribution.</div>
   </section>
 
   <!-- 5 -->
