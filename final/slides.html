@@ -186,7 +186,7 @@
     <p class="lede">Eight global batch sizes at sequence length 256, AOT-checked first, then measured.
       The memory boundary and the throughput knee are four doublings apart.</p>
     <div class="body">
-      <div class="figrow dense"><img src="figures/slide_throughput.svg" alt="Throughput and AOT memory against global batch size" style="max-height:45vh"></div>
+      <div class="figrow dense"><img src="figures/slide_throughput.svg" alt="Throughput and AOT memory against global batch size" style="max-height:30vh"></div>
       
       <div class="grid g3" style="margin-top:14px">
         <div class="card"><h3>Memory boundary</h3><div class="stat bad">gb512</div>
@@ -244,7 +244,7 @@
     <div class="kicker">Question 3</div>
     <h2>Where does a training step actually spend its time?</h2>
     <div class="body">
-      <div class="figrow figpair"><img src="figures/slide_step_split.svg" alt="The FLOP split of one step, and how it inverts with L" style="max-height:50vh"><img class="explainer" src="https://storage.googleapis.com/gweb-cloudblog-publish/images/1_Z5xATZ3.max-2000x2000.png" alt="Google diagram: the Ironwood TPU, built around MXU matrix units, VPU, HBM and ICI" style="max-height:50vh" loading="lazy"></div>
+      <div class="figrow figpair"><img src="figures/slide_step_split.svg" alt="The FLOP split of one step, and how it inverts with L" style="max-height:30vh"><img class="explainer" src="https://storage.googleapis.com/gweb-cloudblog-publish/images/1_Z5xATZ3.max-2000x2000.png" alt="Google diagram: the Ironwood TPU, built around MXU matrix units, VPU, HBM and ICI" style="max-height:30vh" loading="lazy"></div>
       <div class="grid g2">
         <div class="card"><h3>XProf, per train step</h3>
           <div class="stat">24.94 TFLOPs</div>
@@ -432,7 +432,7 @@
     <div class="kicker">Serving</div>
     <h2>What does the chosen checkpoint cost to serve?</h2>
     <div class="body">
-      <div class="figrow"><img src="figures/slide_serving.svg" alt="Serving throughput and p95 latency against concurrency" style="max-height:42vh"></div>
+      <div class="figrow"><img src="figures/slide_serving.svg" alt="Serving throughput and p95 latency against concurrency" style="max-height:40vh"></div>
       <table>
         <thead><tr><th>Concurrency</th><th>Requests</th><th>req/s</th><th>TTFT p50</th>
           <th>Latency p50</th><th>Latency p95</th><th>Output tok/s</th><th>Mean out tokens</th></tr></thead>
@@ -466,7 +466,7 @@
     <p class="lede">Five GKE JobSet runs: an 8-chip baseline, then 16 chips two ways, inside one
       ICI slice and across two slices over DCN.</p>
     <div class="body">
-      <div class="figrow figpair"><img src="figures/slide_scaling.svg" alt="Per-chip throughput across the five scaling trials" style="max-height:20vh"><img class="explainer" src="https://storage.googleapis.com/gweb-cloudblog-publish/images/1a-01.max-1600x1600.png" alt="Google diagram: two TPU pods, a slice in each, ICI inside a slice and DCN between them" style="max-height:20vh" loading="lazy"></div>
+      <div class="figrow figpair"><img src="figures/slide_scaling.svg" alt="Per-chip throughput across the five scaling trials" style="max-height:21vh"><img class="explainer" src="https://storage.googleapis.com/gweb-cloudblog-publish/images/1a-01.max-1600x1600.png" alt="Google diagram: two TPU pods, a slice in each, ICI inside a slice and DCN between them" style="max-height:21vh" loading="lazy"></div>
       <table>
         <thead><tr><th>Run</th><th>Chips</th><th>Fabric</th><th>Topology</th><th>Slices</th>
           <th>Batch</th><th>s/step</th><th>tokens/s</th><th>tokens/s/chip</th><th>Efficiency</th></tr></thead>
@@ -514,7 +514,7 @@
       by the model rather than the batch. Doubling per-slice work should amortize a fixed cost
       better, not worse.</p>
     <div class="body">
-      <div class="figrow figpair"><img src="figures/slide_communication.svg" alt="Exposed communication per step on DCN at two batches" style="max-height:50vh"><img class="explainer" src="https://storage.googleapis.com/gweb-cloudblog-publish/images/1b-01.max-2200x2200.png" alt="Google diagram: data-parallel replicas, activations over ICI, gradients over DCN" style="max-height:50vh" loading="lazy"></div>
+      <div class="figrow figpair"><img src="figures/slide_communication.svg" alt="Exposed communication per step on DCN at two batches" style="max-height:40vh"><img class="explainer" src="https://storage.googleapis.com/gweb-cloudblog-publish/images/1b-01.max-2200x2200.png" alt="Google diagram: data-parallel replicas, activations over ICI, gradients over DCN" style="max-height:40vh" loading="lazy"></div>
       <div class="grid g2">
         <div class="card"><h3>Backing out exposed communication</h3>
           <table style="margin-top:4px">
@@ -718,10 +718,10 @@
       <div class="figrow figpair">
         <img class="explainer" src="https://storage.googleapis.com/gweb-cloudblog-publish/images/1_v4.max-1600x1600.png"
              alt="Google diagram: TPU 8t block diagram, TensorCore with two MXUs, SparseCores, six HBM3E controllers"
-             style="max-height:35vh" loading="lazy">
+             style="max-height:34vh" loading="lazy">
         <img class="explainer" src="https://storage.googleapis.com/gweb-cloudblog-publish/images/4_v1_nUZDsJM.max-1800x1800.png"
              alt="Google diagram: TPU 8i block diagram, two TensorCores, eight HBM3 controllers, SC-CAE inside the ICI block"
-             style="max-height:35vh" loading="lazy">
+             style="max-height:34vh" loading="lazy">
       </div>
       <div class="grid g2">
         <div class="card">
@@ -771,10 +771,10 @@
       <div class="figrow figpair">
         <img class="explainer" src="https://storage.googleapis.com/gweb-cloudblog-publish/images/2_TPU_8t_rack_level_connectivity_to_Virgo_.max-2000x2000.png"
              alt="Google diagram: TPU 8t racks under the Virgo network, two-layer non-blocking switching, Jupiter and optical circuit switches above"
-             style="max-height:40vh" loading="lazy">
+             style="max-height:34vh" loading="lazy">
         <img class="explainer" src="https://storage.googleapis.com/gweb-cloudblog-publish/images/6_Qu7H2lI.max-1300x1300.png"
              alt="Google diagram: a seven-hop path across Boardfly groups through an optical circuit switch"
-             style="max-height:40vh" loading="lazy">
+             style="max-height:34vh" loading="lazy">
       </div>
       <div class="grid g3">
         <div class="card">
@@ -819,7 +819,7 @@
       <div class="figrow">
         <img class="explainer" src="https://storage.googleapis.com/gweb-cloudblog-publish/images/3_rq0yjyX.max-2000x2000.png"
              alt="Google diagram: without TPUDirect a transfer goes HBM to host to NIC to NIC to host to HBM; with TPUDirect RDMA it goes HBM to NIC to NIC to HBM, and storage connects directly"
-             style="max-height:42vh" loading="lazy">
+             style="max-height:40vh" loading="lazy">
       </div>
       <div class="grid g3">
         <div class="card">

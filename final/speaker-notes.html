@@ -54,7 +54,7 @@ If you are running long, the cuttable sentences are marked <strong>[cut]</strong
 <h2>Slide 1: Title (0:00 to 0:45)</h2>
 <blockquote>
 <p>This is Train, Tune and Scale Qwen3-4B on a TPU v5e-8.</p>
-<p>Forty minutes of wall clock and about six dollars on eight v5e chips, spent answering three
+<p>Forty minutes of wall clock on eight v5e chips, about five and a quarter chip-hours, answering three
 questions: what fits, what is worth running, and what breaks when you add more chips.</p>
 <p>The short version of all three. What fits is tensor parallel, not data parallel, and I predicted
 that before running it. What is worth running is global batch 32, which is nowhere near the
@@ -74,10 +74,13 @@ between spends memory for nothing. Going from 32 to 64 buys you 0.4% more throug
 more memory.</p>
 <p>The other number here is the ceiling. 25.5% of the chip's BF16 peak, and it plateaus there
 across an eight-times range of batch sizes. More work per step does not help after gb32.</p>
-<p>Why not? Not because the arithmetic units are saturated: at 25.5% of peak they clearly are not.
-Something else caps it, either memory bandwidth or fixed per-step overhead, and this run did not
-isolate which. That is a gap I will name rather than paper over.</p>
-<p><strong>[cut]</strong> And the cheapest thing on this slide is the ahead-of-time compile. Seventeen cents of
+<p>Why not? Not because the arithmetic units are saturated: at a quarter of peak they clearly are
+not. I left this open on the day, and I have since closed it. Running the identical config with
+FSDP instead of tensor parallel, on the same chip with the same memory footprint, more than
+doubles it, to 52.7%. Tensor parallelism all-reduces activations at every layer, so its traffic
+grows with token count and no batch size escapes it. The ceiling was my sharding choice, not the
+hardware.</p>
+<p><strong>[cut]</strong> And the cheapest thing on this slide is the ahead-of-time compile. Ten chip-minutes of
 compute told me the DP8 layout would die before I ran a single training step. It needed 65
 gigabytes against 15.75 available.</p>
 </blockquote>

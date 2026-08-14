@@ -68,8 +68,8 @@ itself the useful exercise, so here is the sort, done honestly.</p>
   <td>16 here, less under FP8 or MXFP4, but the arithmetic is what decides which models a fleet can train at all. Kimi K3 needs 11x an entire v5e pod.</td>
 </tr>
 <tr>
-  <td><strong>TP against DP, and FSDP</strong></td>
-  <td>Where the model state lives, and what that costs you in collectives. This is the first decision on any distributed training job.</td>
+  <td><strong>TP against DP against FSDP</strong></td>
+  <td>Where the state lives, and <em>what</em> crosses the wire. TP ships activations (scales with tokens), FSDP ships weights (fixed per step). Worth 2.10x here. The first decision on any distributed training job.</td>
 </tr>
 <tr>
   <td><strong>Which collective crosses which fabric</strong></td>
@@ -115,8 +115,8 @@ itself the useful exercise, so here is the sort, done honestly.</p>
   <td>Eight requests against a local vLLM. Real serving work starts several orders of magnitude further along.</td>
 </tr>
 <tr>
-  <td>The per-cell wall clock and the $5.96 ledger</td>
-  <td>Real for this run, meaningless anywhere else. Useful only as evidence that the capacity lab cost $0.17.</td>
+  <td>The per-cell wall clock and the cost ledger</td>
+  <td>Real for this run, meaningless anywhere else. Useful only as evidence that the capacity lab cost about 10 chip-minutes and ruled out a layout that would have failed.</td>
 </tr>
 <tr>
   <td><code>start_tpu_vm.sh</code>, the Stanford node mapping, the JobSet YAML</td>
@@ -186,6 +186,12 @@ proves you understand it.</p>
   <td>Data Parallel</td>
   <td>Every chip holds a full copy of the model, splits the <em>data</em></td>
   <td>DP8 died at 65.47 GiB</td>
+</tr>
+<tr>
+  <td><strong>FSDP</strong></td>
+  <td>Fully Sharded Data Parallel</td>
+  <td>Shards state like TP, but all-gathers <em>weights</em> per layer instead of all-reducing <em>activations</em>. Fixed cost per step</td>
+  <td>FSDP8 doubled MFU to 52.7%</td>
 </tr>
 <tr>
   <td><strong>AOT</strong></td>
@@ -271,6 +277,16 @@ chip against 15.75 available, which is exactly why it died.</p>
 of every layer, so state per chip drops roughly 8x. The cost is communication <em>inside</em> every layer,
 which is only tolerable over a fast fabric. This is why TP lives inside an ICI slice and not across
 DCN.</p>
+<p><strong>FSDP, Fully Sharded Data Parallel</strong> (ZeRO-3 in the PyTorch world). Shards weights and optimizer
+state across chips exactly like TP, so the memory saving is the same. The difference is what moves.
+Just before a layer runs, FSDP all-gathers that layer's weights, computes on the full local batch,
+then throws the gathered copy away. So it ships <strong>weights</strong>, whose size is fixed by the parameter
+count, where TP ships <strong>activations</strong>, whose size grows with token count.</p>
+<p>That distinction is the largest single result in this project. Same chip, same memory footprint,
+one config flag: v5e went 25.1% to <strong>52.7% MFU</strong>, v6e 11.6% to 27.3%. It also explains two earlier
+mysteries at once, the MFU plateau across an 8x batch range and the flat sequence sweep. Both were
+measuring the same activation traffic, which scales with tokens and which no batch or sequence
+setting can escape.</p>
 <p><strong>EP, Expert Parallel.</strong> MoE-specific. Different experts live on different devices, so tokens must
 be routed to wherever their expert is, then routed back. This is the all-to-all that dominates MoE
 performance.</p>
@@ -400,15 +416,19 @@ datacenter networking between slices, with far less bandwidth and much higher la
 <li><strong>Why is the DCN weak-scaling result strange?</strong> An all-reduce payload is set by parameter count,
 not batch size. Doubling the batch should not make per-chip throughput worse. It did: 1,085
 against 1,320.</li>
-<li><strong>Why does throughput plateau at gb32 when memory keeps growing?</strong> Something other than work per
-step is the limit past that point. You did not isolate what, and saying so is better than
-guessing.</li>
+<li><strong>Why does throughput plateau at gb32 when memory keeps growing?</strong> Because under TP8 the
+activation all-reduce at every layer scales with token count, so more tokens buy proportionally
+more traffic and the ratio cannot move. It is not the chip: FSDP8 on the same hardware reaches
+52.7%. This was an open question on the day and was closed on 2026-08-14.</li>
 <li><strong>Why is 99.07% matmul not a general fact?</strong> Because attention scales as L^2 and matmul as L. It
 is a statement about L=256.</li>
 <li><strong>Why not ship GRPO?</strong> Its accuracy gain was two examples on a 16-item set and it flipped sign on
 an identical earlier run.</li>
 <li><strong>What does 16 bytes per parameter consist of?</strong> Roughly 12 persistent (weights plus Adam's two
-moments, in mixed precision) plus 4 transient at peak.</li>
+moments, in mixed precision) plus 4 transient at peak.
+7b. <strong>What is the difference between TP and FSDP, since both shard the state?</strong> What crosses the
+wire. TP all-reduces activations at every layer, so traffic scales with tokens. FSDP all-gathers
+weights, a fixed cost per step. Same memory, 2.10x the throughput on v5e.</li>
 <li><strong>What would you do next?</strong> Re-run the two DCN trials with XProf on, because that anomaly is the
 only broken measurement in the project and it costs 20 minutes.</li>
 </ol>

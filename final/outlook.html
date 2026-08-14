@@ -614,8 +614,12 @@ vendor target. Replace with measurements when they exist.</li>
 <li><strong>A confirmed active-parameter count for Kimi K3.</strong> Currently unavailable, which is why the
 table says so rather than guessing.</li>
 <li><strong>Sub-8-bit training becoming standard.</strong> Rescales finding 1 entirely.</li>
-<li><strong>Independent Ironwood utilization numbers.</strong> This run plateaued at 25.5% of v5e peak. Whether v7
-does better on real training workloads is the biggest unknown here and nothing above answers it.</li>
+<li><strong>Independent Ironwood utilization numbers.</strong> Partly answered on 2026-08-14, and not in v7's
+favour. Running this config across three generations, MFU rank-orders by bytes per FLOP: v5p
+6.02 to 31.7%, v5e 4.16 to 25.1%, v6e 1.79 to 11.6%. The fastest chip has the worst MFU because
+its compute outgrew its memory, and v5e to v6e doubles bandwidth while multiplying compute by
+4.66. Ironwood widens that ratio further, so the open question is now whether v7 can be fed at
+all, not whether it is faster.</li>
 <li><strong>Whether the Zhenwu M890's 128-accelerator rack is a hard fabric boundary.</strong> Decides whether
 finding 7's comparison is fair.</li>
 <li><strong>Whether world models become the workload that matters.</strong> Google says 8t and 8i were built to
