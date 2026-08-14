@@ -45,6 +45,9 @@
 <p>For recording the ME344 final presentation against
 <a href="https://areporeporepo.github.io/me344-run/final/five.html"><code>five.html</code></a>. Open the deck, hit
 record, read this. Arrow keys advance.</p>
+<p>The deck now carries a chart per slide and ends on the outlook rather than on the ship decision.
+A PowerPoint of the same five slides, with these notes already in the notes pane, is at
+<code>~/Desktop/ME344-canvas/ME344-final-5-slides.pptx</code>. Google Slides imports it directly.</p>
 <p>Roughly 700 words, which lands near 5:00 at a normal speaking pace. Timings are cumulative.
 If you are running long, the cuttable sentences are marked <strong>[cut]</strong>.</p>
 <hr />
@@ -71,6 +74,9 @@ between spends memory for nothing. Going from 32 to 64 buys you 0.4% more throug
 more memory.</p>
 <p>The other number here is the ceiling. 25.5% of the chip's BF16 peak, and it plateaus there
 across an eight-times range of batch sizes. More work per step does not help after gb32.</p>
+<p>Why not? Not because the arithmetic units are saturated: at 25.5% of peak they clearly are not.
+Something else caps it, either memory bandwidth or fixed per-step overhead, and this run did not
+isolate which. That is a gap I will name rather than paper over.</p>
 <p><strong>[cut]</strong> And the cheapest thing on this slide is the ahead-of-time compile. Seventeen cents of
 compute told me the DP8 layout would die before I ran a single training step. It needed 65
 gigabytes against 15.75 available.</p>
@@ -105,8 +111,9 @@ the second eight chips for nothing.</p>
 gradient all-reduce has to cross DCN instead of ICI. Same model, same batches, same logical
 layout. Efficiency drops to 65.2% strong and 53.6% weak.</p>
 <p>And there is one result I cannot explain. DCN weak scaling came out worse per chip than DCN
-strong. 1,085 tokens per second per chip against 1,320. A fixed-size gradient all-reduce should
-not do that, because the payload is set by the model, not the batch. Differencing against ICI at
+strong. 1,085 tokens per second per chip against 1,320. An all-reduce averages gradients, which
+is one value per parameter, so its payload is fixed by the model and does not grow when you
+double the batch. Weak scaling should not be worse than strong. Differencing against ICI at
 matched batch shows 3.51 seconds of exposed communication against 1.08, a 3.2 times jump for
 the same payload.</p>
 <p>Lost compute-communication overlap, rematerialization at 110% of the AOT limit, and contention
@@ -116,23 +123,33 @@ on is the first thing I would do with more time.</p>
 </blockquote>
 <p><em>Advance.</em></p>
 <hr />
-<h2>Slide 5: Conclusion (4:00 to 5:00)</h2>
+<h2>Slide 5: Outlook (4:00 to 5:00)</h2>
 <blockquote>
-<p>So: what I would ship, and what this pod says about bigger models.</p>
+<p>So: what I would ship, and what survives this hardware.</p>
 <p>I would ship the SFT checkpoint at step 202. It is the only candidate with a domain gain, no
-retention regression, and an actual serving measurement behind it. I would explicitly not lean
-on GRPO, because its accuracy win did not reproduce.</p>
+retention regression, and an actual serving measurement behind it. Not GRPO, because its gain
+did not reproduce.</p>
 <p><strong>[cut]</strong> One caveat I will state rather than hide: the run's own stopping rule prefers step 50,
 where held-out loss was best at 0.0436 before drifting to 0.0623 by step 200. No task metric was
-ever run against step 50, which is a gap.</p>
-<p>Two things here generalize past this hardware. The first is the arithmetic: 16 bytes of training
-state per parameter is what tells you which models a fleet can train at all. Apply it to a
-2.8 trillion parameter model and you need eleven times the HBM of an entire 256-chip v5e pod,
-which is why those models arrived in 2026 and not 2023.</p>
-<p>The second is the fabric result. On Ironwood that boundary moves from sixteen chips to over nine
-thousand, but it does not disappear, and mixture-of-experts models put a second collective on
-the critical path. Google's new inference part drops the 3D torus for a topology built
-specifically to make all-to-all cheaper, which suggests they reached the same conclusion.</p>
+ever run against step 50.</p>
+<p>Now the part that outlives the assignment. This chart takes the 16 bytes per parameter I
+measured and runs it forward. Kimi K3, at 2.8 trillion parameters, needs 44.8 terabytes of
+training state. That is eleven times the HBM of an entire 256-chip v5e pod. An Ironwood pod
+clears it with room. That gap is why 2.8-trillion-parameter open models arrived in 2026 and not
+in 2023.</p>
+<p>The fabric result ages best. On Ironwood the boundary moves from 256 chips to 9,216, but it does
+not disappear, and mixture-of-experts models add a second collective, a per-layer all-to-all.
+Google's new inference part drops the 3D torus for a topology that cuts network diameter from 16
+hops to 7 for a claimed 50% better all-to-all latency, and names MoE serving as the reason. So
+they reached the same conclusion I did.</p>
+<p><strong>[cut]</strong> One caveat on my own numbers: the 99% matmul figure is a claim about sequence length
+256 only. Attention scales as L squared against matmul's L, so at a million tokens the same step
+is 97% attention, which is why Kimi K3 and Qwen3.5 replaced most of their attention layers.</p>
+<p>And a prediction to close on. Google says these chips were built to train and serve world models
+like Genie 3, so millions of agents can rehearse in simulation. If that is where the compute
+goes, the systems question of 2027 is not tokens per second on a training step, it is the
+throughput and latency of a simulate, act, learn loop, and the fabric question I measured
+reappears between the model and its environment.</p>
 <p>Thanks.</p>
 </blockquote>
 <hr />
@@ -141,10 +158,11 @@ specifically to make all-to-all cheaper, which suggests they reached the same co
 <li><strong>Cmd-P on the deck</strong> prints one slide per PDF page if you want slides as a file.</li>
 <li>The deck is at 100% zoom by default. Full-screen the browser before recording so the footer
 navigation is not in frame.</li>
-<li>If you overrun, cut the two <strong>[cut]</strong> paragraphs. That saves about 35 seconds.</li>
+<li>If you overrun, cut the three <strong>[cut]</strong> paragraphs. That saves about 50 seconds.</li>
 <li>Slide 4 is the strongest content. If you have to rush anything, rush slide 3, not slide 4.</li>
-<li>The forward-looking material lives in the separate 7-slide outlook deck and is not needed here.
-The last paragraph of slide 5 is the only place it appears, deliberately.</li>
+<li>Slide 5 is the outlook. The deeper version, with the derivations, the Zhenwu M890 comparison and
+the open-versus-API-only argument, is the separate 7-slide deck at <code>/final/outlook-slides.html</code>.
+Do not try to fit that into five minutes.</li>
 </ul>
 
 <footer>Anh Nguyen &middot; Stanford ME344, Summer 2026 &middot; run <code>qanh-20260813t194806z</code> &middot;

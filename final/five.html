@@ -3,52 +3,49 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ME344 Final Project — 5-slide cut</title>
+<title>ME344 Final Project: 5-slide cut</title>
 <style>
   :root {
     --bg: #f5f5f7; --panel: #ffffff; --border: #d2d2d7;
     --text: #1d1d1f; --dim: #6e6e73; --accent: #0071e3;
-    --ok: #34c759; --warn: #ff9f0a; --fail: #ff3b30;
+    --ok: #1a8f3c; --warn: #b8770a; --fail: #d72c20;
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; }
   body { background: var(--bg); color: var(--text);
-         font: 17px/1.5 -apple-system, BlinkMacSystemFont, "SF Pro Text", Helvetica, Arial, sans-serif; }
-  code, .mono, table { font-family: "SF Mono", ui-monospace, Menlo, monospace; }
+         font: 16px/1.5 -apple-system, BlinkMacSystemFont, "SF Pro Text", Helvetica, Arial, sans-serif; }
+  code, .mono { font-family: "SF Mono", ui-monospace, Menlo, monospace; }
   .deck { height: 100vh; overflow: hidden; }
-  .slide { display: none; height: 100vh; padding: 46px 64px 62px; flex-direction: column; }
+  .slide { display: none; height: 100vh; padding: 40px 56px 56px; flex-direction: column; }
   .slide.active { display: flex; }
-  h1 { font-size: 44px; line-height: 1.1; margin: 0 0 10px; letter-spacing: -0.025em; }
-  h2 { font-size: 32px; margin: 0 0 8px; letter-spacing: -0.015em; }
-  .kicker { color: var(--dim); font-size: 13px; text-transform: uppercase; letter-spacing: 0.09em; margin-bottom: 14px; }
-  .lede { font-size: 19px; color: var(--dim); margin: 0 0 20px; max-width: 76ch; }
-  .body { flex: 1; min-height: 0; overflow: auto; }
-  table { border-collapse: collapse; width: 100%; font-size: 14px; background: var(--panel); }
-  th, td { border: 1px solid var(--border); padding: 8px 11px; text-align: right; }
-  th:first-child, td:first-child { text-align: left; }
-  thead th { background: #fafafa; color: var(--dim); font-weight: 600; }
-  tr.hi td { background: #fff8e6; font-weight: 600; }
-  tr.bad td { background: #fff0ef; }
-  tr.good td { background: #eefaf0; }
-  .grid { display: grid; gap: 16px; }
-  .g2 { grid-template-columns: 1fr 1fr; }
-  .g3 { grid-template-columns: repeat(3, 1fr); }
-  .card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 17px 19px; }
-  .card h3 { margin: 0 0 8px; font-size: 13.5px; color: var(--dim); font-weight: 600;
-             text-transform: uppercase; letter-spacing: 0.05em; }
-  .stat { font-size: 38px; font-weight: 650; letter-spacing: -0.025em; }
-  .stat.ok { color: var(--ok); } .stat.bad { color: var(--fail); } .stat.warn { color: var(--warn); }
-  .sub { color: var(--dim); font-size: 13.5px; }
-  ul { margin: 6px 0 0; padding-left: 20px; } li { margin: 6px 0; }
-  .note { color: var(--dim); font-size: 13.5px; margin-top: 12px; }
-  .caveat { border-left: 3px solid var(--warn); padding-left: 12px; background: #fffaf0; }
-  .src { margin-top: 12px; padding-top: 8px; border-top: 1px dashed var(--border);
-         font-family: "SF Mono", ui-monospace, Menlo, monospace; font-size: 11.5px; color: var(--dim); }
-  footer { position: fixed; left: 0; right: 0; bottom: 0; height: 40px; display: flex;
-           align-items: center; justify-content: space-between; padding: 0 64px;
+  h1 { font-size: 42px; line-height: 1.08; margin: 0 0 10px; letter-spacing: -0.025em; }
+  h2 { font-size: 30px; margin: 0 0 6px; letter-spacing: -0.018em; line-height: 1.15; }
+  .kicker { color: var(--dim); font-size: 12px; text-transform: uppercase;
+            letter-spacing: 0.09em; margin-bottom: 10px; }
+  .lede { font-size: 18px; color: var(--dim); margin: 0 0 18px; max-width: 76ch; }
+  .body { flex: 1; min-height: 0; display: flex; gap: 28px; }
+  .figure { flex: 1 1 66%; min-width: 0; display: flex; align-items: flex-start;
+            justify-content: center; }
+  .figure img { max-width: 100%; max-height: 100%; object-fit: contain; }
+  .points { flex: 0 0 30%; overflow: auto; }
+  .points h3 { margin: 0 0 3px; font-size: 14px; }
+  .points p { margin: 0 0 15px; font-size: 13px; color: var(--dim); line-height: 1.5; }
+  .points h3.ok { color: var(--ok); } .points h3.bad { color: var(--fail); }
+  .points h3.warn { color: var(--warn); } .points h3.accent { color: var(--accent); }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; align-content: start; }
+  .col h3 { margin: 0 0 4px; font-size: 12px; color: var(--dim); font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.05em; }
+  .stat { font-size: 30px; font-weight: 650; letter-spacing: -0.025em; margin-bottom: 8px; }
+  .stat.accent { color: var(--accent); } .stat.ok { color: var(--ok); } .stat.bad { color: var(--fail); }
+  .col p { margin: 0; font-size: 13px; color: var(--dim); line-height: 1.5; }
+  .src { margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--border);
+         font-family: "SF Mono", ui-monospace, Menlo, monospace; font-size: 11px; color: var(--dim); }
+  footer { position: fixed; left: 0; right: 0; bottom: 0; height: 38px; display: flex;
+           align-items: center; justify-content: space-between; padding: 0 56px;
            border-top: 1px solid var(--border); background: rgba(255,255,255,0.85);
            backdrop-filter: saturate(180%) blur(16px); font-size: 12px; color: var(--dim); }
-  footer nav button { font: inherit; color: var(--accent); background: none; border: none; cursor: pointer; padding: 4px 8px; }
+  footer nav button { font: inherit; color: var(--accent); background: none; border: none;
+                      cursor: pointer; padding: 4px 8px; }
   @media print {
     html, body { height: auto; } .deck { height: auto; overflow: visible; }
     .slide { display: flex !important; height: auto; min-height: 96vh; page-break-after: always; }
@@ -63,179 +60,131 @@
   <section class="slide active">
     <div class="kicker">Stanford ME344 &middot; Final Project &middot; Anh Nguyen</div>
     <h1>Train, Tune, And Scale Qwen3-4B<br>on a TPU v5e-8</h1>
-    <p class="lede">Forty minutes and $5.96 on eight v5e chips, spent answering three questions:
-      what fits, what is worth running, and what breaks when you add more chips.</p>
+    <p class="lede">Forty minutes and about $6 on eight v5e chips, spent answering three
+      questions: what fits, what is worth running, and what breaks when you add more chips.</p>
     <div class="body">
-      <div class="grid g3">
-        <div class="card"><h3>What fits</h3><div class="stat">TP8, not DP8</div>
-          <div class="sub">Tensor parallel shards the 16 bytes/parameter of training state eight
-            ways and fits in 8.23 GiB/chip. Data parallel replicates it and needs 59.94, so it dies
-            at 65.47 GiB against 15.75 available. I predicted both before running them.</div></div>
-        <div class="card"><h3>What is worth running</h3><div class="stat">global batch 32</div>
-          <div class="sub">Throughput saturates there at 16,562 tokens/s using 59% of HBM. The
-            memory wall is four doublings later at gb512. Everything between spends memory for
-            nothing.</div></div>
-        <div class="card"><h3>What breaks</h3><div class="stat bad">the fabric</div>
-          <div class="sub">16 chips inside one ICI slice: 100% efficiency. The same 16 chips across
-            two slices, so the gradient all-reduce crosses DCN: 65% strong, 54% weak.</div></div>
+      <div class="grid3" style="flex:1">
+        <div class="col">
+          <h3>What fits</h3><div class="stat accent">TP8, not DP8</div>
+          <p>Tensor parallel shards the 16 bytes per parameter of training state eight ways and
+            fits in 8.23 GiB per chip. Data parallel replicates it, needs 59.94, and dies at 65.47
+            against 15.75 available. Both outcomes predicted before running either.</p>
+        </div>
+        <div class="col">
+          <h3>What is worth running</h3><div class="stat ok">global batch 32</div>
+          <p>Throughput saturates at 16,562 tokens/s using 59.4% of HBM. The memory wall is four
+            doublings later at gb512. Everything in between spends memory for nothing.</p>
+        </div>
+        <div class="col">
+          <h3>What breaks</h3><div class="stat bad">the fabric</div>
+          <p>16 chips inside one ICI slice: 100% efficiency. The same 16 across two slices, so the
+            gradient all-reduce crosses DCN: 65% strong, 54% weak.</p>
+        </div>
       </div>
-      <div class="note" style="margin-top:18px">Full 17-slide deck, executed notebook and raw data:
-        <strong>areporeporepo.github.io/me344-run/final/</strong></div>
-      <div class="src">run qanh-20260813t194806z &middot; MaxText 17c7172 &middot; every number below is
-        traceable to a named artifact file</div>
     </div>
+    <div class="src">run qanh-20260813t194806z &middot; MaxText 17c7172 &middot; every number traces
+      to a named artifact file &middot; areporeporepo.github.io/me344-run/final/</div>
   </section>
 
   <!-- 2 -->
   <section class="slide">
-    <div class="kicker">1 of 3: memory</div>
+    <div class="kicker">1 of 4 &middot; memory</div>
     <h2>The useful batch and the memory wall are not the same shape</h2>
-    <p class="lede">Eight batch sizes, each compiled ahead of time before being measured. The
-      question a systems engineer actually needs answered is not "what fits" but "what is worth
-      filling".</p>
     <div class="body">
-      <table>
-        <thead><tr><th>Global batch</th><th>AOT GiB/chip</th><th>% of 15.75 limit</th>
-          <th>tokens/s</th><th>TFLOP/s/device</th><th>% of BF16 peak</th></tr></thead>
-        <tbody>
-          <tr><td>4</td><td>8.23</td><td>52.2%</td><td>10,457</td><td>31.84</td><td>16.2%</td></tr>
-          <tr><td>16</td><td>9.00</td><td>57.2%</td><td>15,361</td><td>46.78</td><td>23.7%</td></tr>
-          <tr class="hi"><td>32</td><td>9.35</td><td>59.4%</td><td>16,562</td><td>50.43</td><td>25.6%</td></tr>
-          <tr><td>64</td><td>10.60</td><td>67.3%</td><td>16,635</td><td>50.65</td><td>25.7%</td></tr>
-          <tr><td>128</td><td>12.99</td><td>82.5%</td><td>16,627</td><td>50.63</td><td>25.7%</td></tr>
-          <tr><td>256</td><td>17.37</td><td>110.3%</td><td>16,227</td><td>49.41</td><td>25.1%</td></tr>
-          <tr class="bad"><td>512</td><td colspan="5">AOT out of memory: needs 18.43 GiB temporaries against 15.75 GiB available</td></tr>
-        </tbody>
-      </table>
-      <div class="grid g3" style="margin-top:16px">
-        <div class="card"><h3>The knee</h3><div class="stat ok">gb32</div>
-          <div class="sub">gb64 buys 0.4% more throughput for 13% more HBM. gb256 is 2% slower while
-            using 86% more.</div></div>
-        <div class="card"><h3>The ceiling</h3><div class="stat">25.5% of peak</div>
-          <div class="sub">And it plateaus. The remaining 74% is not recoverable by a bigger step;
-            it needs a different execution strategy.</div></div>
-        <div class="card"><h3>The cheapest insight</h3><div class="stat">$0.17</div>
-          <div class="sub">What the whole ahead-of-time memory-planning stage cost. It predicted the
-            gb512 failure without ever running it.</div></div>
+      <div class="figure"><img src="figures/slide_throughput.svg" alt="Throughput and AOT memory against global batch size"></div>
+      <div class="points">
+        <h3 class="ok">The knee: gb32</h3>
+        <p>16,562 tokens/s at 59.4% of HBM. gb64 buys 0.4% more throughput for 13% more memory.</p>
+        <h3 class="bad">The wall: gb512</h3>
+        <p>Fails to compile. 18.43 GiB of temporaries against 15.75 available.</p>
+        <h3>The ceiling: 25.5%</h3>
+        <p>Of the 197 BF16 TFLOP/s peak, and it plateaus there across an 8x range of batch sizes.</p>
+        <h3 class="warn">What I did not isolate</h3>
+        <p>At 25.5% of peak the arithmetic units are clearly not the limit. Memory bandwidth and
+          fixed per-step overhead are both candidates. This run did not separate them.</p>
       </div>
-      <div class="src">source: sweep_results.csv (all 8 rows), capacity_report.json,
-        compute_bound.json, cost_ledger.csv</div>
     </div>
+    <div class="src">sweep_results.csv &middot; capacity_report.json &middot; 8 batch sizes, AOT
+      compiled then benchmarked at 8 steps each</div>
   </section>
 
   <!-- 3 -->
   <section class="slide">
-    <div class="kicker">2 of 3: the model</div>
-    <h2>Fine-tuning worked. The evidence for it is thinner than the number suggests.</h2>
+    <div class="kicker">2 of 4 &middot; the model</div>
+    <h2>Fine-tuning worked. Forty examples cannot prove it.</h2>
     <div class="body">
-      <div class="grid g2">
-        <div class="card"><h3>What SFT did</h3>
-          <table style="margin-top:4px">
-            <thead><tr><th>Metric</th><th>Base</th><th>SFT 202</th></tr></thead>
-            <tbody>
-              <tr class="good"><td>banking77 exact (n=40)</td><td>70.0%</td><td><strong>92.5%</strong></td></tr>
-              <tr><td>format compliance</td><td>100%</td><td>100%</td></tr>
-              <tr class="good"><td>GSM8K retention (n=16)</td><td>81.25%</td><td><strong>87.5%</strong></td></tr>
-            </tbody>
-          </table>
-          <div class="note">A +22.5 point domain gain with retention going <em>up</em>, so no
-            capability was traded away. XProf explains why the step was cheap to run:
-            <strong>99.07% of its 24.94 TFLOPs is weight matmul</strong>, only 0.93% attention at
-            sequence length 256.</div>
-        </div>
-        <div class="card caveat"><h3>Why I will not call it a launch</h3>
-          <table style="margin-top:4px">
-            <thead><tr><th>Checkpoint</th><th>Observed</th><th>Wilson 95%</th></tr></thead>
-            <tbody>
-              <tr><td>base</td><td>70.0%</td><td>54.6 - 81.9%</td></tr>
-              <tr><td>SFT 202</td><td>92.5%</td><td>80.1 - 97.4%</td></tr>
-            </tbody>
-          </table>
-          <div class="note">The intervals <strong>still overlap by 1.8 points</strong>. A
-            plus-or-minus 10 point margin needs 97 examples; I used 40.<br><br>
-            GRPO makes the point harder: it moved accuracy <strong>+12.5 points here and -12.5
-            points on an identically configured run three days earlier</strong>, with its guardrail
-            flipping pass to fail. That is a two-example swing on 16 items. Its format gain
-            (6/16 to 15/16) is the only part large enough to trust.</div>
-        </div>
+      <div class="figure"><img src="figures/slide_evaluation.svg" alt="Base and SFT accuracy with 95% Wilson intervals, overlapping"></div>
+      <div class="points">
+        <h3 class="accent">SFT: 70.0% to 92.5%</h3>
+        <p>On 40 held-out banking77 prompts, format compliance holding at 100%, GSM8K retention
+          rising 81.25% to 87.5%.</p>
+        <h3 class="warn">But the intervals overlap</h3>
+        <p>95% Wilson: base 54.6 to 81.9, SFT 80.1 to 97.4. They overlap by 1.8 points, so the
+          delta is not formally established.</p>
+        <h3 class="bad">And GRPO did not reproduce</h3>
+        <p>Plus 12.5 points here, minus 12.5 on an identically configured run three days earlier,
+          with the guardrail flipping pass to fail. Two examples out of sixteen.</p>
+        <h3>So: a smoke test</h3>
+        <p>97 examples would be needed for a plus-or-minus 10 point margin. I used 40.</p>
       </div>
-      <div class="src">source: evaluation_results.csv, evaluation_uncertainty.json, rl_summary.json,
-        profile.log &middot; cross-run comparison against run qanh-20260810t005140z</div>
     </div>
+    <div class="src">evaluation_results.csv &middot; evaluation_uncertainty.json &middot; Wilson
+      score interval, 95%, n=40</div>
   </section>
 
   <!-- 4 -->
   <section class="slide">
-    <div class="kicker">3 of 3: scaling</div>
+    <div class="kicker">3 of 4 &middot; scaling</div>
     <h2>Chip count is not the scaling unit. The fabric is.</h2>
-    <p class="lede">Five GKE JobSet runs. Sixteen chips arranged two ways, with everything else held
-      fixed: same model, same checkpoint, same batches, same logical data and tensor layout.</p>
     <div class="body">
-      <table>
-        <thead><tr><th>Run</th><th>Chips</th><th>Fabric</th><th>Batch</th><th>s/step</th>
-          <th>tokens/s</th><th>tokens/s/chip</th><th>Efficiency</th></tr></thead>
-        <tbody>
-          <tr><td>baseline</td><td>8</td><td>ICI 2&times;4</td><td>256</td><td>4.045</td><td>16,200</td><td>2,025</td><td>reference</td></tr>
-          <tr class="good"><td>ici_strong</td><td>16</td><td>ICI 4&times;4</td><td>256</td><td>2.022</td><td>32,417</td><td>2,026</td><td>100.1%</td></tr>
-          <tr class="good"><td>ici_weak</td><td>16</td><td>ICI 4&times;4</td><td>512</td><td>4.061</td><td>32,272</td><td>2,017</td><td>99.6%</td></tr>
-          <tr class="bad"><td>strong</td><td>16</td><td>DCN 2&times;(2&times;4)</td><td>256</td><td>3.104</td><td>21,123</td><td>1,320</td><td>65.2%</td></tr>
-          <tr class="bad"><td>weak</td><td>16</td><td>DCN 2&times;(2&times;4)</td><td>512</td><td>7.553</td><td>17,355</td><td>1,085</td><td>53.6%</td></tr>
-        </tbody>
-      </table>
-      <div class="grid g2" style="margin-top:16px">
-        <div class="card"><h3>Inside a slice, scaling is free</h3><div class="stat ok">2,025 &rarr; 2,026</div>
-          <div class="sub">Tokens/s/chip going from 8 to 16 chips over ICI. Doubling the chips
-            doubles the throughput, strong and weak alike.</div></div>
-        <div class="card caveat"><h3>And one result I cannot explain</h3><div class="stat warn">3.2&times;</div>
-          <div class="sub">DCN weak is worse per chip than DCN strong, which a gradient all-reduce
-            sized by the model rather than the batch should not do. Differencing against ICI at
-            matched batch: 3.51 s exposed against 1.08 s, same payload. Lost overlap,
-            rematerialization at 110% of the AOT limit, or contention from other students all fit,
-            and the GKE jobs saved no traces. Naming one would be a guess.</div></div>
+      <div class="figure"><img src="figures/slide_scaling.svg" alt="Per-chip throughput across ICI and DCN, strong and weak scaling"></div>
+      <div class="points">
+        <h3 class="ok">Inside one ICI slice: free</h3>
+        <p>8 to 16 chips holds 100.1% strong and 99.6% weak efficiency. Per chip throughput goes
+          2,025 to 2,026.</p>
+        <h3 class="bad">Across DCN: 35% gone</h3>
+        <p>Same model, same batches, same logical layout. Only the fabric the gradient all-reduce
+          travels over changed.</p>
+        <h3 class="warn">One result I cannot explain</h3>
+        <p>DCN weak is worse per chip than DCN strong, 1,085 against 1,320. An all-reduce payload
+          is fixed by parameter count, so doubling the batch should not hurt.</p>
+        <h3>Three candidates, no evidence</h3>
+        <p>Lost compute/communication overlap, rematerialization at 110% of the AOT limit, or
+          shared-fabric contention. The GKE jobs saved no traces.</p>
       </div>
-      <div class="src">source: scale_out.json &middot; provenance: these five results were produced
-        2026-08-10 and reused; each records a source_checkpoint from that run, and the collector
-        validates only student_id</div>
     </div>
+    <div class="src">scale_out.json &middot; 5 trials &middot; the GKE results are dated 2026-08-10
+      and reused, each records a source_checkpoint from that run</div>
   </section>
 
   <!-- 5 -->
   <section class="slide">
-    <div class="kicker">Conclusion</div>
-    <h2>What I would ship, and what this pod says about bigger models</h2>
+    <div class="kicker">4 of 4 &middot; outlook</div>
+    <h2>What I would ship, and what this pod says about 2027</h2>
     <div class="body">
-      <div class="grid g2">
-        <div class="card"><h3>Ship SFT step 202</h3>
-          <ul>
-            <li>Only candidate with a domain gain, no retention regression, <em>and</em> a serving
-              measurement: 27.0 req/s at concurrency 1, 75.5 at concurrency 4.</li>
-            <li>Not the GRPO checkpoint, whose accuracy effect flipped sign between runs.</li>
-            <li>Treated as a smoke test, not a launch: the intervals overlap and 97 examples are
-              needed for a real margin.</li>
-            <li>Open question I am not hiding: the stopping rule prefers step 50, which no task
-              metric has ever scored.</li>
-          </ul>
-        </div>
-        <div class="card"><h3>Two measurements that generalize</h3>
-          <div class="sub"><strong>16 bytes/parameter</strong> of training state, validated against
-            this run to the second decimal. It says a 2.8T-parameter model needs about 2,650 v5e
-            chips, and a slice caps at 256, so frontier-scale training is <em>forced</em> across the
-            DCN where I measured a 35 to 46% penalty. The fabric, not the chip count, is the binding
-            constraint at scale.</div>
-          <div class="note"><strong>0.93% attention at L=256.</strong> Attention grows as L&sup2;
-            against L for the weights, so it reaches parity near 27,000 tokens of context and would
-            be ~97% of the step at a million. Every conclusion on these slides is a
-            short-sequence result. Long-context and world-model training is a different machine
-            problem on the same chips.</div>
-        </div>
+      <div class="figure"><img src="figures/capacity_forward.svg" alt="Training state of five models against the HBM of four fleets, log scale"></div>
+      <div class="points">
+        <h3 class="accent">Ship SFT step 202</h3>
+        <p>The only candidate with a domain gain, no retention regression, and a serving
+          measurement behind it. Not GRPO: its gain did not reproduce.</p>
+        <h3>The arithmetic outlives the number</h3>
+        <p>16 bytes per parameter is what says which models a fleet can train. Kimi K3 needs 11x an
+          entire v5e pod. That is why 2.8T open models arrived in 2026.</p>
+        <h3 class="ok">The fabric result ages best</h3>
+        <p>On Ironwood the boundary moves from 256 chips to 9,216 but does not vanish. TPU 8i drops
+          the 3D torus for a topology cutting 16 hops to 7, claiming 50% better all-to-all, and
+          names MoE serving as the reason.</p>
+        <h3 class="warn">99% matmul is about L=256</h3>
+        <p>Attention scales as L&sup2; against matmul's L, so at 1M context the same step is 97%
+          attention. That is why Kimi K3 and Qwen3.5 replaced most of their attention.</p>
+        <h3>Prediction, not measurement</h3>
+        <p>Google says 8t and 8i were built for world models like Genie 3. If so, 2027's systems
+          question is a simulate-act-learn loop, not tokens/s on a training step.</p>
       </div>
-      <div class="note" style="margin-top:16px"><strong>The habit worth keeping:</strong> the run's
-        artifacts were destroyed once when a VM was deleted. Everything here was rebuilt from Cloud
-        Storage plus a re-run, which is why every slide names the file it came from.</div>
-      <div class="src">source: capacity_report.json, sweep_results.csv, profile.log, scale_out.json,
-        evaluation_uncertainty.json, training_decision.json &middot; parameter counts for frontier
-        models are from secondary reporting and are approximate</div>
     </div>
+    <div class="src">16 bytes/parameter measured on this run &middot; chip capacities from Google
+      Cloud docs and the TPU 8t/8i deep dive, 2026-04-22 &middot; full outlook at
+      /final/outlook.html</div>
   </section>
 
 </div>
