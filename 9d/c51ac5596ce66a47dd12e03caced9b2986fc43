@@ -1,0 +1,21 @@
+final/five.html
+  s_12283f6ed82210::t_b9ff2126a7189a 32,103,106,110-115
+final/figures/slide_ceiling.svg
+  s_12283f6ed82210::t_a5ce52ea0ce13b 1-2609
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "9dc51ac5596ce66a47dd12e03caced9b2986fc43",
+  "prompts": {},
+  "sessions": {
+    "s_12283f6ed82210": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9e3fc376-acc5-43cc-b10a-9b8d5821f7cc",
+        "model": "claude-opus-5"
+      },
+      "human_author": "anh nguyen <anh.nqqq@icloud.com>"
+    }
+  }
+}
