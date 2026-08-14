@@ -1,0 +1,25 @@
+final/five.html
+  s_94f8f36002b2a4::t_909d87a274873c 147-148
+  s_94f8f36002b2a4::t_da52faca74cfc7 102-107
+  s_94f8f36002b2a4::t_a902b7dcec7c7a 197
+final/slides.html
+  s_94f8f36002b2a4::t_ca96c36af2b918 852-901
+  s_94f8f36002b2a4::t_07772e2f2d7b50 932-936
+  s_94f8f36002b2a4::t_35da27a9b35bb2 851,959
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "869821cfb1ee7d19183a6610947cc6ca818df262",
+  "prompts": {},
+  "sessions": {
+    "s_94f8f36002b2a4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "105260e2-6098-474e-b38f-f9f481690874",
+        "model": "claude-opus-5"
+      },
+      "human_author": "anh nguyen <anh.nqqq@icloud.com>"
+    }
+  }
+}
