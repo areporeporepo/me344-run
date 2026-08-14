@@ -46,6 +46,97 @@
 DCN, &quot;inter-chip interconnect&quot; is not an answer. So each entry says what it stands for, what it
 actually does, and where it shows up in your numbers.</p>
 <p>Start with the twelve. If you only have an hour, learn those cold and skim the rest.</p>
+<h2>What is worth learning here, and what is course furniture</h2>
+<p>Not everything in this project generalises. Some of it exists because a class needed a task that
+finishes in forty minutes, and knowing it well buys you nothing in 2027. Sorting the two is
+itself the useful exercise, so here is the sort, done honestly.</p>
+<h3>Learn these. They are the same problems at any scale.</h3>
+<table>
+<thead>
+<tr>
+  <th>Concept</th>
+  <th>Why it survives</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>AOT capacity planning</strong></td>
+  <td>The technique that travelled furthest. MaxText now drives it in an automated remat-policy search against DeepSeek3 671B on a tpu7x-512 pod. Predicting memory before spending it scales up, not away.</td>
+</tr>
+<tr>
+  <td><strong>Bytes per parameter</strong></td>
+  <td>16 here, less under FP8 or MXFP4, but the arithmetic is what decides which models a fleet can train at all. Kimi K3 needs 11x an entire v5e pod.</td>
+</tr>
+<tr>
+  <td><strong>TP against DP, and FSDP</strong></td>
+  <td>Where the model state lives, and what that costs you in collectives. This is the first decision on any distributed training job.</td>
+</tr>
+<tr>
+  <td><strong>Which collective crosses which fabric</strong></td>
+  <td>The single most portable finding in the project. An all-reduce is once per step; an all-to-all is per layer. Put the cheap one on the slow wire.</td>
+</tr>
+<tr>
+  <td><strong>Bandwidth against hop count</strong></td>
+  <td>Two different problems hiding inside one &quot;the network is slow&quot;. Google built Virgo for the first and Boardfly for the second.</td>
+</tr>
+<tr>
+  <td><strong>Attention scaling as L squared</strong></td>
+  <td>Explains why 2026 architectures replaced most of their attention layers. The 0.93% figure is only true at L=256.</td>
+</tr>
+<tr>
+  <td><strong>MoE sparsity</strong></td>
+  <td>Total parameters outrunning active ones is why HBM capacity binds before FLOPs, and why 8i has more memory than 8t.</td>
+</tr>
+<tr>
+  <td><strong>Confidence intervals before claims</strong></td>
+  <td>A two-example swing flipped a result's sign. This one has no expiry date and is ignored constantly.</td>
+</tr>
+</tbody>
+</table>
+<h3>Do not spend time on these.</h3>
+<table>
+<thead>
+<tr>
+  <th>Thing</th>
+  <th>Why not</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>banking77's 77 intent labels</td>
+  <td>A 2020 dataset chosen to be boring. It is a fixture for measuring the machine, not a benchmark.</td>
+</tr>
+<tr>
+  <td>The specific 40-prompt and 16-item suites</td>
+  <td>Their <em>size</em> is the lesson. Their contents are arbitrary.</td>
+</tr>
+<tr>
+  <td>Serving at concurrency 1 and 4</td>
+  <td>Eight requests against a local vLLM. Real serving work starts several orders of magnitude further along.</td>
+</tr>
+<tr>
+  <td>The per-cell wall clock and the $5.96 ledger</td>
+  <td>Real for this run, meaningless anywhere else. Useful only as evidence that the capacity lab cost $0.17.</td>
+</tr>
+<tr>
+  <td><code>start_tpu_vm.sh</code>, the Stanford node mapping, the JobSet YAML</td>
+  <td>Course plumbing. The concepts underneath (slices, topologies, multi-worker jobs) transfer; these files do not.</td>
+</tr>
+<tr>
+  <td>GRPO's reward shaping for this task</td>
+  <td>GRPO as a method is worth knowing, since RL post-training is central now. The reward function for a banking-intent toy is not.</td>
+</tr>
+<tr>
+  <td>W&amp;B offline mode, the venv split</td>
+  <td>Environment detail.</td>
+</tr>
+</tbody>
+</table>
+<h3>The honest caveat about that sort</h3>
+<p>The deck still contains most of the second column, because the assignment asked six specific
+questions and the deck has to answer them. That is a different job from teaching you something
+durable. When you present it, the second column is evidence. When you study it, only the first
+column is worth your time.</p>
 <hr />
 <h2>The twelve you must know cold</h2>
 <p>These are the ones your own slides depend on. Each is paired with the number from your run that
