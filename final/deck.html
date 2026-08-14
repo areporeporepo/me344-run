@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The deck: web, PowerPoint, Google Slides</title>
+<style>
+  :root {
+    --bg: #f5f5f7; --panel: #ffffff; --border: #d2d2d7;
+    --text: #1d1d1f; --dim: #6e6e73; --accent: #0071e3;
+    --ok: #34c759; --warn: #ff9f0a; --fail: #ff3b30;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.65 -apple-system, BlinkMacSystemFont, "SF Pro Text", Helvetica, Arial, sans-serif; }
+  code, pre, table { font-family: "SF Mono", ui-monospace, Menlo, monospace; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 48px 24px 80px; }
+  .back { font-size: 13px; color: var(--accent); text-decoration: none; }
+  h1 { font-size: 34px; line-height: 1.15; margin: 14px 0 8px; letter-spacing: -0.02em; }
+  h2 { font-size: 22px; margin: 38px 0 10px; letter-spacing: -0.01em;
+       border-top: 1px solid var(--border); padding-top: 22px; }
+  h3 { font-size: 16.5px; margin: 24px 0 8px; }
+  p, li { max-width: 78ch; }
+  a { color: var(--accent); }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; background: var(--panel); margin: 12px 0; }
+  th, td { border: 1px solid var(--border); padding: 7px 10px; text-align: right; }
+  th:first-child, td:first-child { text-align: left; }
+  thead th { background: #fafafa; color: var(--dim); font-weight: 600; }
+  pre { background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+        padding: 13px 16px; overflow-x: auto; font-size: 13px; }
+  code { font-size: 13.5px; }
+  p code, li code, td code { background: #ececf0; padding: 1px 5px; border-radius: 4px; }
+  pre code { background: none; padding: 0; }
+  blockquote { border-left: 3px solid var(--warn); background: #fffaf0; margin: 14px 0;
+               padding: 10px 16px; color: var(--dim); font-size: 14px; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+  footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--border);
+           font-size: 12.5px; color: var(--dim); }
+</style>
+</head>
+<body>
+<div class="wrap">
+<a class="back" href="index.html">&larr; Overview</a>
+<h1>The Deck</h1>
+<p>Five slides, five minutes, one chart per slide, ending on the outlook. Every number traces to a
+named artifact file from run <code>qanh-20260813t194806z</code>.</p>
+<h2>Get it</h2>
+<table>
+<thead>
+<tr>
+  <th>Format</th>
+  <th>Where</th>
+  <th>Use it for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>Web</strong></td>
+  <td><a href="five.html"><code>five.html</code></a></td>
+  <td>Presenting from a browser. Arrow keys advance, Cmd-P prints one slide per PDF page.</td>
+</tr>
+<tr>
+  <td><strong>PowerPoint</strong></td>
+  <td><a href="ME344-final-5-slides.pptx"><code>ME344-final-5-slides.pptx</code></a></td>
+  <td>Importing into Google Slides, Keynote or PowerPoint. The speaker script is already in the notes pane of every slide.</td>
+</tr>
+<tr>
+  <td><strong>Google Slides</strong></td>
+  <td><em>not published yet</em></td>
+  <td>See below.</td>
+</tr>
+<tr>
+  <td><strong>Script</strong></td>
+  <td><a href="speaker-notes.html"><code>speaker-notes.html</code></a></td>
+  <td>Recording. Timed and cued slide by slide, with the sentences to cut if you overrun.</td>
+</tr>
+</tbody>
+</table>
+<h2>Putting it in Google Slides</h2>
+<p>Google Slides imports <code>.pptx</code> directly and keeps the layout, the charts and the speaker notes.</p>
+<ol>
+<li>Download <a href="ME344-final-5-slides.pptx"><code>ME344-final-5-slides.pptx</code></a>.</li>
+<li>Open <a href="https://drive.google.com">drive.google.com</a> and drag the file in.</li>
+<li>Right-click it, then <strong>Open with, Google Slides</strong>.</li>
+<li><strong>File, Save as Google Slides</strong> if you want a native copy rather than the imported one.</li>
+<li><strong>Share, Anyone with the link</strong> if it needs to be public.</li>
+</ol>
+<p>Speaker notes land in the notes pane, so <strong>View, Presenter view</strong> gives you the script while
+presenting.</p>
+<h2>What is on each slide</h2>
+<table>
+<thead>
+<tr>
+  <th></th>
+  <th>Slide</th>
+  <th>Chart</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>1</td>
+  <td>Three questions: what fits, what is worth running, what breaks</td>
+  <td>none, three columns of text</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td>The useful batch and the memory wall are not the same shape</td>
+  <td>throughput and AOT memory against batch size</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td>Fine-tuning worked. Forty examples cannot prove it.</td>
+  <td>base and SFT with 95% Wilson intervals, overlap shaded</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td>Chip count is not the scaling unit. The fabric is.</td>
+  <td>per-chip throughput across all five scaling trials</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td>What I would ship, and what this pod says about 2027</td>
+  <td>16 bytes per parameter run forward, five models against four fleets</td>
+</tr>
+</tbody>
+</table>
+<p>The deeper forward-looking material, with the derivations, the Zhenwu M890 comparison and the
+open-weights argument, is a separate seven-slide deck at
+<a href="outlook-slides.html"><code>outlook-slides.html</code></a>. It does not fit in five minutes and is not meant to.</p>
+<h2>Rebuilding it</h2>
+<pre><code class="language-bash">python3 build_slide_figures.py     # the three run charts
+python3 build_outlook_figure.py    # the forward projection
+python3 build_pptx.py              # assembles the .pptx
+python3 publish_site.py            # pushes everything to the site
+</code></pre>
+
+<footer>Anh Nguyen &middot; Stanford ME344, Summer 2026 &middot; run <code>qanh-20260813t194806z</code> &middot;
+generated by <code>publish_site.py</code></footer>
+</div>
+</body>
+</html>
