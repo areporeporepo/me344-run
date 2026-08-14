@@ -1,0 +1,36 @@
+final/index.html
+  s_12283f6ed82210::t_a62c138ee7ded8 92-93,96-100
+  s_12283f6ed82210::t_f5e1ef505ab9d2 101
+final/slides.html
+  s_12283f6ed82210::t_ee94517c795b6e 85,89
+  s_12283f6ed82210::t_7530eb123f0cc8 86-88,90-101
+  s_12283f6ed82210::t_58e1fb5b490980 102-104,150,231,259,296,372,412,447,481,509,529,557,571
+final/figures/slide_communication.svg
+  s_12283f6ed82210::t_b4ac3c665fdd86 1-2201
+final/figures/slide_cost.svg
+  s_12283f6ed82210::t_1118d3c43082b5 1-2162
+final/figures/slide_serving.svg
+  s_12283f6ed82210::t_4613d15f2b38ce 1-1723
+final/figures/slide_step_split.svg
+  s_12283f6ed82210::t_5d5671dc2c8cfb 1-1897
+final/figures/slide_utilization.svg
+  s_12283f6ed82210::t_587d3c49d75501 1-2071
+final/speaker-notes-17.html
+  s_12283f6ed82210::t_f5b3753226c317 1-128
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "48f5589932467fcb452e18bbbce1b51ba486f4ed",
+  "prompts": {},
+  "sessions": {
+    "s_12283f6ed82210": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9e3fc376-acc5-43cc-b10a-9b8d5821f7cc",
+        "model": "claude-opus-5"
+      },
+      "human_author": "anh nguyen <anh.nqqq@icloud.com>"
+    }
+  }
+}
