@@ -571,9 +571,10 @@
   <!-- 14 -->
   <section class="slide">
     <div class="kicker">What it took</div>
-    <h2>Where the 40 minutes and the $5.96 went</h2>
-    <p class="lede">Wall-clock per notebook cell from the driver's own progress log, next to the
-      estimated TPU cost per stage from the cost ledger.</p>
+    <h2>Where the 40 minutes, and the 5.0 chip-hours, went</h2>
+    <p class="lede">Wall-clock per notebook cell from the driver's own progress log. Eight chips run
+      throughout, so 39m 36s of cell time is 5.0 chip-hours. Chip-time is the number that travels:
+      it is the same on any price list.</p>
     <div class="body">
       <div class="grid g2">
         <div class="card"><h3>Wall clock per cell</h3>
@@ -600,7 +601,7 @@
         
       </div>
       <div class="src"><b>source:</b> run_progress.log (per-cell START/DONE timestamps emitted by the
-        driver), cost_ledger.csv (kind=command rows, estimated_usd grouped by stage prefix)<br>
+        driver), cost_ledger.csv (kind=command rows, wall_seconds grouped by stage prefix, times 8 chips)<br>
         <b>note:</b> two non-zero exit codes in the ledger are the deliberate DP8 and gb512 OOM
         probes, not failures.</div>
     </div>

@@ -108,9 +108,9 @@ the same way and checked the same way.</p>
 <blockquote>
 <p>The submitted artifact combines nine panels and one figure. The dashboard is built from the sweep results, SFT metrics, evaluation results, serving latencies, recovery report, scaling numbers, and the cost ledger. This figure plus answers.md is the entire Canvas submission, packaged into qanh-20260813t194806z.final.tar.gz. The archive is 325 KiB and was uploaded to Google Cloud Storage at 20:32:45Z.</p>
 </blockquote>
-<h2>Slide 14: Time and Cost (13:20 to 14:10)</h2>
+<h2>Slide 14: Where the chip-time went (13:20 to 14:10)</h2>
 <blockquote>
-<p>Here is what it took, specifically where the 40 minutes and $5.96 went. The run took 39m 36s of measured cell time, from 19:48:15Z to 20:27:51Z. The sweep was the most expensive cell because it benchmarks 8 shapes, including a deliberate OOM, taking 9m 05s. Estimated TPU cost by stage shows SFT and recovery cost $1.76. The AOT batch frontier cost $1.45. What is worth noting is the capacity lab cost exactly $0.17. The entire memory planning exercise that told us gb512 fails before we ever ran it is the cheapest line item that prevents the most expensive kind of mistake. The 25 commands total $5.96, and the two non zero exit codes in the ledger are the deliberate DP8 and gb512 OOM probes, not failures.</p>
+<p>Here is what it took, specifically where the 40 minutes and 5.0 chip-hours went. The run took 39m 36s of measured cell time, from 19:48:15Z to 20:27:51Z. The sweep was the most expensive cell because it benchmarks 8 shapes, including a deliberate OOM, taking 9m 05s. By stage, SFT and recovery took 88 chip-minutes and the batch frontier sweep 73. The one worth pointing at is the capacity lab: 8 chip-minutes. The entire memory planning exercise, the thing that told us gb512 fails before we ever ran it, is the cheapest line on the list and it prevents the most expensive kind of mistake. All 25 commands together come to 5.0 chip-hours. I am quoting chip-time rather than dollars deliberately, because chip-hours are the same number on anyone's price list, and the two non zero exit codes in the ledger are the deliberate DP8 and gb512 OOM probes, not failures.</p>
 </blockquote>
 <h2>Slide 15: Launch Recommendations (14:10 to 15:00)</h2>
 <blockquote>
