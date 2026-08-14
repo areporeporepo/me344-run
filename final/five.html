@@ -29,6 +29,7 @@
   .figure img { max-width: 100%; max-height: 100%; object-fit: contain; }
   .figstack { flex-direction: column; gap: 8px; justify-content: flex-start; }
   .figstack img { max-height: 47%; }
+  .figstack.three img { max-height: 31%; }
   .figstack .explainer { border: 1px solid var(--border); border-radius: 8px;
                          background: #fff; padding: 5px; }
   .titlefig { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; }
@@ -99,19 +100,19 @@
   <!-- 2 -->
   <section class="slide">
     <div class="kicker">1 of 4 &middot; memory</div>
-    <h2>The useful batch and the memory wall are not the same shape</h2>
+    <h2>Why the chip was only a quarter busy, and both answers matter in 2027</h2>
     <div class="body">
       <div class="figure figstack">
-        <img src="figures/slide_throughput.svg" alt="Throughput and AOT memory against global batch size">
+        <img src="figures/slide_ceiling.svg" alt="MFU against chip bytes per FLOP, TP8 and FSDP8 series: the slope is the hardware, the gap is the sharding">
         <img src="figures/slide_sharding.svg" alt="TP8 all-reduces activations, FSDP8 all-gathers weights, and the measured MFU difference">
       </div>
       <div class="points">
-        <h3 class="ok">The knee: gb32</h3>
-        <p>16,562 tokens/s at 59.4% of HBM. gb64 buys 0.4% more throughput for 13% more memory.</p>
-        <h3 class="bad">The wall: gb512</h3>
-        <p>Fails to compile. 18.43 GiB of temporaries against 15.75 available.</p>
-        <h3>The ceiling: 25.5%</h3>
-        <p>Of the 197 BF16 TFLOP/s peak, and it plateaus there across an 8x range of batch sizes.</p>
+        <h3>First, the batch does not save you</h3>
+        <p>Throughput saturates at global batch 32 (16,562 tokens/s, 59.4% of HBM) and the first
+          shape that fails to compile is gb512 (18.43 GiB against 15.75). Between them sit four
+          doublings that spend memory for nothing, and MFU never moves off <b>25.5%</b> across that
+          whole range. A sequence sweep to 2048 moves it under half a point too. So the ceiling is
+          not something you tune your way out of.</p>
         <h3 class="ok">Isolated, in two parts</h3>
         <p><b>Across chips it is bandwidth.</b> v6e has 4.66x the compute of v5e but delivered
           2.16x, almost exactly its 2.00x bandwidth ratio, and MFU <em>fell</em> to 11.6%. MFU
