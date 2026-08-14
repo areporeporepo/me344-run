@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Every acronym in this project, and how it actually works</title>
+<style>
+  :root {
+    --bg: #f5f5f7; --panel: #ffffff; --border: #d2d2d7;
+    --text: #1d1d1f; --dim: #6e6e73; --accent: #0071e3;
+    --ok: #34c759; --warn: #ff9f0a; --fail: #ff3b30;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.65 -apple-system, BlinkMacSystemFont, "SF Pro Text", Helvetica, Arial, sans-serif; }
+  code, pre, table { font-family: "SF Mono", ui-monospace, Menlo, monospace; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 48px 24px 80px; }
+  .back { font-size: 13px; color: var(--accent); text-decoration: none; }
+  h1 { font-size: 34px; line-height: 1.15; margin: 14px 0 8px; letter-spacing: -0.02em; }
+  h2 { font-size: 22px; margin: 38px 0 10px; letter-spacing: -0.01em;
+       border-top: 1px solid var(--border); padding-top: 22px; }
+  h3 { font-size: 16.5px; margin: 24px 0 8px; }
+  p, li { max-width: 78ch; }
+  a { color: var(--accent); }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; background: var(--panel); margin: 12px 0; }
+  th, td { border: 1px solid var(--border); padding: 7px 10px; text-align: right; }
+  th:first-child, td:first-child { text-align: left; }
+  thead th { background: #fafafa; color: var(--dim); font-weight: 600; }
+  pre { background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+        padding: 13px 16px; overflow-x: auto; font-size: 13px; }
+  code { font-size: 13.5px; }
+  p code, li code, td code { background: #ececf0; padding: 1px 5px; border-radius: 4px; }
+  pre code { background: none; padding: 0; }
+  blockquote { border-left: 3px solid var(--warn); background: #fffaf0; margin: 14px 0;
+               padding: 10px 16px; color: var(--dim); font-size: 14px; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+  footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--border);
+           font-size: 12.5px; color: var(--dim); }
+</style>
+</head>
+<body>
+<div class="wrap">
+<a class="back" href="index.html">&larr; Overview</a>
+<h1>Every Acronym In This Project, And How It Actually Works</h1>
+<p>Written for the presentation. Expanding the letters is not enough: if someone asks why ICI beat
+DCN, &quot;inter-chip interconnect&quot; is not an answer. So each entry says what it stands for, what it
+actually does, and where it shows up in your numbers.</p>
+<p>Start with the twelve. If you only have an hour, learn those cold and skim the rest.</p>
+<hr />
+<h2>The twelve you must know cold</h2>
+<p>These are the ones your own slides depend on. Each is paired with the number from your run that
+proves you understand it.</p>
+<table>
+<thead>
+<tr>
+  <th>Acronym</th>
+  <th>Expansion</th>
+  <th>The one-line mechanism</th>
+  <th>Your number</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>TPU</strong></td>
+  <td>Tensor Processing Unit</td>
+  <td>Google's custom matrix-multiply chip. Not a GPU: fewer, bigger systolic arrays, no graphics legacy</td>
+  <td>8 x v5e, 197 TFLOP/s each</td>
+</tr>
+<tr>
+  <td><strong>HBM</strong></td>
+  <td>High Bandwidth Memory</td>
+  <td>The stacked DRAM physically next to the chip. Small and fast. When you &quot;run out of memory&quot; this is what ran out</td>
+  <td>16 GB/chip, 15.75 usable</td>
+</tr>
+<tr>
+  <td><strong>ICI</strong></td>
+  <td>Inter-Chip Interconnect</td>
+  <td>Dedicated high-speed wiring <em>inside</em> a TPU slice. Chips talk without touching Ethernet</td>
+  <td>400 GB/s, gave you 100.1%</td>
+</tr>
+<tr>
+  <td><strong>DCN</strong></td>
+  <td>Data Center Network</td>
+  <td>Ordinary datacenter networking <em>between</em> slices. Orders of magnitude slower than ICI</td>
+  <td>dropped you to 65.2%</td>
+</tr>
+<tr>
+  <td><strong>TP</strong></td>
+  <td>Tensor Parallel</td>
+  <td>Split each weight matrix across chips. Every chip holds 1/8 of every layer</td>
+  <td>TP8 fit in 8.23 GiB/chip</td>
+</tr>
+<tr>
+  <td><strong>DP</strong></td>
+  <td>Data Parallel</td>
+  <td>Every chip holds a full copy of the model, splits the <em>data</em></td>
+  <td>DP8 died at 65.47 GiB</td>
+</tr>
+<tr>
+  <td><strong>AOT</strong></td>
+  <td>Ahead-Of-Time compilation</td>
+  <td>Compile the training step without running it, read the memory the compiler says it needs</td>
+  <td>predicted both fit and OOM</td>
+</tr>
+<tr>
+  <td><strong>OOM</strong></td>
+  <td>Out Of Memory</td>
+  <td>The allocation failed. On TPU this usually means HBM, not host RAM</td>
+  <td>gb512: 18.43 needed, 15.75 free</td>
+</tr>
+<tr>
+  <td><strong>SFT</strong></td>
+  <td>Supervised Fine-Tuning</td>
+  <td>Ordinary training on labelled input/output pairs. The boring, reliable one</td>
+  <td>70.0% to 92.5%</td>
+</tr>
+<tr>
+  <td><strong>GRPO</strong></td>
+  <td>Group Relative Policy Optimization</td>
+  <td>RL that samples several answers per prompt and rewards the better ones relative to the group. No separate value model</td>
+  <td>format 37.5% to 93.75%</td>
+</tr>
+<tr>
+  <td><strong>MoE</strong></td>
+  <td>Mixture of Experts</td>
+  <td>Only a few of many feed-forward &quot;experts&quot; run per token. Huge total size, small compute per token</td>
+  <td>not used here, dominates 2026</td>
+</tr>
+<tr>
+  <td><strong>BF16</strong></td>
+  <td>Brain Float 16</td>
+  <td>16-bit float with float32's exponent range but fewer mantissa bits. The default training precision</td>
+  <td>your 197 TFLOP/s peak is BF16</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>Hardware</h2>
+<p><strong>TPU, Tensor Processing Unit.</strong> An ASIC built around a systolic array: a grid of multiply-accumulate
+units where data flows through and partial sums accumulate in place, so you avoid re-reading
+operands from memory for every operation. That is why TPUs are efficient at dense matmul and
+unremarkable at branchy code.</p>
+<p><strong>v5e, and <code>v5litepod-8</code>.</strong> The fifth-generation &quot;efficiency&quot; TPU, aimed at inference and
+cost-sensitive training. <code>v5litepod-8</code> is eight of those chips on one host. The &quot;lite&quot; is real: v5e
+has no FP8, where the current Ironwood does.</p>
+<p><strong>HBM, High Bandwidth Memory.</strong> Stacked DRAM dies sitting on the same package as the compute die,
+connected by a very wide bus. You get enormous bandwidth and very little capacity, which is the
+central tension of this whole assignment. Your chip has 16 GB with 15.75 usable, and the
+run-time system reserves the difference.</p>
+<p><strong>SRAM / Vmem.</strong> On-chip scratchpad, much faster than HBM and much smaller. You never touched it
+directly, but it is why TPU 8i lists 384 MB as a headline spec: it is where KV cache lives during
+decoding.</p>
+<p><strong>2x4, 4x4, 3D torus.</strong> The physical wiring layout of a slice. Your 8 chips were a 2x4 grid. A torus
+wraps the edges around so every chip has neighbours in every direction, which keeps the worst-case
+hop count low. TPU 8i abandons the torus for a high-radix design that cuts the worst case from 16
+hops to 7.</p>
+<p><strong>Slice, pod, superpod.</strong> A <em>slice</em> is a contiguous block of ICI-connected chips you get allocated
+(yours: 8). A <em>pod</em> is the largest ICI domain the hardware supports (v5e: 256 chips). A <em>superpod</em>
+is the marketing term for the biggest one on 8t: 9,600 chips.</p>
+<p><strong>FLOP, TFLOP, PFLOP.</strong> Floating-point operation. Tera is 10^12, Peta is 10^15. Watch the trailing
+<code>/s</code>: <strong>TFLOP</strong> is an amount of work, <strong>TFLOP/s</strong> is a rate. Your step is 24.94 TFLOPs of work, and
+you sustained 50.4 TFLOP/s.</p>
+<p><strong>BF16, FP8, FP4, INT8, INT4.</strong> Number formats, by bits. BF16 keeps FP32's 8-bit exponent so you
+rarely overflow, at the cost of precision. Fewer bits means more arithmetic per second and less
+memory per parameter, which is why TPU 8t leads with FP4 at 12.6 PFLOP/s.</p>
+<p><strong>MXFP4 / MXFP8.</strong> Microscaling floats. A block of values shares one scaling factor, so you get
+4-bit or 8-bit storage without the dynamic range collapsing. Kimi K3 uses these.</p>
+<p><strong>PPU, Parallel Processing Unit.</strong> Alibaba's in-house accelerator architecture, as in the Zhenwu
+M890. A third lineage alongside NVIDIA and TPU.</p>
+<p><strong>SparseCore.</strong> A TPU co-processor for embedding lookups and sparse operations. It matters to you
+only because enabling its collective offloading changes the memory layout, and therefore moves
+where OOM happens.</p>
+<hr />
+<h2>Parallelism and collectives</h2>
+<p>This is the section that carries slide 4, so it is worth real time.</p>
+<p><strong>DP, Data Parallel.</strong> Every device gets a complete copy of the model and a different slice of the
+batch. Simple, but every device pays full memory cost. Your DP8 test needed 59.94 GiB of state per
+chip against 15.75 available, which is exactly why it died.</p>
+<p><strong>TP, Tensor Parallel.</strong> Split the weight matrices themselves across devices. Each chip stores 1/8
+of every layer, so state per chip drops roughly 8x. The cost is communication <em>inside</em> every layer,
+which is only tolerable over a fast fabric. This is why TP lives inside an ICI slice and not across
+DCN.</p>
+<p><strong>EP, Expert Parallel.</strong> MoE-specific. Different experts live on different devices, so tokens must
+be routed to wherever their expert is, then routed back. This is the all-to-all that dominates MoE
+performance.</p>
+<p><strong><code>DP2 x TP8</code>.</strong> Your GKE 16-chip layout. Two data-parallel replicas, each internally split 8 ways
+tensor-parallel. The point of the experiment: keep this layout identical and change only whether
+the DP dimension crosses ICI or DCN.</p>
+<p><strong>Collective operations.</strong> Communication patterns where all participants take part:</p>
+<ul>
+<li><strong>all-reduce</strong>: everyone contributes a value, everyone receives the combined result. Gradient
+averaging in data parallelism. Payload size is fixed by the <em>model</em>, not the batch, which is why
+your DCN weak-scaling result is anomalous.</li>
+<li><strong>all-gather</strong>: everyone ends up with everyone's piece.</li>
+<li><strong>all-to-all</strong>: every device sends a <em>different</em> chunk to every other device. This is MoE expert
+routing, it is latency-sensitive, and it is why TPU 8i got a new topology.</li>
+</ul>
+<p><strong>Strong vs weak scaling.</strong> Strong: fix total work, add chips, hope it finishes faster. Weak: grow
+the work with the chips, hope time-per-step stays flat. You measured both. ICI held ~100% on each;
+DCN gave 65.2% strong and 53.6% weak.</p>
+<p><strong>Exposed communication.</strong> Communication time that is <em>not</em> hidden behind compute. Good systems
+overlap the two so the network works while the chips compute. Your DCN run had 3.51 s exposed
+against ICI's 1.08 s, and that 3.2x gap for an unchanged payload is the thing you cannot explain.</p>
+<p><strong>Remat / rematerialization (also &quot;gradient checkpointing&quot;).</strong> Instead of storing every intermediate
+activation for the backward pass, throw some away and recompute them. Trades compute for memory.
+This is why your gb256 config ran despite AOT predicting 110% of the memory limit, and it is what
+MaxText's <code>estimator.py</code> searches over.</p>
+<p><strong>Pathways.</strong> Google's orchestration layer that lets one JAX program drive chips across many pods.
+It is what makes the &quot;over 1 million chips in a single training cluster&quot; claim possible.</p>
+<hr />
+<h2>Compilation</h2>
+<p><strong>XLA, Accelerated Linear Algebra.</strong> The compiler underneath JAX and TPU. It takes your whole
+computation graph and optimizes it as a unit: fusing operations, choosing layouts, scheduling
+communication. You do not write TPU kernels; XLA emits them.</p>
+<p><strong>HLO, High Level Operations.</strong> XLA's intermediate representation. When an error mentions &quot;HLO
+temporaries&quot;, it means scratch buffers XLA allocated for intermediate results. Your DP8 failure was
+65.47 GB of HLO temporaries.</p>
+<p><strong>JIT, Just-In-Time.</strong> Compile on first call, at runtime. The default in JAX. It is why the first
+training step takes ~18 seconds and later ones take 4.</p>
+<p><strong>AOT, Ahead-Of-Time.</strong> Compile <em>without</em> executing, on hardware you do not have. Three properties
+make it valuable: it reports the same OOM you would hit for real, you can run it on a CPU while
+targeting a TPU cluster, and the compiled artifact can be saved and reloaded. This is the technique
+that turned out to scale furthest in your whole project.</p>
+<p><strong>Compiled signature.</strong> The shapes and configuration baked into a compiled artifact. Change batch
+size or sequence length and it will not match; you get a clear error rather than silent misbehavior.</p>
+<hr />
+<h2>Software stack</h2>
+<p><strong>JAX.</strong> The Python array framework you used. Its bargain: write pure functions, get automatic
+differentiation, vectorization and compilation. <code>jax.jit</code> compiles, <code>jax.grad</code> differentiates.</p>
+<p><strong>MaxText.</strong> Google's reference JAX LLM implementation, pinned in your run at commit <code>17c7172</code>.
+Provides the training loop, sharding and model definitions. <code>train_compile.py</code> is its AOT entry
+point.</p>
+<p><strong>XProf.</strong> The TPU profiler. Captures a trace of what every core did per step, which is how you got
+the 99.07% matmul against 0.93% attention split. Viewed through TensorBoard.</p>
+<p><strong>W&amp;B / <code>wandb</code>, Weights and Biases.</strong> Experiment tracking. You ran it in <code>offline</code> mode, so metrics
+were written to disk rather than uploaded.</p>
+<p><strong>GCS, Google Cloud Storage.</strong> Object storage. Every <code>gs://</code> path. Where your checkpoints, scaling
+results and submission archive live.</p>
+<p><strong>GKE, Google Kubernetes Engine.</strong> Managed Kubernetes. Ran your three 16-chip scaling jobs.</p>
+<p><strong>JobSet.</strong> A Kubernetes extension for jobs that need several coordinated pods, which is what a
+multi-worker TPU job is. Your <code>scale-job.yaml</code> defines one.</p>
+<p><strong><code>kubectl</code>.</strong> The Kubernetes CLI. <code>kubectl get pods</code>, <code>kubectl logs</code>.</p>
+<p><strong><code>uv</code>, venv.</strong> Fast Python package installer, and virtual environments. You had two: one for
+pre-training, one for post-training, because their dependencies conflict.</p>
+<hr />
+<h2>Training and evaluation</h2>
+<p><strong>Checkpoint.</strong> A saved snapshot of model weights plus optimizer state. Yours are at steps 200 and
+202. &quot;Step 202&quot; exists because you resumed and did two more steps to prove resumption worked.</p>
+<p><strong>Optimizer state.</strong> What the optimizer remembers between steps. Adam keeps two extra values per
+parameter (momentum and variance), which is most of why training costs <strong>16 bytes per parameter</strong>
+rather than the 2 bytes the BF16 weights alone would need.</p>
+<p><strong>SFT, Supervised Fine-Tuning.</strong> Train on (prompt, correct answer) pairs with ordinary
+cross-entropy loss. Predictable and effective. 200 steps took you from 70.0% to 92.5%.</p>
+<p><strong>RL, Reinforcement Learning.</strong> Learning from a reward signal rather than labelled answers.</p>
+<p><strong>GRPO, Group Relative Policy Optimization.</strong> Sample a <em>group</em> of answers for one prompt, score
+them, and push the model toward the ones that scored above the group's average. The &quot;relative&quot; part
+removes the need for a separate value-estimating model, which is what makes it cheap enough to run
+in a class assignment. It moved your format compliance from 37.5% to 93.75%.</p>
+<p><strong>Reward / guardrail.</strong> The score GRPO optimizes, plus a check that it did not wreck something else
+while chasing it. Your guardrail passed this run and failed the previous one.</p>
+<p><strong>Cross-entropy loss, perplexity.</strong> Loss measures surprise at the correct token. Perplexity is
+<code>exp(loss)</code>, readable as &quot;effectively how many options was the model choosing between&quot;. Your
+held-out loss was 0.0436 at its best.</p>
+<p><strong>Held-out set.</strong> Examples never trained on. The only honest measure of whether it learned rather
+than memorized. Yours was 40 prompts.</p>
+<p><strong>Exact match, format compliance.</strong> Two different questions. Exact match: was the answer right?
+Format compliance: was it even shaped like an answer? GRPO mostly fixed the second.</p>
+<p><strong>banking77.</strong> A 2020 dataset of 13k retail-banking customer messages labelled with 77 intents.
+Your SFT task. Genuinely uninteresting as a benchmark, and deliberately so: it is a fixture chosen
+so a small model changes measurably in 200 steps.</p>
+<p><strong>GSM8K.</strong> Grade School Math 8K, a word-problem benchmark. Used here as a <em>retention</em> check: did
+teaching it banking intents damage its arithmetic? It went 81.25% to 87.5%, so no.</p>
+<p><strong>Wilson interval.</strong> A confidence interval for a proportion that behaves properly with small
+samples, where the naive formula does not. Yours: 80.1% to 97.4% for SFT against 54.6% to 81.9% for
+base. <strong>They overlap</strong>, which is the entire reason you call your result a smoke test.</p>
+<p><strong>Early stopping.</strong> Stop when held-out loss stops improving rather than when the step budget runs
+out. Your best was step 50, and by step 200 it had drifted from 0.0436 to 0.0623.</p>
+<hr />
+<h2>Architecture, the 2026 frontier</h2>
+<p><strong>MoE, Mixture of Experts.</strong> Replace one big feed-forward block with many &quot;experts&quot; and a router
+that sends each token to only a few. Kimi K3 activates 16 of 896. Total parameters explode while
+per-token compute stays modest, so <strong>HBM capacity binds before FLOPs do</strong>, and expert routing adds
+an all-to-all per layer.</p>
+<p><strong>Router, active vs total parameters, sparsity.</strong> The router picks experts per token. Qwen3-30B-A3B
+means 30B total, 3B active. That ratio is the sparsity, and it has been rising steadily.</p>
+<p><strong>Attention, and why L matters.</strong> Attention lets each token look at every other token, so its cost
+grows as L^2 while the weight matmuls grow as L. At your L=256 attention was 0.93% of the step. At
+1M tokens the same arithmetic makes it ~97%.</p>
+<p><strong>KV cache.</strong> During generation, the keys and values for previous tokens are cached instead of
+recomputed. At long context this becomes the dominant memory consumer, which is why TPU 8i
+advertises 384 MB of on-chip SRAM.</p>
+<p><strong>MLA, Multi-head Latent Attention.</strong> Compresses the KV cache into a smaller latent representation.
+Used by Kimi K2.</p>
+<p><strong>KDA, Kimi Delta Attention.</strong> Kimi K3's hybrid: mostly linear-attention layers, with a full
+attention layer every fourth one. Reported 6.3x faster decoding at 1M context.</p>
+<p><strong>Gated DeltaNet.</strong> Qwen3.5's equivalent, replacing 75% of standard attention layers.</p>
+<p><strong>Linear attention.</strong> Any attention variant with cost linear in L instead of quadratic, bought by
+approximating the all-pairs comparison. This is the direct response to the L^2 problem above.</p>
+<p><strong>World model.</strong> A model that generates an environment you can act inside, rather than text.
+Google's Genie 3 makes navigable worlds at 24 fps. Google says TPU 8t and 8i were built to train
+and serve these, so agents can rehearse in simulation.</p>
+<hr />
+<h2>Drill: questions you should be able to answer without notes</h2>
+<ol>
+<li><strong>Why did DP8 fail when TP8 fit?</strong> DP replicates all 16 bytes/parameter of training state on
+every chip; TP shards it 8 ways. 59.94 GiB against 15.75 available.</li>
+<li><strong>Why is ICI faster than DCN, physically?</strong> ICI is dedicated links inside a slice. DCN is general
+datacenter networking between slices, with far less bandwidth and much higher latency.</li>
+<li><strong>Why is the DCN weak-scaling result strange?</strong> An all-reduce payload is set by parameter count,
+not batch size. Doubling the batch should not make per-chip throughput worse. It did: 1,085
+against 1,320.</li>
+<li><strong>Why does throughput plateau at gb32 when memory keeps growing?</strong> Something other than work per
+step is the limit past that point. You did not isolate what, and saying so is better than
+guessing.</li>
+<li><strong>Why is 99.07% matmul not a general fact?</strong> Because attention scales as L^2 and matmul as L. It
+is a statement about L=256.</li>
+<li><strong>Why not ship GRPO?</strong> Its accuracy gain was two examples on a 16-item set and it flipped sign on
+an identical earlier run.</li>
+<li><strong>What does 16 bytes per parameter consist of?</strong> Roughly 12 persistent (weights plus Adam's two
+moments, in mixed precision) plus 4 transient at peak.</li>
+<li><strong>What would you do next?</strong> Re-run the two DCN trials with XProf on, because that anomaly is the
+only broken measurement in the project and it costs 20 minutes.</li>
+</ol>
+
+<footer>Anh Nguyen &middot; Stanford ME344, Summer 2026 &middot; run <code>qanh-20260813t194806z</code> &middot;
+generated by <code>publish_site.py</code></footer>
+</div>
+</body>
+</html>
