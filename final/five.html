@@ -103,8 +103,10 @@
         <p>Re-running the identical config on v6e and v5p separates the two candidates. v6e has
           4.66x the compute of v5e but delivered 2.16x, almost exactly its 2.00x bandwidth ratio,
           and MFU <em>fell</em> to 11.6%. Across all three chips MFU rank-orders perfectly by bytes
-          per FLOP: v5p 6.02 to 31.7%, v5e 4.16 to 25.1%, v6e 1.79 to 11.6%. Bandwidth is the limit,
-          not per-step overhead.</p>
+          per FLOP: v5p 6.02 to 31.7%, v5e 4.16 to 25.1%, v6e 1.79 to 11.6%. Google's own specs say
+          why: v5e to v6e doubles HBM, bandwidth and ICI but multiplies compute by 4.66. Bandwidth is
+          the limit, not per-step overhead. And a sequence sweep to 2048 moves MFU under half a point
+          on either chip, so the plateau is a hardware ratio, not a tuning failure.</p>
       </div>
     </div>
     <div class="src">sweep_results.csv &middot; capacity_report.json &middot; 8 batch sizes, AOT

@@ -880,7 +880,8 @@
         <div class="card"><h3>Bytes per FLOP predicts MFU</h3><div class="stat ok">rank-perfect</div>
           <div class="sub">v5p 6.02 &rarr; 31.7%, v5e 4.16 &rarr; 25.1%, v6e 1.79 &rarr; 11.6%.
             The <em>fastest</em> chip has the <em>worst</em> MFU, because its compute outgrew its
-            memory. So the fix is longer sequences, not newer silicon.</div></div>
+            memory. Google's spec sheet says it plainly: v5e to v6e doubles HBM, bandwidth and ICI,
+            but multiplies compute by 4.66.</div></div>
       </div>
       <div class="note" style="margin-top:12px">Two practical consequences. Never compare MFU across
         generations without saying so, since the denominator moves: report tokens/s and MFU together.
@@ -896,6 +897,61 @@
         v5e row is an independent re-measurement that reproduces the 8-chip baseline on this deck to
         within 2% (2,028 against 2,025 tokens/s/chip), which is what makes the comparison legitimate.
         TP caps at 8 because Qwen3-4B has 8 KV heads, so the 16-chip run is DP2&times;TP8.</div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Why, from Google's own spec sheet</div>
+    <h2>They doubled the memory system and quadrupled the math</h2>
+    <p class="lede">Every v5e-to-v6e ratio is 2&times; except compute, which is 4.66&times;. That single
+      asymmetry is the whole explanation for MFU halving, and it is published, not inferred.</p>
+    <div class="body">
+      <div class="grid g2">
+        <div class="card"><h3>Published per-chip specs</h3>
+          <table>
+            <thead><tr><th>Per chip</th><th>v5e</th><th>v6e</th><th>Ratio</th></tr></thead>
+            <tbody>
+              <tr class="bad"><td>bf16 compute</td><td>197 TFLOPs</td><td>918 TFLOPs</td><td>4.66&times;</td></tr>
+              <tr class="bad"><td>int8</td><td>393 TOPs</td><td>1836 TOPs</td><td>4.67&times;</td></tr>
+              <tr class="good"><td>HBM capacity</td><td>16 GB</td><td>32 GB</td><td>2.0&times;</td></tr>
+              <tr class="good"><td>HBM bandwidth</td><td>800 GiBps</td><td>1638 GBps</td><td>~2.0&times;</td></tr>
+              <tr class="good"><td>ICI bidirectional</td><td>400 GBps</td><td>800 GBps</td><td>2.0&times;</td></tr>
+              <tr><td>Chips per host</td><td>8</td><td>8</td><td>1&times;</td></tr>
+              <tr><td>Pod size</td><td>256</td><td>256</td><td>1&times;</td></tr>
+            </tbody>
+          </table>
+          <div class="sub" style="margin-top:8px">Our measured speedup was <b>2.16&times;</b>, which
+            tracks the memory column, not the compute column.</div>
+        </div>
+        <div class="card"><h3>And sequence length does not rescue it</h3>
+          <table>
+            <thead><tr><th>Seq</th><th>Batch/chip</th><th>v5e MFU</th><th>v6e MFU</th></tr></thead>
+            <tbody>
+              <tr><td>256</td><td>32</td><td>25.08%</td><td>11.63%</td></tr>
+              <tr><td>512</td><td>16</td><td>25.41%</td><td>12.09%</td></tr>
+              <tr><td>1024</td><td>8</td><td>25.20%</td><td>11.83%</td></tr>
+              <tr><td>2048</td><td>4</td><td>25.30%</td><td>11.66%</td></tr>
+            </tbody>
+          </table>
+          <div class="sub" style="margin-top:8px"><b>An 8&times; sequence range moves MFU by under
+            half a point on either chip.</b> I predicted longer sequences would recover MFU. The
+            measurement says no, so the prediction is withdrawn.</div>
+        </div>
+      </div>
+      <div class="note" style="margin-top:12px"><b>Why the sweep came out flat, and what it teaches.</b>
+        Tokens per step was held at 65,536, so raising sequence length forced batch down in
+        proportion. Arithmetic intensity depends on tokens per weight load, not on how those tokens
+        are arranged into batch by sequence, so the sweep held intensity fixed by construction.
+        Together with the original batch sweep, where MFU plateaued at 25.5% across an 8&times; batch
+        range, the conclusion is stronger than the one I started with: <b>MFU here is pinned by the
+        chip's bytes-per-FLOP ratio and is nearly insensitive to how the work is shaped.</b> That
+        implies activation traffic under TP8 scales with token count just as FLOPs do. The lever is
+        the sharding strategy or the model architecture, not the batch and sequence dials.</div>
+      <div class="src"><b>sources:</b> cloud.google.com/tpu/docs/v5e and /v6e for the published specs;
+        seqsweep.log on both nodes for the sequence sweep (10 steps per point, last-3 average,
+        tokens/step fixed at 65,536). Note Google documents v5e bandwidth in GiBps and v6e in GBps,
+        so the bandwidth ratio is 1.9&times; to 2.05&times; depending on unit conversion. The
+        conclusion is unaffected: it is nowhere near 4.66&times;.</div>
     </div>
   </section>
 
@@ -932,8 +988,11 @@
             <li><s>Repeat the frontier on a v6e to see whether the knee tracks HBM bandwidth or
               stays at gb32.</s> <b>Done 2026-08-14: it tracks bandwidth.</b> v6e gave 2.16&times;
               against a 2.00&times; bandwidth ratio and a 4.66&times; FLOPs ratio, and MFU fell to
-              11.6%. What remains is the sequence-length sweep on v6e, and DCN on v6e, which needs
-              two slices and a Kueue flavor the class queue does not have.</li>
+              11.6%. The sequence-length sweep is also done, and it came out <b>flat</b>: under half a
+              point of MFU across seq 256 to 2048 on both chips, so that lever is dead. What remains
+              is a sharding study (FSDP against TP, since TP8 activation traffic looks like the real
+              cost) and DCN on v6e, which needs two slices plus a Kueue flavor the class queue does
+              not have.</li>
           </ul>
         </div>
         <div class="card"><h3>Reproducibility notes worth keeping</h3>
