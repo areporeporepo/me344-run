@@ -186,7 +186,7 @@
     <p class="lede">Eight global batch sizes at sequence length 256, AOT-checked first, then measured.
       The memory boundary and the throughput knee are four doublings apart.</p>
     <div class="body">
-      <div class="figrow dense"><img src="figures/slide_throughput.svg" alt="Throughput and AOT memory against global batch size" style="max-height:30vh"></div>
+      <div class="figrow dense"><img src="figures/slide_throughput.svg" alt="Throughput and AOT memory against global batch size" style="max-height:45vh"></div>
       
       <div class="grid g3" style="margin-top:14px">
         <div class="card"><h3>Memory boundary</h3><div class="stat bad">gb512</div>
@@ -244,7 +244,7 @@
     <div class="kicker">Question 3</div>
     <h2>Where does a training step actually spend its time?</h2>
     <div class="body">
-      <div class="figrow figpair"><img src="figures/slide_step_split.svg" alt="The FLOP split of one step, and how it inverts with L" style="max-height:30vh"><img class="explainer" src="https://storage.googleapis.com/gweb-cloudblog-publish/images/1_Z5xATZ3.max-2000x2000.png" alt="Google diagram: the Ironwood TPU, built around MXU matrix units, VPU, HBM and ICI" style="max-height:30vh" loading="lazy"></div>
+      <div class="figrow figpair"><img src="figures/slide_step_split.svg" alt="The FLOP split of one step, and how it inverts with L" style="max-height:50vh"><img class="explainer" src="https://storage.googleapis.com/gweb-cloudblog-publish/images/1_Z5xATZ3.max-2000x2000.png" alt="Google diagram: the Ironwood TPU, built around MXU matrix units, VPU, HBM and ICI" style="max-height:50vh" loading="lazy"></div>
       <div class="grid g2">
         <div class="card"><h3>XProf, per train step</h3>
           <div class="stat">24.94 TFLOPs</div>
@@ -432,7 +432,7 @@
     <div class="kicker">Serving</div>
     <h2>What does the chosen checkpoint cost to serve?</h2>
     <div class="body">
-      <div class="figrow"><img src="figures/slide_serving.svg" alt="Serving throughput and p95 latency against concurrency" style="max-height:40vh"></div>
+      <div class="figrow"><img src="figures/slide_serving.svg" alt="Serving throughput and p95 latency against concurrency" style="max-height:42vh"></div>
       <table>
         <thead><tr><th>Concurrency</th><th>Requests</th><th>req/s</th><th>TTFT p50</th>
           <th>Latency p50</th><th>Latency p95</th><th>Output tok/s</th><th>Mean out tokens</th></tr></thead>
@@ -466,7 +466,7 @@
     <p class="lede">Five GKE JobSet runs: an 8-chip baseline, then 16 chips two ways, inside one
       ICI slice and across two slices over DCN.</p>
     <div class="body">
-      <div class="figrow figpair"><img src="figures/slide_scaling.svg" alt="Per-chip throughput across the five scaling trials" style="max-height:21vh"><img class="explainer" src="https://storage.googleapis.com/gweb-cloudblog-publish/images/1a-01.max-1600x1600.png" alt="Google diagram: two TPU pods, a slice in each, ICI inside a slice and DCN between them" style="max-height:21vh" loading="lazy"></div>
+      <div class="figrow figpair"><img src="figures/slide_scaling.svg" alt="Per-chip throughput across the five scaling trials" style="max-height:20vh"><img class="explainer" src="https://storage.googleapis.com/gweb-cloudblog-publish/images/1a-01.max-1600x1600.png" alt="Google diagram: two TPU pods, a slice in each, ICI inside a slice and DCN between them" style="max-height:20vh" loading="lazy"></div>
       <table>
         <thead><tr><th>Run</th><th>Chips</th><th>Fabric</th><th>Topology</th><th>Slices</th>
           <th>Batch</th><th>s/step</th><th>tokens/s</th><th>tokens/s/chip</th><th>Efficiency</th></tr></thead>
@@ -514,7 +514,7 @@
       by the model rather than the batch. Doubling per-slice work should amortize a fixed cost
       better, not worse.</p>
     <div class="body">
-      <div class="figrow figpair"><img src="figures/slide_communication.svg" alt="Exposed communication per step on DCN at two batches" style="max-height:40vh"><img class="explainer" src="https://storage.googleapis.com/gweb-cloudblog-publish/images/1b-01.max-2200x2200.png" alt="Google diagram: data-parallel replicas, activations over ICI, gradients over DCN" style="max-height:40vh" loading="lazy"></div>
+      <div class="figrow figpair"><img src="figures/slide_communication.svg" alt="Exposed communication per step on DCN at two batches" style="max-height:50vh"><img class="explainer" src="https://storage.googleapis.com/gweb-cloudblog-publish/images/1b-01.max-2200x2200.png" alt="Google diagram: data-parallel replicas, activations over ICI, gradients over DCN" style="max-height:50vh" loading="lazy"></div>
       <div class="grid g2">
         <div class="card"><h3>Backing out exposed communication</h3>
           <table style="margin-top:4px">
@@ -718,10 +718,10 @@
       <div class="figrow figpair">
         <img class="explainer" src="https://storage.googleapis.com/gweb-cloudblog-publish/images/1_v4.max-1600x1600.png"
              alt="Google diagram: TPU 8t block diagram, TensorCore with two MXUs, SparseCores, six HBM3E controllers"
-             style="max-height:34vh" loading="lazy">
+             style="max-height:35vh" loading="lazy">
         <img class="explainer" src="https://storage.googleapis.com/gweb-cloudblog-publish/images/4_v1_nUZDsJM.max-1800x1800.png"
              alt="Google diagram: TPU 8i block diagram, two TensorCores, eight HBM3 controllers, SC-CAE inside the ICI block"
-             style="max-height:34vh" loading="lazy">
+             style="max-height:35vh" loading="lazy">
       </div>
       <div class="grid g2">
         <div class="card">
@@ -760,6 +760,92 @@
       <b>specifications:</b> the same article. Announced, not shipping: nobody outside Google has
       measured either part, and secondary reporting adds TSMC 2nm and a late-2027 date that
       Google's own page does not state.</div>
+  </section>
+
+    <section class="slide">
+    <div class="kicker">Forward-looking &middot; the fabric</div>
+    <h2>The two fabrics they rebuilt, and which of my numbers each one answers</h2>
+    <p class="lede">I measured a 35% penalty for one collective crossing the wrong fabric. Both
+      halves of the eighth generation are attacks on that number, from opposite directions.</p>
+    <div class="body">
+      <div class="figrow figpair">
+        <img class="explainer" src="https://storage.googleapis.com/gweb-cloudblog-publish/images/2_TPU_8t_rack_level_connectivity_to_Virgo_.max-2000x2000.png"
+             alt="Google diagram: TPU 8t racks under the Virgo network, two-layer non-blocking switching, Jupiter and optical circuit switches above"
+             style="max-height:40vh" loading="lazy">
+        <img class="explainer" src="https://storage.googleapis.com/gweb-cloudblog-publish/images/6_Qu7H2lI.max-1300x1300.png"
+             alt="Google diagram: a seven-hop path across Boardfly groups through an optical circuit switch"
+             style="max-height:40vh" loading="lazy">
+      </div>
+      <div class="grid g3">
+        <div class="card">
+          <h3>What I measured</h3>
+          <p>Inside one ICI slice, the second eight chips are free: <b>100.1% strong, 99.6%
+            weak</b>. Push the same gradient all-reduce onto DCN and it falls to <b>65.2% and
+            53.6%</b>, with exposed communication going 1.08 s to 3.51 s.</p>
+          <p>Two separate problems live in that sentence: how much bandwidth the slow fabric has,
+            and how many hops a message takes.</p>
+        </div>
+        <div class="card">
+          <h3>Virgo answers the bandwidth half</h3>
+          <p>The scale-out fabric under the 8t racks, two-layer and fully non-blocking, with
+            independent planes for resilience and a path up through Jupiter and optical circuit
+            switching to other sites.</p>
+          <p>Google claims <b>4x the raw scale-out DCN bandwidth</b> of the previous generation,
+            a 134,000-chip fabric at up to <b>47 petabits/s</b> bisectional, and over a million
+            chips in one training cluster via Pathways. This is the layer my penalty was paid on.</p>
+        </div>
+        <div class="card">
+          <h3>Boardfly answers the latency half</h3>
+          <p>Diagram on the right traces a worst case: two hops inside a group, an optical hop
+            across, then down to the destination. <b>Seven hops, where a 3D torus needs sixteen</b>,
+            for a claimed up to <b>50% better all-to-all latency</b>.</p>
+          <p>Bandwidth was never the whole story for an all-to-all. Latency and hop count are, and
+            that is the collective MoE puts on the critical path.</p>
+        </div>
+      </div>
+    </div>
+    <div class="src"><b>diagram:</b> Google Cloud, "Inside the eighth-generation TPU", 2026-04-22, reproduced for teaching with attribution.<br>
+      <b>tie-back:</b> scale_out.json (65.2% and 53.6% DCN efficiency, 1.08 s against 3.51 s
+      exposed). Every 8t and 8i figure here is a vendor claim about unshipped hardware, not a
+      measurement.</div>
+  </section>
+
+    <section class="slide">
+    <div class="kicker">Forward-looking &middot; getting the host out of the way</div>
+    <h2>Five hops become three, and storage stops going through a CPU</h2>
+    <p class="lede">The least glamorous number in my run is the 3m 41s the resume cell took. This
+      is the path that time was spent on, and what the next generation does to it.</p>
+    <div class="body">
+      <div class="figrow">
+        <img class="explainer" src="https://storage.googleapis.com/gweb-cloudblog-publish/images/3_rq0yjyX.max-2000x2000.png"
+             alt="Google diagram: without TPUDirect a transfer goes HBM to host to NIC to NIC to host to HBM; with TPUDirect RDMA it goes HBM to NIC to NIC to HBM, and storage connects directly"
+             style="max-height:42vh" loading="lazy">
+      </div>
+      <div class="grid g3">
+        <div class="card">
+          <h3>Top row: the old path</h3>
+          <p>A tensor leaves HBM, is staged in <b>host</b> memory over PCIe, crosses to the other
+            NIC, is staged in the far <b>host</b>, then finally lands in the destination HBM. Five
+            steps, two of them CPU memory copies that do no arithmetic.</p>
+        </div>
+        <div class="card">
+          <h3>Bottom row: RDMA, and direct storage</h3>
+          <p>TPUDirect RDMA goes HBM to NIC to NIC to HBM. <b>Three steps, no host staging.</b>
+            TPUDirect Storage extends that to managed storage, for a claimed <b>10x faster storage
+            access</b> than Ironwood.</p>
+        </div>
+        <div class="card">
+          <h3>Why this is my slide, not just Google's</h3>
+          <p>My checkpoints round-tripped through GCS, and the resume cell cost <b>3m 41s</b> of a
+            40-minute run, about 9% of it, to prove optimizer state survives a restart.</p>
+          <p>I did not instrument that path, so I cannot tell you how much was host staging. That is
+            the honest limit: this diagram explains a cost I observed but never decomposed.</p>
+        </div>
+      </div>
+    </div>
+    <div class="src"><b>diagram:</b> Google Cloud, "Inside the eighth-generation TPU", 2026-04-22, reproduced for teaching with attribution.<br>
+      <b>tie-back:</b> run_progress.log (cell 24, resume from checkpoint, 3m 41s),
+      recovery_report.json, checkpoint_paths.txt. The 10x storage claim is Google's, unmeasured here.</div>
   </section>
 
   <section class="slide">
