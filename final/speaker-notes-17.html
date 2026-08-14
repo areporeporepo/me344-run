@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Speaker script: 17 slides, about 17 minutes</title>
+<title>Speaker script: 20 slides, about 20 minutes</title>
 <style>
   :root {
     --bg: #f5f5f7; --panel: #ffffff; --border: #d2d2d7;
@@ -41,16 +41,20 @@
 <body>
 <div class="wrap">
 <a class="back" href="index.html">&larr; Overview</a>
-<h1>Speaker Script: 17 Slides, About 17 Minutes</h1>
+<h1>Speaker Script: 20 Slides, About 20 Minutes</h1>
 <p>The long technical walkthrough, for
 <a href="https://areporeporepo.github.io/me344-run/final/slides.html"><code>slides.html</code></a>. The five-minute cut
 and its script are separate: see <a href="speaker-notes.html"><code>speaker-notes.html</code></a>.</p>
-<p>Roughly 2,550 words. Timings are cumulative. Nine slides carry a chart, and slides 11 and 12 pair
-a measured chart with Google's own Multislice diagram, so on those two say what the diagram shows
-before you give the number.</p>
+<p>Roughly 3,000 words. Timings are cumulative. Eleven slides carry a chart, and six carry a Google
+diagram, so on those say what the diagram shows before you give the number.</p>
+<p>Slides 17 to 19 are the forward-looking section, built out of Google's eighth-generation deep
+dive. Every figure in them is a vendor claim about hardware nobody outside Google has measured,
+and the narration says so. If you are short on time these are the ones to drop: they are the
+argument for why the run's findings still matter, not the findings themselves.</p>
 <p>Drafted by Gemini 3.1 Pro against the deck and the outlook, then checked against the artifact
 files. Two things were corrected in that pass: it conflated the two utilisation metrics on slide 4,
-and it quoted Kimi K3's training state in TiB where the chart uses TB.</p>
+and it quoted Kimi K3's training state in TiB where the chart uses TB. Slides 17 to 19 were drafted
+the same way and checked the same way.</p>
 <hr />
 <h2>Slide 1: Introduction (0:00 to 1:00)</h2>
 <blockquote>
@@ -116,7 +120,19 @@ and it quoted Kimi K3's training state in TiB where the chart uses TB.</p>
 <blockquote>
 <p>What does this pod predict about extrapolation to the next generation? Memory forces you onto the slow fabric. The minimum chips to hold training state equals 16 bytes times parameters divided by 15.75 GiB. Qwen3-4B needs 3.8 chips, so we used 8. But a 2.8T model like Kimi K3 needs 44.8 TB of state, which is 41 TiB, demanding 2,648 chips. That spans 11 v5e slices. Because a slice caps at 256 chips, trillion parameter training is forced across DCN, exactly where we measured 65.2% strong and 53.6% weak scaling. Even on Ironwood with 192 GB per chip, you eventually hit the fabric edge. Mixture of experts does not help because every expert needs optimizer state. It also puts a per layer all to all collective on the critical path. That is exactly why the TPU 8t and 8i split, with 8i using a Boardfly topology to cut network hops for MoE all to alls. Finally, the batch knee is a short sequence artifact. Attention FLOPs grow as L squared while weight FLOPs grow as L. At 256 tokens, attention was 0.93% of the step. At a million tokens, it hits roughly 97%. The workload completely inverts.</p>
 </blockquote>
-<h2>Slide 17: Next Steps and Outlook (16:00 to 17:00)</h2>
+<h2>Slide 17: TPU 8t and 8i: the first time training and inference get different silicon (16:00 to 17:10)</h2>
+<blockquote>
+<p>Google announced the TPU 8t and 8i on 2026-04-22, after my run. They are not shipping yet. These are vendor claims about hardware nobody outside Google has measured. The 8t is for training. It gives 12.6 PFLOP/s in FP4, 216 GB of HBM at 6,528 GB/s, and 128 MB of on-chip SRAM. It includes a SparseCore for embeddings and uses a 3D torus of 9,600 chips. Google claims 2.7x better training performance per dollar than Ironwood. The 8i is for inference. It gives 10.1 PFLOP/s in FP4, 288 GB of HBM at 8,601 GB/s, and 384 MB of SRAM for KV cache. It includes an SC-CAE, which is a collectives acceleration engine. It uses a Boardfly topology of 1,152 chips, for a claimed 80% better inference per dollar. The two things worth pointing at are memory and collectives. The inference part has more memory and more bandwidth than the training part. There is also a collectives engine on the inference die. I measured a 35% penalty for one all-reduce crossing the wrong fabric. Google put silicon on the chip for exactly that class of problem.</p>
+</blockquote>
+<h2>Slide 18: The two fabrics they rebuilt, and which of my numbers each one answers (17:10 to 18:25)</h2>
+<blockquote>
+<p>My result contains two separate problems: how much bandwidth the slow fabric has, and how many hops a message takes. Inside one ICI slice I got 100.1% strong and 99.6% weak. Across DCN it fell to 65.2% and 53.6%, with exposed communication going from 1.08 s to 3.51 s. Virgo attacks the bandwidth half. It is the scale-out fabric under the 8t racks. It is a two-layer, fully non-blocking design with independent planes, scaling up through Jupiter and optical circuit switching to other sites. Google claims 4x the previous generation's raw scale-out DCN bandwidth. They claim a 134,000-chip fabric at up to 47 petabits per second bisectional, and over a million chips in one training cluster via Pathways. Boardfly attacks the latency half. The right-hand diagram traces a worst case. A message takes two hops inside a group, an optical hop across, then down to the destination. That is seven hops where a 3D torus needs sixteen. Google claims up to 50% better all-to-all latency. The point to land is that bandwidth was never the whole story for an all-to-all. Latency and hop count are, and that is the collective MoE puts on the critical path.</p>
+</blockquote>
+<h2>Slide 19: Five hops become three, and storage stops going through a CPU (18:25 to 19:30)</h2>
+<blockquote>
+<p>The top row shows the old path. A tensor leaves HBM, is staged in host memory over PCIe, crosses to the far NIC, is staged in the far host, then lands in the destination HBM. That is five steps, and two of them are CPU memory copies that do no arithmetic. The bottom row shows the new path. TPUDirect RDMA goes directly from HBM to NIC to NIC to HBM. That is three steps with no host staging. TPUDirect Storage extends that to managed storage for a claimed 10x faster storage access. I tie this to my run honestly. My checkpoints round-tripped through Cloud Storage. The resume cell cost 3 minutes 41 seconds of a 40-minute run. That is about 9%, just to prove optimizer state survives a restart. I did not instrument that path, so I cannot say how much of it was host staging. This diagram explains a cost I observed but never decomposed.</p>
+</blockquote>
+<h2>Slide 20: Next Steps and Outlook (16:00 to 17:00)</h2>
 <blockquote>
 <p>For my next steps, I would close the DCN question by re running the two DCN trials with XProf enabled to read the collective timeline directly. I would also repeat it at a per slice batch below the 110% of AOT point to test the rematerialization theory. To make the evaluation load bearing, I would grow the suite to 97 examples and evaluate the step 50 checkpoint. I would also test XLA flag variants that change matmul fusion to push on the 74% of peak throughput left on the table. But the biggest takeaway is how ahead of time compilation scaled up. MaxText now uses this primitive in an automated search loop. They run a rematerialization policy search against DeepSeek3 671B on a tpu7x-512 pod without holding the target chips. The memory lab I ran on eight chips is now an automated search at frontier scale.</p>
 </blockquote>
