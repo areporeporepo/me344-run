@@ -1,0 +1,29 @@
+final/five.html
+  s_12283f6ed82210::t_671f681e68f154 6,11,16-17,19,21-44,47-48,63-64,66-82,85-86,91,94-104,107-108,113-114,116-128,131-132,137,140-153,156-157,162-163,165-182,185-187
+final/figures/capacity_forward.svg
+  s_12283f6ed82210::t_8f7bdf488ed1de 1-2172
+final/figures/slide_evaluation.svg
+  s_12283f6ed82210::t_f4685c5962d1a1 1-1682
+final/figures/slide_scaling.svg
+  s_12283f6ed82210::t_ce6c2bd04e8201 1-1929
+final/figures/slide_throughput.svg
+  s_12283f6ed82210::t_a959f2f0a41ca0 1-1766
+final/speaker-notes.html
+  s_12283f6ed82210::t_a5cb4b464416c1 48-50,77-79,114-116,126,128,130-131,134-152,161,163-165
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "2fa81eae208fab99c6bd4d60809117d296c022d8",
+  "prompts": {},
+  "sessions": {
+    "s_12283f6ed82210": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9e3fc376-acc5-43cc-b10a-9b8d5821f7cc",
+        "model": "claude-opus-5"
+      },
+      "human_author": "anh nguyen <anh.nqqq@icloud.com>"
+    }
+  }
+}
