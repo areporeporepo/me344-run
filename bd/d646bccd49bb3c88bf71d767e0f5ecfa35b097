@@ -1,0 +1,14 @@
+final/five.html
+  h_ed8409725be97e 63
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "bdd646bccd49bb3c88bf71d767e0f5ecfa35b097",
+  "prompts": {},
+  "humans": {
+    "h_ed8409725be97e": {
+      "author": "anh nguyen <anh.nqqq@icloud.com>"
+    }
+  }
+}
