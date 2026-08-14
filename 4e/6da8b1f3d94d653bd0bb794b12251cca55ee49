@@ -1,0 +1,20 @@
+final/slides.html
+  s_94f8f36002b2a4::t_9ecc76c9e1e3f5 904-953
+  s_94f8f36002b2a4::t_aff9159c6db2c0 901-903
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "4e6da8b1f3d94d653bd0bb794b12251cca55ee49",
+  "prompts": {},
+  "sessions": {
+    "s_94f8f36002b2a4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "105260e2-6098-474e-b38f-f9f481690874",
+        "model": "claude-opus-5"
+      },
+      "human_author": "anh nguyen <anh.nqqq@icloud.com>"
+    }
+  }
+}
