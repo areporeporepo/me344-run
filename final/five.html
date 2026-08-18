@@ -6,9 +6,9 @@
 <title>ME344 Final Project: 5-slide cut</title>
 <style>
   :root {
-    --bg: #f5f5f7; --panel: #ffffff; --border: #d2d2d7;
-    --text: #1d1d1f; --dim: #6e6e73; --accent: #0071e3;
-    --ok: #1a8f3c; --warn: #b8770a; --fail: #d72c20;
+    --bg: #f4f4f4; --panel: #ffffff; --border: #dedede;
+    --text: #111111; --dim: #6b6b6b; --accent: #111111;
+    --ok: #111111; --warn: #3f3f3f; --fail: #3f3f3f;
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; }
@@ -58,13 +58,63 @@
     .slide { display: flex !important; height: auto; min-height: 96vh; page-break-after: always; }
     footer { display: none; }
   }
+
+
+
+/* ---- begin gerty monochrome overrides: apply_gerty_html.py ---- */
+  /* Nothing below carries meaning in hue: the presenter runs a grayscale display filter, so
+     every encoding here is luminance, texture, weight or a face. */
+  .slide { position: relative; }
+  .gerty { position: absolute; top: 30px; right: 52px; width: 58px; height: 58px; }
+
+  /* Two kinds of image on these slides are not mine to redraw: the four figures the run itself
+     produced, and the ten Google diagrams. Both are desaturated here rather than left as the
+     only colour in the deck. They survive it: each one separates its series by line style,
+     marker or legend rather than by hue alone. */
+  .slide img { filter: grayscale(1); }
+
+  /* the row that is the answer gets a black rule; the row that failed gets hatched */
+  tr.hi td { background: #ececec; font-weight: 600; }
+  tr.hi td:first-child { box-shadow: inset 3px 0 0 #111111; }
+  tr.bad td { background: repeating-linear-gradient(135deg,
+                #ffffff 0 5px, #e6e6e6 5px 10px); }
+  tr.good td { background: #f1f1f1; }
+
+  /* the verdict faces, the same five characters the .pptx deck uses */
+  .stat.ok, .stat.bad, .stat.warn { color: #111111; }
+  .stat.ok::before, .stat.bad::before, .stat.warn::before,
+  .pill.ok::before, .pill.bad::before {
+    font-family: "SF Mono", ui-monospace, Menlo, monospace; font-weight: 400;
+    margin-right: 0.4em; color: #3f3f3f;
+  }
+  .stat.ok::before, .stat.bad::before, .stat.warn::before { font-size: 0.42em;
+    vertical-align: 0.28em; }
+  .stat.ok::before { content: "(^_^)"; }
+  .stat.bad::before { content: "(x_x)"; }
+  .stat.warn::before { content: "(-_-)"; }
+
+  .pill.ok, .pill.bad { color: #111111; border-color: #111111; }
+  .pill.ok { background: #f1f1f1; }
+  .pill.bad { background: repeating-linear-gradient(135deg,
+                #ffffff 0 4px, #e6e6e6 4px 8px); }
+  .pill.ok::before { content: "(^_^) "; font-size: 0.94em; }
+  .pill.bad::before { content: "(x_x) "; font-size: 0.94em; }
+
+  .caveat { border-left: 3px solid #111111; background: #f1f1f1; }
+  footer nav button { color: #111111; }
+/* ---- end gerty monochrome overrides ---- */
 </style>
 </head>
 <body>
+<!-- begin gerty sprite -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><symbol id="gerty-listening" viewBox="0 0 120 120"><title>GERTY: setting up</title><rect x="5" y="5" width="110" height="110" rx="24" fill="#111111"/><rect x="5" y="5" width="110" height="110" rx="24" fill="none" stroke="#ffffff" stroke-width="2" stroke-opacity="0.28"/><g fill="#ffffff"><circle cx="44" cy="50" r="7"/><circle cx="76" cy="50" r="7"/><path d="M 51 82 L 69 82" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/></g></symbol><symbol id="gerty-thinking" viewBox="0 0 120 120"><title>GERTY: open on the day</title><rect x="5" y="5" width="110" height="110" rx="24" fill="#111111"/><rect x="5" y="5" width="110" height="110" rx="24" fill="none" stroke="#ffffff" stroke-width="2" stroke-opacity="0.28"/><g fill="#ffffff"><circle cx="44" cy="50" r="7"/><circle cx="76" cy="50" r="7"/><path d="M 49 82 L 71 82" fill="none" stroke="#ffffff" stroke-width="8.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 32 33 L 54 33" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 88 33 L 66 33" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></g></symbol><symbol id="gerty-unsure_brow" viewBox="0 0 120 120"><title>GERTY: did not reproduce</title><rect x="5" y="5" width="110" height="110" rx="24" fill="#111111"/><rect x="5" y="5" width="110" height="110" rx="24" fill="none" stroke="#ffffff" stroke-width="2" stroke-opacity="0.28"/><g fill="#ffffff"><circle cx="44" cy="50" r="7"/><circle cx="76" cy="50" r="7"/><path d="M 41 82 Q 50.5 71 60 82 Q 69.5 93 79 82" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 31 36 L 53 29" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 89 36 L 67 29" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></g></symbol><symbol id="gerty-puzzled" viewBox="0 0 120 120"><title>GERTY: I cannot explain this one</title><rect x="5" y="5" width="110" height="110" rx="24" fill="#111111"/><rect x="5" y="5" width="110" height="110" rx="24" fill="none" stroke="#ffffff" stroke-width="2" stroke-opacity="0.28"/><g fill="#ffffff"><ellipse cx="44" cy="50" rx="5.5" ry="10.5"/><circle cx="76" cy="50" r="7"/><path d="M 41 82 Q 50.5 71 60 82 Q 69.5 93 79 82" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/></g></symbol><symbol id="gerty-hopeful" viewBox="0 0 120 120"><title>GERTY: a forecast, not a measurement</title><rect x="5" y="5" width="110" height="110" rx="24" fill="#111111"/><rect x="5" y="5" width="110" height="110" rx="24" fill="none" stroke="#ffffff" stroke-width="2" stroke-opacity="0.28"/><g fill="#ffffff"><ellipse cx="44" cy="50" rx="5.5" ry="10.5"/><ellipse cx="76" cy="50" rx="5.5" ry="10.5"/><path d="M 46 79 Q 60 91 74 79" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/></g></symbol></svg>
+<!-- end gerty sprite -->
+
 <div class="deck">
 
   <!-- 1 -->
   <section class="slide active">
+    <svg class="gerty" aria-hidden="true"><use href="#gerty-listening"></use></svg>
     <div class="kicker">Stanford ME344 &middot; Final Project &middot; Anh Nguyen</div>
     <h1>Train, Tune, And Scale Qwen3-4B<br>on a TPU v5e-8</h1>
     <p class="lede">Forty minutes on eight v5e chips, 5.0 chip-hours, spent answering three
@@ -99,6 +149,7 @@
 
   <!-- 2 -->
   <section class="slide">
+    <svg class="gerty" aria-hidden="true"><use href="#gerty-thinking"></use></svg>
     <div class="kicker">1 of 4 &middot; memory</div>
     <h2>Why the chip was only a quarter busy, and both answers matter in 2027</h2>
     <div class="body">
@@ -132,6 +183,7 @@
 
   <!-- 3 -->
   <section class="slide">
+    <svg class="gerty" aria-hidden="true"><use href="#gerty-unsure_brow"></use></svg>
     <div class="kicker">2 of 4 &middot; the model</div>
     <h2>Fine-tuning worked. Forty examples cannot prove it.</h2>
     <div class="body">
@@ -156,6 +208,7 @@
 
   <!-- 4 -->
   <section class="slide">
+    <svg class="gerty" aria-hidden="true"><use href="#gerty-puzzled"></use></svg>
     <div class="kicker">3 of 4 &middot; scaling</div>
     <h2>Chip count is not the scaling unit. The fabric is.</h2>
     <div class="body">
@@ -188,6 +241,7 @@
 
   <!-- 5 -->
   <section class="slide">
+    <svg class="gerty" aria-hidden="true"><use href="#gerty-hopeful"></use></svg>
     <div class="kicker">4 of 4 &middot; outlook</div>
     <h2>What I would ship, and what this pod says about 2027</h2>
     <div class="body">

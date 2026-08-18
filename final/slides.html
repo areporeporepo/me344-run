@@ -6,9 +6,9 @@
 <title>Train, Tune, And Scale Qwen3-4B on a v5e-8 — ME344 Final Project</title>
 <style>
   :root {
-    --bg: #f5f5f7; --panel: #ffffff; --border: #d2d2d7;
-    --text: #1d1d1f; --dim: #6e6e73; --accent: #0071e3;
-    --ok: #34c759; --warn: #ff9f0a; --fail: #ff3b30;
+    --bg: #f4f4f4; --panel: #ffffff; --border: #dedede;
+    --text: #111111; --dim: #6b6b6b; --accent: #111111;
+    --ok: #111111; --warn: #3f3f3f; --fail: #3f3f3f;
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; }
@@ -34,9 +34,9 @@
   th, td { border: 1px solid var(--border); padding: 6px 9px; text-align: right; }
   th:first-child, td:first-child { text-align: left; }
   thead th { background: #fafafa; font-weight: 600; color: var(--dim); }
-  tr.hi td { background: #fff8e6; font-weight: 600; }
-  tr.bad td { background: #fff0ef; }
-  tr.good td { background: #eefaf0; }
+  tr.hi td { background: #ececec; font-weight: 600; }
+  tr.bad td { background: #ffffff; }
+  tr.good td { background: #f1f1f1; }
 
   .grid { display: grid; gap: 14px; }
   .g2 { grid-template-columns: 1fr 1fr; }
@@ -52,8 +52,8 @@
   .note { color: var(--dim); font-size: 12.5px; margin-top: 10px; }
   .pill { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 11.5px;
           border: 1px solid var(--border); background: var(--panel); color: var(--dim); }
-  .pill.ok { border-color: var(--ok); color: #1c7c33; background: #eefaf0; }
-  .pill.bad { border-color: var(--fail); color: #b3261e; background: #fff0ef; }
+  .pill.ok { border-color: var(--ok); color: #111111; background: #f1f1f1; }
+  .pill.bad { border-color: var(--fail); color: #3f3f3f; background: #ffffff; }
   .flow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 12.5px; }
   .flow .step { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 7px 11px; }
   .flow .arrow { color: var(--dim); }
@@ -65,7 +65,7 @@
     font-size: 11px; color: var(--dim); line-height: 1.5;
   }
   .src b { color: var(--text); font-weight: 600; }
-  .caveat { border-left: 3px solid var(--warn); padding-left: 10px; background: #fffaf0; }
+  .caveat { border-left: 3px solid var(--warn); padding-left: 10px; background: #f1f1f1; }
 
   footer {
     position: fixed; left: 0; right: 0; bottom: 0; height: 42px;
@@ -102,13 +102,63 @@
   .slide:has(.figrow) .stat { font-size: 24px; }
   .slide:has(.figrow) .grid { gap: 10px; }
   @media print { .figrow img { max-height: none; } }
+
+
+
+/* ---- begin gerty monochrome overrides: apply_gerty_html.py ---- */
+  /* Nothing below carries meaning in hue: the presenter runs a grayscale display filter, so
+     every encoding here is luminance, texture, weight or a face. */
+  .slide { position: relative; }
+  .gerty { position: absolute; top: 30px; right: 52px; width: 58px; height: 58px; }
+
+  /* Two kinds of image on these slides are not mine to redraw: the four figures the run itself
+     produced, and the ten Google diagrams. Both are desaturated here rather than left as the
+     only colour in the deck. They survive it: each one separates its series by line style,
+     marker or legend rather than by hue alone. */
+  .slide img { filter: grayscale(1); }
+
+  /* the row that is the answer gets a black rule; the row that failed gets hatched */
+  tr.hi td { background: #ececec; font-weight: 600; }
+  tr.hi td:first-child { box-shadow: inset 3px 0 0 #111111; }
+  tr.bad td { background: repeating-linear-gradient(135deg,
+                #ffffff 0 5px, #e6e6e6 5px 10px); }
+  tr.good td { background: #f1f1f1; }
+
+  /* the verdict faces, the same five characters the .pptx deck uses */
+  .stat.ok, .stat.bad, .stat.warn { color: #111111; }
+  .stat.ok::before, .stat.bad::before, .stat.warn::before,
+  .pill.ok::before, .pill.bad::before {
+    font-family: "SF Mono", ui-monospace, Menlo, monospace; font-weight: 400;
+    margin-right: 0.4em; color: #3f3f3f;
+  }
+  .stat.ok::before, .stat.bad::before, .stat.warn::before { font-size: 0.42em;
+    vertical-align: 0.28em; }
+  .stat.ok::before { content: "(^_^)"; }
+  .stat.bad::before { content: "(x_x)"; }
+  .stat.warn::before { content: "(-_-)"; }
+
+  .pill.ok, .pill.bad { color: #111111; border-color: #111111; }
+  .pill.ok { background: #f1f1f1; }
+  .pill.bad { background: repeating-linear-gradient(135deg,
+                #ffffff 0 4px, #e6e6e6 4px 8px); }
+  .pill.ok::before { content: "(^_^) "; font-size: 0.94em; }
+  .pill.bad::before { content: "(x_x) "; font-size: 0.94em; }
+
+  .caveat { border-left: 3px solid #111111; background: #f1f1f1; }
+  footer nav button { color: #111111; }
+/* ---- end gerty monochrome overrides ---- */
 </style>
 </head>
 <body>
+<!-- begin gerty sprite -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><symbol id="gerty-listening" viewBox="0 0 120 120"><title>GERTY: setting up</title><rect x="5" y="5" width="110" height="110" rx="24" fill="#111111"/><rect x="5" y="5" width="110" height="110" rx="24" fill="none" stroke="#ffffff" stroke-width="2" stroke-opacity="0.28"/><g fill="#ffffff"><circle cx="44" cy="50" r="7"/><circle cx="76" cy="50" r="7"/><path d="M 51 82 L 69 82" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/></g></symbol><symbol id="gerty-dead_open" viewBox="0 0 120 120"><title>GERTY: it failed to compile</title><rect x="5" y="5" width="110" height="110" rx="24" fill="#111111"/><rect x="5" y="5" width="110" height="110" rx="24" fill="none" stroke="#ffffff" stroke-width="2" stroke-opacity="0.28"/><g fill="#ffffff"><path d="M 36 42 L 52 58" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 52 42 L 36 58" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 68 42 L 84 58" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 84 42 L 68 58" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="60" cy="82" rx="13" ry="9"/></g></symbol><symbol id="gerty-content" viewBox="0 0 120 120"><title>GERTY: fine, as expected</title><rect x="5" y="5" width="110" height="110" rx="24" fill="#111111"/><rect x="5" y="5" width="110" height="110" rx="24" fill="none" stroke="#ffffff" stroke-width="2" stroke-opacity="0.28"/><g fill="#ffffff"><path d="M 34 48 Q 44 59 54 48" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 66 48 Q 76 59 86 48" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 46 79 Q 60 91 74 79" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/></g></symbol><symbol id="gerty-curious" viewBox="0 0 120 120"><title>GERTY: the question this raises</title><rect x="5" y="5" width="110" height="110" rx="24" fill="#111111"/><rect x="5" y="5" width="110" height="110" rx="24" fill="none" stroke="#ffffff" stroke-width="2" stroke-opacity="0.28"/><g fill="#ffffff"><ellipse cx="44" cy="50" rx="5.5" ry="10.5"/><ellipse cx="76" cy="50" rx="5.5" ry="10.5"/><circle cx="60" cy="82" r="9" fill="none" stroke="#ffffff" stroke-width="5"/></g></symbol><symbol id="gerty-neutral" viewBox="0 0 120 120"><title>GERTY: a statement of fact</title><rect x="5" y="5" width="110" height="110" rx="24" fill="#111111"/><rect x="5" y="5" width="110" height="110" rx="24" fill="none" stroke="#ffffff" stroke-width="2" stroke-opacity="0.28"/><g fill="#ffffff"><circle cx="44" cy="50" r="7"/><circle cx="76" cy="50" r="7"/><path d="M 42 82 L 78 82" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/></g></symbol><symbol id="gerty-pleased" viewBox="0 0 120 120"><title>GERTY: the result I would ship</title><rect x="5" y="5" width="110" height="110" rx="24" fill="#111111"/><rect x="5" y="5" width="110" height="110" rx="24" fill="none" stroke="#ffffff" stroke-width="2" stroke-opacity="0.28"/><g fill="#ffffff"><path d="M 34 55 L 44 44 L 54 55" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 66 55 L 76 44 L 86 55" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 40 76 Q 60 96 80 76" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/></g></symbol><symbol id="gerty-relieved" viewBox="0 0 120 120"><title>GERTY: it fit, but only just</title><rect x="5" y="5" width="110" height="110" rx="24" fill="#111111"/><rect x="5" y="5" width="110" height="110" rx="24" fill="none" stroke="#ffffff" stroke-width="2" stroke-opacity="0.28"/><g fill="#ffffff"><path d="M 34 55 L 44 44 L 54 55" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 66 55 L 76 44 L 86 55" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 51 82 L 69 82" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 99 12.299999999999999 Q 106 24.2 106 27 a 7 7 0 1 1 -14 0 Q 92 24.2 99 12.299999999999999 Z"/></g></symbol><symbol id="gerty-thinking" viewBox="0 0 120 120"><title>GERTY: open on the day</title><rect x="5" y="5" width="110" height="110" rx="24" fill="#111111"/><rect x="5" y="5" width="110" height="110" rx="24" fill="none" stroke="#ffffff" stroke-width="2" stroke-opacity="0.28"/><g fill="#ffffff"><circle cx="44" cy="50" r="7"/><circle cx="76" cy="50" r="7"/><path d="M 49 82 L 71 82" fill="none" stroke="#ffffff" stroke-width="8.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 32 33 L 54 33" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 88 33 L 66 33" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></g></symbol><symbol id="gerty-unsure" viewBox="0 0 120 120"><title>GERTY: not formally established</title><rect x="5" y="5" width="110" height="110" rx="24" fill="#111111"/><rect x="5" y="5" width="110" height="110" rx="24" fill="none" stroke="#ffffff" stroke-width="2" stroke-opacity="0.28"/><g fill="#ffffff"><circle cx="44" cy="50" r="7"/><circle cx="76" cy="50" r="7"/><path d="M 41 82 Q 50.5 71 60 82 Q 69.5 93 79 82" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/></g></symbol><symbol id="gerty-warm" viewBox="0 0 120 120"><title>GERTY: an unexpectedly good result</title><rect x="5" y="5" width="110" height="110" rx="24" fill="#111111"/><rect x="5" y="5" width="110" height="110" rx="24" fill="none" stroke="#ffffff" stroke-width="2" stroke-opacity="0.28"/><g fill="#ffffff"><circle cx="44" cy="50" r="7"/><circle cx="76" cy="50" r="7"/><path d="M 38 74 Q 60 101 82 74" fill="none" stroke="#ffffff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></g></symbol><symbol id="gerty-wide" viewBox="0 0 120 120"><title>GERTY: the scale that is coming</title><rect x="5" y="5" width="110" height="110" rx="24" fill="#111111"/><rect x="5" y="5" width="110" height="110" rx="24" fill="none" stroke="#ffffff" stroke-width="2" stroke-opacity="0.28"/><g fill="#ffffff"><circle cx="44" cy="50" r="10"/><circle cx="76" cy="50" r="10"/><path d="M 40 76 Q 60 96 80 76" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/></g></symbol><symbol id="gerty-puzzled" viewBox="0 0 120 120"><title>GERTY: I cannot explain this one</title><rect x="5" y="5" width="110" height="110" rx="24" fill="#111111"/><rect x="5" y="5" width="110" height="110" rx="24" fill="none" stroke="#ffffff" stroke-width="2" stroke-opacity="0.28"/><g fill="#ffffff"><ellipse cx="44" cy="50" rx="5.5" ry="10.5"/><circle cx="76" cy="50" r="7"/><path d="M 41 82 Q 50.5 71 60 82 Q 69.5 93 79 82" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/></g></symbol><symbol id="gerty-grin" viewBox="0 0 120 120"><title>GERTY: the best number in the run</title><rect x="5" y="5" width="110" height="110" rx="24" fill="#111111"/><rect x="5" y="5" width="110" height="110" rx="24" fill="none" stroke="#ffffff" stroke-width="2" stroke-opacity="0.28"/><g fill="#ffffff"><path d="M 34 55 L 44 44 L 54 55" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 66 55 L 76 44 L 86 55" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 38 74 Q 60 101 82 74" fill="none" stroke="#ffffff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></g></symbol><symbol id="gerty-sleepy" viewBox="0 0 120 120"><title>GERTY: the boring part that must be said</title><rect x="5" y="5" width="110" height="110" rx="24" fill="#111111"/><rect x="5" y="5" width="110" height="110" rx="24" fill="none" stroke="#ffffff" stroke-width="2" stroke-opacity="0.28"/><g fill="#ffffff"><path d="M 34 48 Q 44 59 54 48" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 66 48 Q 76 59 86 48" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 42 82 L 78 82" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/></g></symbol><symbol id="gerty-proud" viewBox="0 0 120 120"><title>GERTY: predicted, then confirmed</title><rect x="5" y="5" width="110" height="110" rx="24" fill="#111111"/><rect x="5" y="5" width="110" height="110" rx="24" fill="none" stroke="#ffffff" stroke-width="2" stroke-opacity="0.28"/><g fill="#ffffff"><path d="M 34 55 L 44 44 L 54 55" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 66 55 L 76 44 L 86 55" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 49 82 L 71 82" fill="none" stroke="#ffffff" stroke-width="8.5" stroke-linecap="round" stroke-linejoin="round"/></g></symbol><symbol id="gerty-hopeful" viewBox="0 0 120 120"><title>GERTY: a forecast, not a measurement</title><rect x="5" y="5" width="110" height="110" rx="24" fill="#111111"/><rect x="5" y="5" width="110" height="110" rx="24" fill="none" stroke="#ffffff" stroke-width="2" stroke-opacity="0.28"/><g fill="#ffffff"><ellipse cx="44" cy="50" rx="5.5" ry="10.5"/><ellipse cx="76" cy="50" rx="5.5" ry="10.5"/><path d="M 46 79 Q 60 91 74 79" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/></g></symbol><symbol id="gerty-shocked" viewBox="0 0 120 120"><title>GERTY: eleven times an entire pod</title><rect x="5" y="5" width="110" height="110" rx="24" fill="#111111"/><rect x="5" y="5" width="110" height="110" rx="24" fill="none" stroke="#ffffff" stroke-width="2" stroke-opacity="0.28"/><g fill="#ffffff"><circle cx="44" cy="50" r="10"/><circle cx="76" cy="50" r="10"/><ellipse cx="60" cy="82" rx="13" ry="9"/></g></symbol><symbol id="gerty-squint" viewBox="0 0 120 120"><title>GERTY: a caveat on my own number</title><rect x="5" y="5" width="110" height="110" rx="24" fill="#111111"/><rect x="5" y="5" width="110" height="110" rx="24" fill="none" stroke="#ffffff" stroke-width="2" stroke-opacity="0.28"/><g fill="#ffffff"><path d="M 34 48 Q 44 59 54 48" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 66 48 Q 76 59 86 48" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 49 82 L 71 82" fill="none" stroke="#ffffff" stroke-width="8.5" stroke-linecap="round" stroke-linejoin="round"/></g></symbol><symbol id="gerty-surprised" viewBox="0 0 120 120"><title>GERTY: that ordering should be impossible</title><rect x="5" y="5" width="110" height="110" rx="24" fill="#111111"/><rect x="5" y="5" width="110" height="110" rx="24" fill="none" stroke="#ffffff" stroke-width="2" stroke-opacity="0.28"/><g fill="#ffffff"><circle cx="44" cy="50" r="9" fill="none" stroke="#ffffff" stroke-width="4.5"/><circle cx="76" cy="50" r="9" fill="none" stroke="#ffffff" stroke-width="4.5"/><circle cx="60" cy="82" r="9" fill="none" stroke="#ffffff" stroke-width="5"/></g></symbol><symbol id="gerty-wink" viewBox="0 0 120 120"><title>GERTY: the cheap trick that worked</title><rect x="5" y="5" width="110" height="110" rx="24" fill="#111111"/><rect x="5" y="5" width="110" height="110" rx="24" fill="none" stroke="#ffffff" stroke-width="2" stroke-opacity="0.28"/><g fill="#ffffff"><path d="M 34 55 L 44 44 L 54 55" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="76" cy="50" r="7"/><path d="M 46 79 Q 60 91 74 79" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/></g></symbol><symbol id="gerty-alarmed" viewBox="0 0 120 120"><title>GERTY: a number heading the wrong way</title><rect x="5" y="5" width="110" height="110" rx="24" fill="#111111"/><rect x="5" y="5" width="110" height="110" rx="24" fill="none" stroke="#ffffff" stroke-width="2" stroke-opacity="0.28"/><g fill="#ffffff"><circle cx="44" cy="50" r="10"/><circle cx="76" cy="50" r="10"/><path d="M 41 90 Q 60 70 79 90" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 99 12.299999999999999 Q 106 24.2 106 27 a 7 7 0 1 1 -14 0 Q 92 24.2 99 12.299999999999999 Z"/></g></symbol><symbol id="gerty-bored" viewBox="0 0 120 120"><title>GERTY: a table doing its job</title><rect x="5" y="5" width="110" height="110" rx="24" fill="#111111"/><rect x="5" y="5" width="110" height="110" rx="24" fill="none" stroke="#ffffff" stroke-width="2" stroke-opacity="0.28"/><g fill="#ffffff"><path d="M 34 50 L 54 50" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 66 50 L 86 50" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 42 82 L 78 82" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 32 33 L 54 33" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M 88 33 L 66 33" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></g></symbol><symbol id="gerty-watching" viewBox="0 0 120 120"><title>GERTY: a prediction to close on</title><rect x="5" y="5" width="110" height="110" rx="24" fill="#111111"/><rect x="5" y="5" width="110" height="110" rx="24" fill="none" stroke="#ffffff" stroke-width="2" stroke-opacity="0.28"/><g fill="#ffffff"><circle cx="44" cy="50" r="4.5"/><circle cx="76" cy="50" r="4.5"/><path d="M 42 82 L 78 82" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/></g></symbol></svg>
+<!-- end gerty sprite -->
+
 <div class="deck" id="deck">
 
   <!-- 1 -->
   <section class="slide active">
+    <svg class="gerty" aria-hidden="true"><use href="#gerty-listening"></use></svg>
     <div class="kicker">ME344 &middot; Final Project &middot; 13 August 2026</div>
     <h1>Train, Tune, And Scale Qwen3-4B<br>on a TPU v5e-8</h1>
     <p class="lede">Plan the memory before running it, find the batch boundary, profile the step,
@@ -142,6 +192,7 @@
 
   <!-- 2 -->
   <section class="slide">
+    <svg class="gerty" aria-hidden="true"><use href="#gerty-dead_open"></use></svg>
     <div class="kicker">Question 1</div>
     <h2>Will the first training step fit, before I pay for it?</h2>
     <p class="lede">Ahead-of-time compilation answers the memory question without holding the chips.
@@ -181,6 +232,7 @@
 
   <!-- 3 -->
   <section class="slide">
+    <svg class="gerty" aria-hidden="true"><use href="#gerty-content"></use></svg>
     <div class="kicker">Question 2</div>
     <h2>How much work should one step hold?</h2>
     <p class="lede">Eight global batch sizes at sequence length 256, AOT-checked first, then measured.
@@ -211,6 +263,7 @@
 
   <!-- 4 -->
   <section class="slide">
+    <svg class="gerty" aria-hidden="true"><use href="#gerty-curious"></use></svg>
     <div class="kicker">Question 2, continued</div>
     <h2>How much hardware headroom is left?</h2>
     <p class="lede">Against a 6 &middot; parameters &middot; tokens lower bound and the published
@@ -241,6 +294,7 @@
 
   <!-- 5 -->
   <section class="slide">
+    <svg class="gerty" aria-hidden="true"><use href="#gerty-neutral"></use></svg>
     <div class="kicker">Question 3</div>
     <h2>Where does a training step actually spend its time?</h2>
     <div class="body">
@@ -276,6 +330,7 @@
 
   <!-- 6 -->
   <section class="slide">
+    <svg class="gerty" aria-hidden="true"><use href="#gerty-pleased"></use></svg>
     <div class="kicker">Question 4</div>
     <h2>What changed after fine-tuning?</h2>
     <p class="lede">200 SFT steps on banking77 intent classification at global batch 4,
@@ -313,6 +368,7 @@
 
   <!-- 7 -->
   <section class="slide">
+    <svg class="gerty" aria-hidden="true"><use href="#gerty-relieved"></use></svg>
     <div class="kicker">Question 4, continued</div>
     <h2>Can we resume without starting over?</h2>
     <div class="body">
@@ -353,6 +409,7 @@
 
   <!-- 8 -->
   <section class="slide">
+    <svg class="gerty" aria-hidden="true"><use href="#gerty-thinking"></use></svg>
     <div class="kicker">Question 5</div>
     <h2>How is reward training different from SFT?</h2>
     <p class="lede">GRPO, 12 updates, 4 generations per prompt, on top of the SFT checkpoint.</p>
@@ -392,6 +449,7 @@
 
   <!-- 9 -->
   <section class="slide">
+    <svg class="gerty" aria-hidden="true"><use href="#gerty-unsure"></use></svg>
     <div class="kicker">Question 5, continued</div>
     <h2>How confident can a 40-example evaluation make us?</h2>
     <p class="lede">A point estimate without an interval turns random prompt variation into a
@@ -429,6 +487,7 @@
 
   <!-- 10 -->
   <section class="slide">
+    <svg class="gerty" aria-hidden="true"><use href="#gerty-warm"></use></svg>
     <div class="kicker">Serving</div>
     <h2>What does the chosen checkpoint cost to serve?</h2>
     <div class="body">
@@ -461,6 +520,7 @@
 
   <!-- 11 -->
   <section class="slide">
+    <svg class="gerty" aria-hidden="true"><use href="#gerty-wide"></use></svg>
     <div class="kicker">Question 6</div>
     <h2>Can the same checkpoint run on more workers?</h2>
     <p class="lede">Five GKE JobSet runs: an 8-chip baseline, then 16 chips two ways, inside one
@@ -497,7 +557,7 @@
       <div class="src"><b>diagram:</b> Google Cloud, "How to scale AI training to up to tens of thousands of Cloud TPU chips with Multislice", 2023-08-31, reproduced for teaching with attribution.<br><b>source:</b> scale_out.json (per-mode chips/fabric/topology/steady_step_seconds/
         tokens_per_second_per_chip, ici_strong_scaling_efficiency_percent = 100.05,
         weak_scaling_efficiency_percent = 53.56, ici_over_dcn_weak_ratio = 1.86)<br>
-        <b class="mono" style="color:#b3261e">provenance caveat:</b> these five JobSet results were
+        <b class="mono" style="color:#3f3f3f">provenance caveat:</b> these five JobSet results were
         produced on 2026-08-10 and <b>reused</b> into this run. Every result file records
         <code>source_checkpoint = .../me344-qanh-20260810t005140z-c4/checkpoints/4/items</code>,
         and <code>collect_scale_results()</code> validates only <code>student_id</code>, so nothing
@@ -508,6 +568,7 @@
 
   <!-- 12 -->
   <section class="slide">
+    <svg class="gerty" aria-hidden="true"><use href="#gerty-puzzled"></use></svg>
     <div class="kicker">The anomaly worth explaining, not asserting</div>
     <h2>Why is DCN weak scaling worse per chip than DCN strong?</h2>
     <p class="lede">With DP2 &times; TP8 the cross-slice all-reduce carries gradients, whose size is set
@@ -552,6 +613,7 @@
 
   <!-- 13 -->
   <section class="slide">
+    <svg class="gerty" aria-hidden="true"><use href="#gerty-grin"></use></svg>
     <div class="kicker">The submitted artifact</div>
     <h2>Nine panels, one figure</h2>
     <div class="body" style="display:flex; flex-direction:column">
@@ -570,6 +632,7 @@
 
   <!-- 14 -->
   <section class="slide">
+    <svg class="gerty" aria-hidden="true"><use href="#gerty-sleepy"></use></svg>
     <div class="kicker">What it took</div>
     <h2>Where the 40 minutes, and the 5.0 chip-hours, went</h2>
     <p class="lede">Wall-clock per notebook cell from the driver's own progress log. Eight chips run
@@ -609,6 +672,7 @@
 
   <!-- 15 -->
   <section class="slide">
+    <svg class="gerty" aria-hidden="true"><use href="#gerty-proud"></use></svg>
     <div class="kicker">Recommendation</div>
     <h2>What would I ship?</h2>
     <div class="body">
@@ -651,6 +715,7 @@
 
   <!-- 15 -->
   <section class="slide">
+    <svg class="gerty" aria-hidden="true"><use href="#gerty-hopeful"></use></svg>
     <div class="kicker">Extrapolation</div>
     <h2>What does this pod predict about the next generation?</h2>
     <p class="lede">Two measurements from this run generalize past Qwen3-4B: the 16 bytes/parameter
@@ -699,7 +764,7 @@
         against persistent_training_state_gib = 44.95), sweep_results.csv
         (runtime_hbm_limit_gib_per_chip = 15.75), profile.log (0.93% attention at L=256),
         scale_out.json (DCN efficiency).<br>
-        <b class="mono" style="color:#b3261e">uncertainty:</b> the 2.4T and 2.8T parameter counts
+        <b class="mono" style="color:#3f3f3f">uncertainty:</b> the 2.4T and 2.8T parameter counts
         come from secondary reporting on Qwen 3.8 Max and Kimi K3, not from model cards I verified.
         The extrapolation is the load-bearing part; treat the specific parameter counts as
         approximate. The L&sup2; parity estimate also ignores attention kernel efficiency and
@@ -710,6 +775,7 @@
   <!-- 16 -->
 
     <section class="slide">
+    <svg class="gerty" aria-hidden="true"><use href="#gerty-shocked"></use></svg>
     <div class="kicker">The generation after the one I measured</div>
     <h2>TPU 8t and 8i: the first time training and inference get different silicon</h2>
     <p class="lede">Announced 2026-04-22, after this run. Google split the eighth generation in two,
@@ -764,6 +830,7 @@
   </section>
 
     <section class="slide">
+    <svg class="gerty" aria-hidden="true"><use href="#gerty-squint"></use></svg>
     <div class="kicker">Forward-looking &middot; the fabric</div>
     <h2>The two fabrics they rebuilt, and which of my numbers each one answers</h2>
     <p class="lede">I measured a 35% penalty for one collective crossing the wrong fabric. Both
@@ -812,6 +879,7 @@
   </section>
 
     <section class="slide">
+    <svg class="gerty" aria-hidden="true"><use href="#gerty-surprised"></use></svg>
     <div class="kicker">Forward-looking &middot; getting the host out of the way</div>
     <h2>Five hops become three, and storage stops going through a CPU</h2>
     <p class="lede">The least glamorous number in my run is the 3m 41s the resume cell took. This
@@ -850,6 +918,7 @@
   </section>
 
   <section class="slide">
+    <svg class="gerty" aria-hidden="true"><use href="#gerty-wink"></use></svg>
     <div class="kicker">The open question, now answered</div>
     <h2>Does the ceiling track HBM bandwidth? Yes.</h2>
     <p class="lede">The deck asked whether the knee follows HBM bandwidth or stays at gb32. On
@@ -892,7 +961,7 @@
       <div class="src"><b>source:</b> tpu-capacity-hunter/benchmarks/RESULTS-2026-08-14.md,
         identical MaxText 17c7172 config throughout (qwen3-4b-thinking-2507, seq 256, synthetic data,
         <code>learning_rate=0</code>, FSDP off, TP capped at 8, 12 steps averaging the last 8).<br>
-        <b class="mono" style="color:#b3261e">provenance caveat:</b> these four runs are <b>TPU VM</b>
+        <b class="mono" style="color:#3f3f3f">provenance caveat:</b> these four runs are <b>TPU VM</b>
         runs on <b>spot</b> capacity (v5e us-south1-a, v6e us-central1-b, v5p us-east5-a), not GKE
         JobSet runs, and every one is a <b>single slice</b>, so nothing here measures DCN on v6e. The
         v5e row is an independent re-measurement that reproduces the 8-chip baseline on this deck to
@@ -902,6 +971,7 @@
   </section>
 
   <section class="slide">
+    <svg class="gerty" aria-hidden="true"><use href="#gerty-alarmed"></use></svg>
     <div class="kicker">The result that overturns slide 2</div>
     <h2>The 25.5% ceiling was the sharding choice, not the hardware</h2>
     <p class="lede">Slide 2 chose TP8 over DP8 on a memory argument and never tested FSDP. FSDP
@@ -948,13 +1018,14 @@
         global batch 256, seq 256, 65,536 tokens per step, <code>learning_rate=0</code>, synthetic
         data. Loss differs in the third decimal (493.73 against 493.26) as expected from different
         collective ordering, and token count per step is identical, so the work is the same.<br>
-        <b class="mono" style="color:#b8770a">note:</b> the class assignment mandates TP8, so the
+        <b class="mono" style="color:#3f3f3f">note:</b> the class assignment mandates TP8, so the
         graded runs keep it. This is a finding about the configuration, not a change to the
         submission.</div>
     </div>
   </section>
 
   <section class="slide">
+    <svg class="gerty" aria-hidden="true"><use href="#gerty-bored"></use></svg>
     <div class="kicker">Why, from Google's own spec sheet</div>
     <h2>They doubled the memory system and quadrupled the math</h2>
     <p class="lede">Every v5e-to-v6e ratio is 2&times; except compute, which is 4.66&times;. That single
@@ -1010,6 +1081,7 @@
   </section>
 
   <section class="slide">
+    <svg class="gerty" aria-hidden="true"><use href="#gerty-watching"></use></svg>
     <div class="kicker">Next</div>
     <h2>What I would try with more time</h2>
     <div class="body">
